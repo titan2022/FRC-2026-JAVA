@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.drive.CommandSwerveDrivetrain;
 import frc.robot.drive.ctre.TunerConstants.TunerSwerveDrivetrain;
 
 // https://github.com/CrossTheRoadElec/Phoenix6-Examples/blob/main/java/SwerveWithPathPlanner/src/main/java/frc/robot/subsystems/CommandSwerveDrivetrain.java
@@ -35,7 +36,33 @@ import frc.robot.drive.ctre.TunerConstants.TunerSwerveDrivetrain;
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements
  * Subsystem so it can easily be used in command-based projects.
  */
-public class CTRESwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem {
+public class CTRESwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem, CommandSwerveDrivetrain {
+	public CTRESwerveDrivetrain() {
+		this(TunerConstants.DrivetrainConstants, TunerConstants.FrontLeft, TunerConstants.FrontRight, TunerConstants.BackLeft, TunerConstants.BackRight);
+	}
+
+	public void resetFieldOrientation() {
+		seedFieldCentric();
+	}
+
+	public void setVelocities(ChassisSpeeds speeds) {
+		setControl(new SwerveRequest.ApplyRobotSpeeds().withSpeeds(speeds));
+	}
+
+	public void setFieldVelocities(ChassisSpeeds speeds) {
+		setControl(new SwerveRequest.ApplyFieldSpeeds().withSpeeds(speeds));
+	}
+
+	public ChassisSpeeds getVelocities() {
+		return getState().Speeds;
+	}
+
+	public void brake() {
+		setVelocities(new ChassisSpeeds(0, 0, 0));
+		setControl(new SwerveRequest.SwerveDriveBrake());
+	}
+
+	///// MARK - GENERATED CODE BELOW /////
 	private static final double kSimLoopPeriod = 0.005; // 5 ms
 	private Notifier m_simNotifier = null;
 	private double m_lastSimTime;

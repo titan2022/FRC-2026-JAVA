@@ -44,8 +44,10 @@ import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.simulation.ADXRS450_GyroSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
+import frc.robot.drive.CommandSwerveDrivetrain;
+import frc.robot.drive.sim.SimSwerveConstants.Swerve.ModuleConstants;
 
-public class SimSwerveDrivetrain {
+public class SimSwerveDrivetrain implements CommandSwerveDrivetrain {
 	// Construct the swerve modules with their respective constants.
 	// The SwerveModule class will handle all the details of controlling the modules.
 	private final SwerveModule[] swerveMods = {
@@ -114,6 +116,10 @@ public class SimSwerveDrivetrain {
 		poseEstimator.update(getGyroYaw(), getModulePositions());
 	}
 
+	public void resetFieldOrientation() {
+		// TODO
+	}
+
 	/**
 	 * Basic drive control. A target field-relative ChassisSpeeds (vx, vy, omega) is converted to
 	 * specific swerve module states.
@@ -143,6 +149,15 @@ public class SimSwerveDrivetrain {
 		this.targetChassisSpeeds = targetChassisSpeeds;
 	}
 
+	public void setVelocities(ChassisSpeeds targetChassisSpeeds) {
+		setChassisSpeeds(targetChassisSpeeds, true, false);
+	}
+
+	public void setFieldVelocities(ChassisSpeeds targetChassisSpeeds) {
+		// TODO
+		setChassisSpeeds(targetChassisSpeeds, true, false);
+	}
+
 	/**
 	 * Command the swerve modules to the desired states. Velocities exceeding the maximum speed will
 	 * be desaturated (while preserving the ratios between modules).
@@ -160,7 +175,7 @@ public class SimSwerveDrivetrain {
 	}
 
 	/** Stop the swerve drive. */
-	public void stop() {
+	public void brake() {
 		drive(0, 0, 0);
 	}
 
@@ -213,7 +228,7 @@ public class SimSwerveDrivetrain {
 	}
 
 	/** Get the chassis speeds of the robot (vx, vy, omega) from the swerve module states. */
-	public ChassisSpeeds getChassisSpeeds() {
+	public ChassisSpeeds getVelocities() {
 		return kinematics.toChassisSpeeds(getModuleStates());
 	}
 
@@ -267,7 +282,7 @@ public class SimSwerveDrivetrain {
 		SmartDashboard.putNumber(table + "X", pose.getX());
 		SmartDashboard.putNumber(table + "Y", pose.getY());
 		SmartDashboard.putNumber(table + "Heading", pose.getRotation().getDegrees());
-		ChassisSpeeds chassisSpeeds = getChassisSpeeds();
+		ChassisSpeeds chassisSpeeds = getVelocities();
 		SmartDashboard.putNumber(table + "VX", chassisSpeeds.vxMetersPerSecond);
 		SmartDashboard.putNumber(table + "VY", chassisSpeeds.vyMetersPerSecond);
 		SmartDashboard.putNumber(

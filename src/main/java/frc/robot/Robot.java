@@ -8,7 +8,8 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.drive.ctre.CTRESwerveDrivetrain;
+import frc.robot.drive.CommandSwerveDrivetrain;
+import frc.robot.drive.DriveUtility;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -21,7 +22,7 @@ public class Robot extends TimedRobot {
   public final CommandXboxController driveController = new CommandXboxController(0);
   public final CommandXboxController robotController = new CommandXboxController(1);
 
-  // public final CommandSwerveDrivetrain drivetrain = new CommandSwerveDrivetrain();
+  public final CommandSwerveDrivetrain drivetrain = DriveUtility.makeDrivetrain();
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -52,7 +53,9 @@ public class Robot extends TimedRobot {
   public void disabledInit() {}
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    drivetrain.brake();
+  }
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
