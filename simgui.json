@@ -65,7 +65,8 @@
           "length": 0.6000000238418579,
           "width": 0.5
         },
-        "bottom": 1476,
+        "bottom": 1638,
+        "builtin": "2025 Reefscape",
         "cameras": {
           "arrowColor": [
             0.29535865783691406,
@@ -80,11 +81,10 @@
           "weight": 1.0,
           "width": 1.0
         },
-        "height": 8.210550308227539,
-        "image": "2023-field.png",
-        "left": 150,
-        "right": 2961,
-        "top": 79,
+        "height": 8.051901817321777,
+        "left": 534,
+        "right": 3466,
+        "top": 291,
         "visibleTargetPoses": {
           "arrows": false,
           "image": "tag-blue.png",
@@ -92,7 +92,7 @@
           "selectable": false,
           "width": 0.4000000059604645
         },
-        "width": 16.541748046875,
+        "width": 17.54825210571289,
         "window": {
           "visible": true
         }
