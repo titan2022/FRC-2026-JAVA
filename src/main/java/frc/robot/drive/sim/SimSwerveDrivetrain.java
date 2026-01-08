@@ -27,6 +27,8 @@ package frc.robot.drive.sim;
 
 import static frc.robot.drive.sim.SimSwerveConstants.Swerve.*;
 
+import java.util.function.Consumer;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
@@ -53,6 +55,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.drive.CommandSwerveDrivetrain;
 import frc.robot.drive.sim.SimSwerveConstants.Swerve.ModuleConstants;
+import pabeles.concurrency.ConcurrencyOps.Reset;
 
 public class SimSwerveDrivetrain implements CommandSwerveDrivetrain {
 	// Construct the swerve modules with their respective constants.
@@ -84,7 +87,7 @@ public class SimSwerveDrivetrain implements CommandSwerveDrivetrain {
 	private final SwerveDriveSim swerveDriveSim;
 	private double totalCurrentDraw = 0;
 
-	public SimSwerveDrivetrain() {
+	public SimSwerveDrivetrain(Consumer<Pose2d> resetPoseFunction) {
 		// Define the standard deviations for the pose estimator, which determine how fast the pose
 		// estimate converges to the vision measurement. This should depend on the vision measurement
 		// noise
@@ -112,15 +115,17 @@ public class SimSwerveDrivetrain implements CommandSwerveDrivetrain {
 						DCMotor.getFalcon500(1),
 						kSteerGearRatio,
 						kinematics);
-		configureAutoBuilder();
+		configureAutoBuilder(resetPoseFunction);
 	}
 
-	private void configureAutoBuilder() {
+	// resetPoseFunction should be a function that resets the pose of the vision and the odometry,
+	// along with teleporting the swerve module.
+	private void configureAutoBuilder(Consumer<Pose2d> resetPoseFunction) {
 		try {
 			var config = RobotConfig.fromGUISettings();
 			AutoBuilder.configure(
 				this::getPose,   // Supplier of current robot pose
-				this::resetPose,         // Consumer for seeding pose against auto
+				resetPoseFunction,         // Consumer for seeding pose against auto
 				this::getVelocities, // Supplier of current robot speeds
 				// Consumer of ChassisSpeeds and feedforwards to drive the robot
 				(speeds, feedforwards) -> driveRobotCentric(speeds),
@@ -132,7 +137,9 @@ public class SimSwerveDrivetrain implements CommandSwerveDrivetrain {
 				),
 				config,
 				// Assume the path needs to be flipped for Red vs Blue, this is normally the case
-				() -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
+				// () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
+				// This doesn't seem to work properly in sim
+				() -> false,
 				this // Subsystem for requirements
 			);
 		} catch (Exception ex) {
@@ -224,10 +231,6 @@ public class SimSwerveDrivetrain implements CommandSwerveDrivetrain {
 		}
 
 		poseEstimator.resetPosition(getGyroYaw(), getModulePositions(), pose);
-	}
-
-	public void resetPose(Pose2d pose) {
-		resetPose(pose, false);
 	}
 
 	/** Get the estimated pose of the swerve drive on the field. */

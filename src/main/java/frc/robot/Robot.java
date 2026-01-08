@@ -31,7 +31,7 @@ public class Robot extends TimedRobot {
 
 	public final XboxController controller = new XboxController(0);
 
-	public final CommandSwerveDrivetrain drivetrain = DriveUtility.makeDrivetrain();
+	public final CommandSwerveDrivetrain drivetrain = DriveUtility.makeDrivetrain(this::resetPose);
 
 	public final Vision vision = new Vision(drivetrain::addVisionMeasurement);
 
@@ -95,7 +95,7 @@ public class Robot extends TimedRobot {
 			m_autonomousCommand.cancel();
 		}
 
-		resetPose();
+		// resetPose();
 	}
 
 	@Override
@@ -149,10 +149,10 @@ public class Robot extends TimedRobot {
 	}
 
 	public void resetPose() {
-		// Example Only - startPose should be derived from some assumption
-		// of where your robot was placed on the field.
-		// The first pose in an autonomous path is often a good choice.
-		var startPose = new Pose2d(1, 1, new Rotation2d());
+		resetPose(new Pose2d(1, 1, new Rotation2d()));
+	}
+
+	public void resetPose(Pose2d startPose) {
 		if(RobotBase.isSimulation()) {
 			((SimSwerveDrivetrain)drivetrain).resetPose(startPose, true);
 		}
