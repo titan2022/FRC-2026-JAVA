@@ -1,4 +1,4 @@
-package frc.robot.subsystems.drive;
+package frc.robot.drive.ctre;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -28,15 +28,14 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-
-import frc.robot.subsystems.drive.TunerConstants.TunerSwerveDrivetrain;
+import frc.robot.drive.ctre.TunerConstants.TunerSwerveDrivetrain;
 
 // https://github.com/CrossTheRoadElec/Phoenix6-Examples/blob/main/java/SwerveWithPathPlanner/src/main/java/frc/robot/subsystems/CommandSwerveDrivetrain.java
 /**
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements
  * Subsystem so it can easily be used in command-based projects.
  */
-public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem {
+public class CTRESwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem {
 	private static final double kSimLoopPeriod = 0.005; // 5 ms
 	private Notifier m_simNotifier = null;
 	private double m_lastSimTime;
@@ -128,7 +127,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 	 * @param drivetrainConstants Drivetrain-wide constants for the swerve drive
 	 * @param modules             Constants for each specific module
 	 */
-	public CommandSwerveDrivetrain(
+	public CTRESwerveDrivetrain(
 		SwerveDrivetrainConstants drivetrainConstants,
 		SwerveModuleConstants<?, ?, ?>... modules
 	) {
@@ -152,7 +151,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 	 *                                   CAN FD, and 100 Hz on CAN 2.0.
 	 * @param modules                    Constants for each specific module
 	 */
-	public CommandSwerveDrivetrain(
+	public CTRESwerveDrivetrain(
 		SwerveDrivetrainConstants drivetrainConstants,
 		double odometryUpdateFrequency,
 		SwerveModuleConstants<?, ?, ?>... modules
@@ -183,7 +182,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 	 *                                  and radians
 	 * @param modules                    Constants for each specific module
 	 */
-	public CommandSwerveDrivetrain(
+	public CTRESwerveDrivetrain(
 		SwerveDrivetrainConstants drivetrainConstants,
 		double odometryUpdateFrequency,
 		Matrix<N3, N1> odometryStandardDeviation,
