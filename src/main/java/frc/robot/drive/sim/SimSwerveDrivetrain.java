@@ -27,6 +27,11 @@ package frc.robot.drive.sim;
 
 import static frc.robot.drive.sim.SimSwerveConstants.Swerve.*;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -40,6 +45,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.*;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.simulation.ADXRS450_GyroSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -105,6 +112,32 @@ public class SimSwerveDrivetrain implements CommandSwerveDrivetrain {
 						DCMotor.getFalcon500(1),
 						kSteerGearRatio,
 						kinematics);
+		configureAutoBuilder();
+	}
+
+	private void configureAutoBuilder() {
+		try {
+			var config = RobotConfig.fromGUISettings();
+			AutoBuilder.configure(
+				this::getPose,   // Supplier of current robot pose
+				this::resetPose,         // Consumer for seeding pose against auto
+				this::getVelocities, // Supplier of current robot speeds
+				// Consumer of ChassisSpeeds and feedforwards to drive the robot
+				(speeds, feedforwards) -> setVelocities(speeds),
+				new PPHolonomicDriveController(
+					// PID constants for translation
+					new PIDConstants(kDriveKP, kDriveKI, kDriveKD),
+					// PID constants for rotation
+					new PIDConstants(kDriveKP, kDriveKI, kDriveKD)
+				),
+				config,
+				// Assume the path needs to be flipped for Red vs Blue, this is normally the case
+				() -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
+				this // Subsystem for requirements
+			);
+		} catch (Exception ex) {
+			DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", ex.getStackTrace());
+		}
 	}
 
 	public void periodic() {
@@ -196,6 +229,10 @@ public class SimSwerveDrivetrain implements CommandSwerveDrivetrain {
 		}
 
 		poseEstimator.resetPosition(getGyroYaw(), getModulePositions(), pose);
+	}
+
+	public void resetPose(Pose2d pose) {
+		resetPose(pose, true);
 	}
 
 	/** Get the estimated pose of the swerve drive on the field. */
