@@ -41,6 +41,10 @@ public class Robot extends TimedRobot {
 	public void robotPeriodic() {
 		CommandScheduler.getInstance().run();
 
+		if(RobotBase.isSimulation()) {
+			((SimSwerveDrivetrain)drivetrain).periodic();
+		}
+
 		// Update vision
 		vision.periodic();
 
@@ -117,6 +121,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void simulationPeriodic() {
 		SimSwerveDrivetrain simDrivetrain = (SimSwerveDrivetrain)drivetrain;
+		simDrivetrain.simulationPeriodic();
 		// Update camera simulation
 		vision.simulationPeriodic(simDrivetrain.getSimPose());
 
