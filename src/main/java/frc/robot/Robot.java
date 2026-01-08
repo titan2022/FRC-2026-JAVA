@@ -21,7 +21,7 @@ public class Robot extends TimedRobot {
   public final CommandXboxController driveController = new CommandXboxController(0);
   public final CommandXboxController robotController = new CommandXboxController(1);
 
-  public final CommandSwerveDrivetrain drivetrain = new CommandSwerveDrivetrain();
+  // public final CommandSwerveDrivetrain drivetrain = new CommandSwerveDrivetrain();
 
   /**
    * This function is run when the robot is first started up and should be used for any
