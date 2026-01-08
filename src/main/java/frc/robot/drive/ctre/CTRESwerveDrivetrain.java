@@ -45,11 +45,11 @@ public class CTRESwerveDrivetrain extends TunerSwerveDrivetrain implements Subsy
 		seedFieldCentric();
 	}
 
-	public void setVelocities(ChassisSpeeds speeds) {
+	public void driveRobotCentric(ChassisSpeeds speeds) {
 		setControl(new SwerveRequest.ApplyRobotSpeeds().withSpeeds(speeds));
 	}
 
-	public void setFieldVelocities(ChassisSpeeds speeds) {
+	public void driveFieldCentric(ChassisSpeeds speeds) {
 		setControl(new SwerveRequest.ApplyFieldSpeeds().withSpeeds(speeds));
 	}
 
@@ -58,7 +58,7 @@ public class CTRESwerveDrivetrain extends TunerSwerveDrivetrain implements Subsy
 	}
 
 	public void brake() {
-		setVelocities(new ChassisSpeeds(0, 0, 0));
+		driveRobotCentric(new ChassisSpeeds(0, 0, 0));
 		setControl(new SwerveRequest.SwerveDriveBrake());
 	}
 

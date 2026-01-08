@@ -123,7 +123,7 @@ public class SimSwerveDrivetrain implements CommandSwerveDrivetrain {
 				this::resetPose,         // Consumer for seeding pose against auto
 				this::getVelocities, // Supplier of current robot speeds
 				// Consumer of ChassisSpeeds and feedforwards to drive the robot
-				(speeds, feedforwards) -> setVelocities(speeds),
+				(speeds, feedforwards) -> driveRobotCentric(speeds),
 				new PPHolonomicDriveController(
 					// PID constants for translation
 					new PIDConstants(kDriveKP, kDriveKI, kDriveKD),
@@ -168,12 +168,7 @@ public class SimSwerveDrivetrain implements CommandSwerveDrivetrain {
 		this.targetChassisSpeeds = targetChassisSpeeds;
 	}
 
-	public void setVelocities(ChassisSpeeds targetChassisSpeeds) {
-		setChassisSpeeds(targetChassisSpeeds, true, false);
-	}
-
-	public void setFieldVelocities(ChassisSpeeds targetChassisSpeeds) {
-		// TODO
+	public void driveRobotCentric(ChassisSpeeds targetChassisSpeeds) {
 		setChassisSpeeds(targetChassisSpeeds, true, false);
 	}
 
@@ -195,7 +190,7 @@ public class SimSwerveDrivetrain implements CommandSwerveDrivetrain {
 
 	/** Stop the swerve drive. */
 	public void brake() {
-		drive(0, 0, 0);
+		driveFieldCentric(0, 0, 0);
 	}
 
 	/** See {@link SwerveDrivePoseEstimator#addVisionMeasurement(Pose2d, double)}. */
@@ -232,7 +227,7 @@ public class SimSwerveDrivetrain implements CommandSwerveDrivetrain {
 	}
 
 	public void resetPose(Pose2d pose) {
-		resetPose(pose, true);
+		resetPose(pose, false);
 	}
 
 	/** Get the estimated pose of the swerve drive on the field. */

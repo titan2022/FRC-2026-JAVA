@@ -99,7 +99,7 @@ public class Robot extends TimedRobot {
 		double turn = -controller.getRightX() * SimSwerveConstants.Swerve.kMaxAngularSpeed;
 
 		// Command drivetrain motors based on target speeds
-		drivetrain.drive(forward, strafe, turn);
+		drivetrain.driveFieldCentric(forward, strafe, turn);
 
 		// Calculate whether the gamepiece launcher runs based on our global pose estimate.
 		var curPose = drivetrain.getPose();

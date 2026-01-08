@@ -41,10 +41,6 @@ public interface CommandSwerveDrivetrain extends Subsystem {
 
   public void resetFieldOrientation();
 
-	public void setVelocities(ChassisSpeeds speeds);
-
-	public void setFieldVelocities(ChassisSpeeds speeds);
-
 	public ChassisSpeeds getVelocities();
 
 	public void brake();
@@ -59,6 +55,12 @@ public interface CommandSwerveDrivetrain extends Subsystem {
 		return getPose().getRotation();
 	}
 
+	// NOTE - You must implement one of driveFieldCentric or driveRobotCentric.
+
+	default public void driveRobotCentric(ChassisSpeeds speeds) {
+		var targetChassisSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(speeds, getHeading());
+		driveFieldCentric(targetChassisSpeeds);
+	}
 	/**
 	 * Basic drive control. A target field-relative ChassisSpeeds (vx, vy, omega) is converted to
 	 * specific swerve module states.
@@ -67,9 +69,26 @@ public interface CommandSwerveDrivetrain extends Subsystem {
 	 * @param vyMeters Y velocity (strafe left/right)
 	 * @param omegaRadians Angular velocity (rotation CCW+)
 	 */
-	default public void drive(double vxMeters, double vyMeters, double omegaRadians) {
-		var targetChassisSpeeds =
-				ChassisSpeeds.fromFieldRelativeSpeeds(vxMeters, vyMeters, omegaRadians, getHeading());
-		setVelocities(targetChassisSpeeds);
+	default public void driveRobotCentric(double vxMeters, double vyMeters, double omegaRadians) {
+		var targetChassisSpeeds = new ChassisSpeeds(vxMeters, vyMeters, omegaRadians);
+		driveRobotCentric(targetChassisSpeeds);
+	}
+
+	default public void driveFieldCentric(ChassisSpeeds speeds) {
+		var targetChassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(speeds, getHeading());
+		driveRobotCentric(targetChassisSpeeds);
+	}
+
+	/**
+	 * Basic drive control. A target field-relative ChassisSpeeds (vx, vy, omega) is converted to
+	 * specific swerve module states.
+	 *
+	 * @param vxMeters X velocity (forwards/backwards)
+	 * @param vyMeters Y velocity (strafe left/right)
+	 * @param omegaRadians Angular velocity (rotation CCW+)
+	 */
+	default public void driveFieldCentric(double vxMeters, double vyMeters, double omegaRadians) {
+		var targetChassisSpeeds = new ChassisSpeeds(vxMeters, vyMeters, omegaRadians);
+		driveFieldCentric(targetChassisSpeeds);
 	}
 }
