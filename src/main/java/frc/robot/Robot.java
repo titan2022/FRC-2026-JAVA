@@ -7,6 +7,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -15,6 +17,11 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
+
+  public final CommandXboxController driveController = new CommandXboxController(0);
+  public final CommandXboxController robotController = new CommandXboxController(1);
+
+  public final CommandSwerveDrivetrain drivetrain = new CommandSwerveDrivetrain();
 
   /**
    * This function is run when the robot is first started up and should be used for any
