@@ -62,6 +62,10 @@ public class CTRESwerveDrivetrain extends TunerSwerveDrivetrain implements Subsy
 		setControl(new SwerveRequest.SwerveDriveBrake());
 	}
 
+	public Pose2d getPose() {
+		return getState().Pose;
+	}
+
 	///// MARK - GENERATED CODE BELOW /////
 	private static final double kSimLoopPeriod = 0.005; // 5 ms
 	private Notifier m_simNotifier = null;
@@ -250,6 +254,11 @@ public class CTRESwerveDrivetrain extends TunerSwerveDrivetrain implements Subsy
 		} catch (Exception ex) {
 			DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", ex.getStackTrace());
 		}
+	}
+
+	/** Log various drivetrain values to the dashboard. */
+	public void log() {
+		
 	}
 
 	/**

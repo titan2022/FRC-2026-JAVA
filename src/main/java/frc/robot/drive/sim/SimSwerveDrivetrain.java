@@ -121,20 +121,6 @@ public class SimSwerveDrivetrain implements CommandSwerveDrivetrain {
 	}
 
 	/**
-	 * Basic drive control. A target field-relative ChassisSpeeds (vx, vy, omega) is converted to
-	 * specific swerve module states.
-	 *
-	 * @param vxMeters X velocity (forwards/backwards)
-	 * @param vyMeters Y velocity (strafe left/right)
-	 * @param omegaRadians Angular velocity (rotation CCW+)
-	 */
-	public void drive(double vxMeters, double vyMeters, double omegaRadians) {
-		var targetChassisSpeeds =
-				ChassisSpeeds.fromFieldRelativeSpeeds(vxMeters, vyMeters, omegaRadians, getHeading());
-		setChassisSpeeds(targetChassisSpeeds, true, false);
-	}
-
-	/**
 	 * Command the swerve drive to the desired chassis speeds by converting them to swerve module
 	 * states and using {@link #setModuleStates(SwerveModuleState[], boolean)}.
 	 *
@@ -215,11 +201,6 @@ public class SimSwerveDrivetrain implements CommandSwerveDrivetrain {
 	/** Get the estimated pose of the swerve drive on the field. */
 	public Pose2d getPose() {
 		return poseEstimator.getEstimatedPosition();
-	}
-
-	/** The heading of the swerve drive's estimated pose on the field. */
-	public Rotation2d getHeading() {
-		return getPose().getRotation();
 	}
 
 	/** Raw gyro yaw (this may not match the field heading!). */

@@ -4,6 +4,7 @@ import com.ctre.phoenix6.Utils;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -47,4 +48,28 @@ public interface CommandSwerveDrivetrain extends Subsystem {
 	public ChassisSpeeds getVelocities();
 
 	public void brake();
+
+	public void log();
+
+	/** Get the estimated pose of the swerve drive on the field. */
+	public Pose2d getPose();
+
+	/** The heading of the swerve drive's estimated pose on the field. */
+	default public Rotation2d getHeading() {
+		return getPose().getRotation();
+	}
+
+	/**
+	 * Basic drive control. A target field-relative ChassisSpeeds (vx, vy, omega) is converted to
+	 * specific swerve module states.
+	 *
+	 * @param vxMeters X velocity (forwards/backwards)
+	 * @param vyMeters Y velocity (strafe left/right)
+	 * @param omegaRadians Angular velocity (rotation CCW+)
+	 */
+	default public void drive(double vxMeters, double vyMeters, double omegaRadians) {
+		var targetChassisSpeeds =
+				ChassisSpeeds.fromFieldRelativeSpeeds(vxMeters, vyMeters, omegaRadians, getHeading());
+		setVelocities(targetChassisSpeeds);
+	}
 }
