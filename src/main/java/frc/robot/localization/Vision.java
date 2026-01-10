@@ -60,6 +60,7 @@ public class Vision {
 	 *     edu.wpi.first.math.estimator.SwerveDrivePoseEstimator}
 	 */
 	public Vision(EstimateConsumer estConsumer) {
+		VisionConstants.setupConstants();
 		this.estConsumer = estConsumer;
 		camera = new PhotonCamera(kCameraName);
 

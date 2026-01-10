@@ -65,8 +65,8 @@
           "length": 0.6000000238418579,
           "width": 0.5
         },
-        "bottom": 1638,
-        "builtin": "2025 Reefscape",
+        "bottom": 1914,
+        "builtin": "",
         "cameras": {
           "arrowColor": [
             0.29535865783691406,
@@ -81,10 +81,11 @@
           "weight": 1.0,
           "width": 1.0
         },
-        "height": 8.051901817321777,
-        "left": 534,
-        "right": 3466,
-        "top": 291,
+        "height": 8.069275856018066,
+        "image": "/home/ethan/Projects/IMSA/FRC/FRC-2026-JAVA/2026-field.png",
+        "left": 245,
+        "right": 3942,
+        "top": 118,
         "visibleTargetPoses": {
           "arrows": false,
           "image": "tag-blue.png",
@@ -92,7 +93,7 @@
           "selectable": false,
           "width": 0.4000000059604645
         },
-        "width": 17.54825210571289,
+        "width": 16.54119300842285,
         "window": {
           "visible": true
         }
