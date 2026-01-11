@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 
 public class VisionConstants {
@@ -28,7 +29,7 @@ public class VisionConstants {
 		try {
 			kTagLayout = new AprilTagFieldLayout(Filesystem.getDeployDirectory().toPath().resolve("2026-rebuilt-welded.json"));
 		} catch(Throwable t) {
-			kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
+			DriverStation.reportError("Failed to load 2026-rebuilt-welded.json", false);
 		}
 	}
 }
