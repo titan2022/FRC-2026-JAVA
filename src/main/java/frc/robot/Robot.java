@@ -43,19 +43,19 @@ public class Robot extends TimedRobot {
   private final CommandXboxController operatorController = new CommandXboxController(
       OperatorConstants.kOperatorControllerPort);
 
-	public final Drivetrain drivetrain = DriveUtility.makeDrivetrain(this::resetPose);
-	// public final KitbotTankDrivetrain drivetrain = new KitbotTankDrivetrain();
+	// public final Drivetrain drivetrain = DriveUtility.makeDrivetrain(this::resetPose);
+	public final KitbotTankDrivetrain drivetrain = new KitbotTankDrivetrain();
 	public final KitbotFuelSubsystem fuelSubsystem = new KitbotFuelSubsystem();
 
 	public final Vision vision = new Vision(drivetrain::addVisionMeasurement);
 
 	private Field2d debugField = new Field2d();
 
-	public SendableChooser<Command> autoChooser;
+	// public SendableChooser<Command> autoChooser;
 
 	public Robot() {
-		autoChooser = AutoBuilder.buildAutoChooser();
-		SmartDashboard.putData("Auto Chooser", autoChooser);
+		// autoChooser = AutoBuilder.buildAutoChooser();
+		// SmartDashboard.putData("Auto Chooser", autoChooser);
 
 		if(RobotBase.isReal()) {
 			SmartDashboard.putData("VisionSystemSim-main/Sim Field", debugField);
@@ -128,7 +128,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void autonomousInit() {
-		m_autonomousCommand = autoChooser.getSelected();
+		// m_autonomousCommand = autoChooser.getSelected();
 
 		// schedule the autonomous command (example)
 		if (m_autonomousCommand != null) {
@@ -172,8 +172,8 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void simulationPeriodic() {
-		SimSwerveDrivetrain simDrivetrain = (SimSwerveDrivetrain)drivetrain;
-		// KitbotTankDrivetrain simDrivetrain = (KitbotTankDrivetrain)drivetrain;
+		// SimSwerveDrivetrain simDrivetrain = (SimSwerveDrivetrain)drivetrain;
+		KitbotTankDrivetrain simDrivetrain = (KitbotTankDrivetrain)drivetrain;
 		// simDrivetrain.simulationPeriodic();
 		// // Update camera simulation
 		vision.simulationPeriodic(simDrivetrain.getSimPose());
@@ -181,7 +181,7 @@ public class Robot extends TimedRobot {
 		debugField = vision.getSimDebugField();
 		// debugField.getObject("Robot").setPose(simDrivetrain.getSimPose());
 		debugField.getObject("EstimatedRobot").setPose(simDrivetrain.getPose());
-		debugField.getObject("EstimatedRobotModules").setPoses(simDrivetrain.getModulePoses());
+		// debugField.getObject("EstimatedRobotModules").setPoses(simDrivetrain.getModulePoses());
 
 		// // Update gamepiece launcher simulation
 		// gpLauncher.simulationPeriodic();
@@ -200,9 +200,9 @@ public class Robot extends TimedRobot {
 	}
 
 	public void resetPose(Pose2d startPose) {
-		if(RobotBase.isSimulation()) {
-			((SimSwerveDrivetrain)drivetrain).resetPose(startPose, true);
-		}
+		// if(RobotBase.isSimulation()) {
+		// 	((SimSwerveDrivetrain)drivetrain).resetPose(startPose, true);
+		// }
 		vision.resetSimPose(startPose);
 	}
 }
