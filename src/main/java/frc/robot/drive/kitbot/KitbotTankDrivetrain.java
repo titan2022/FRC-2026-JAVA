@@ -16,6 +16,8 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
@@ -25,6 +27,8 @@ import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotGearing;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotMotor;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotWheelSize;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -54,6 +58,11 @@ public class KitbotTankDrivetrain extends SubsystemBase {
 	private final Pigeon2SimState imuSim = imu.getSimState();
 
 	private final DifferentialDrive drive = new DifferentialDrive(leftLeader, rightLeader);;
+	private final DifferentialDriveOdometry odometry;
+
+	private final Field2d field = new Field2d();
+
+	private Pose2d pose = null;
 
 	// Create the simulation model of our drivetrain.
 	// https://andymark.com/products/am14u6-6-wheel-drop-center-robot-drive-base-2025-frc-kit-of-parts-drive-base
@@ -98,10 +107,29 @@ public class KitbotTankDrivetrain extends SubsystemBase {
 		// so that postive values drive both sides forward
 		config.inverted(true);
 		leftLeader.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+	
+		odometry = new DifferentialDriveOdometry(
+			imu.getRotation2d(),
+			leftLeader.getEncoder().getPosition(),
+			rightLeader.getEncoder().getPosition());
+
+		SmartDashboard.putData("Field", field);
 	}
 
 	@Override
 	public void periodic() {
+		pose = odometry.update(
+			imu.getRotation2d(),
+			leftLeader.getEncoder().getPosition(),
+			rightLeader.getEncoder().getPosition()
+		);
+
+		field.setRobotPose(odometry.getPoseMeters());
+
+		SmartDashboard.putNumber("Left voltage", leftLeader.get() * RobotController.getInputVoltage());
+		SmartDashboard.putNumber("Right voltage", rightLeader.get() * RobotController.getInputVoltage());
+		SmartDashboard.putNumber("Left encoder", leftLeader.getEncoder().getPosition());
+		SmartDashboard.putNumber("Right encoder", rightLeader.getEncoder().getPosition());
 	}
 
 	@Override
@@ -127,6 +155,9 @@ public class KitbotTankDrivetrain extends SubsystemBase {
 		rightLeaderSim.setMotorCurrent(driveSim.getRightCurrentDrawAmps());
 
 		imuSim.setRawYaw(-driveSim.getHeading().getDegrees());
+
+		SmartDashboard.putNumber("Sim left position", driveSim.getLeftPositionMeters());
+		SmartDashboard.putNumber("Sim right position", driveSim.getRightPositionMeters());
 	}
 
 	// Command factory to create command to drive the robot with joystick inputs.
