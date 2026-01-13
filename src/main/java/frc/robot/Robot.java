@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -47,11 +48,17 @@ public class Robot extends TimedRobot {
 
 	public final Vision vision = new Vision(drivetrain::addVisionMeasurement);
 
+	private Field2d debugField = new Field2d();
+
 	// public SendableChooser<Command> autoChooser;
 
 	public Robot() {
 		// autoChooser = AutoBuilder.buildAutoChooser();
 		// SmartDashboard.putData("Auto Chooser", autoChooser);
+
+		if(RobotBase.isReal()) {
+			SmartDashboard.putData("VisionSystemSim-main/Sim Field", debugField);
+		}
 
 		configureBindings();
 	}
@@ -103,6 +110,8 @@ public class Robot extends TimedRobot {
 		// 		new Transform2d(new Translation2d(1.0, 1.0), new Rotation2d(0.17 * 2 * Math.PI));
 		// 	drivetrain.resetPose(drivetrain.getPose().plus(disturbance), false);
 		// }
+
+		debugField.getObject("EstimatedRobot").setPose(drivetrain.getPose());
 
 		// Log values to the dashboard
 		drivetrain.log();
@@ -161,9 +170,9 @@ public class Robot extends TimedRobot {
 		// // Update camera simulation
 		vision.simulationPeriodic(simDrivetrain.getSimPose());
 
-		var debugField = vision.getSimDebugField();
-		debugField.getObject("SimulatedRobot").setPose(simDrivetrain.getSimPose());
-		debugField.getObject("EstimatedRobot").setPose(simDrivetrain.getPose());
+		debugField = vision.getSimDebugField();
+		// debugField.getObject("Robot").setPose(simDrivetrain.getSimPose());
+		// debugField.getObject("EstimatedRobot").setPose(simDrivetrain.getPose());
 		// debugField.getObject("EstimatedRobotModules").setPoses(simDrivetrain.getModulePoses());
 
 		// // Update gamepiece launcher simulation
