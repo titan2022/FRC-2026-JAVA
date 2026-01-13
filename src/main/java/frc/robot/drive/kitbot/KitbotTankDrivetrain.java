@@ -79,4 +79,8 @@ public class KitbotTankDrivetrain extends SubsystemBase {
 		return this.run(
 				() -> drive.arcadeDrive(xSpeed.getAsDouble(), zRotation.getAsDouble()));
 	}
+
+	public void brake() {
+		drive.stopMotor();
+	}
 }
