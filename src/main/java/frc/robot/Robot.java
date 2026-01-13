@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.drive.CommandSwerveDrivetrain;
+import frc.robot.drive.Drivetrain;
 import frc.robot.drive.DriveUtility;
 import frc.robot.drive.kitbot.KitbotTankDrivetrain;
 import frc.robot.drive.pvswerve.SimSwerveConstants;
@@ -45,7 +45,7 @@ public class Robot extends TimedRobot {
 	public final KitbotTankDrivetrain drivetrain = new KitbotTankDrivetrain();
 	public final KitbotFuelSubsystem fuelSubsystem = new KitbotFuelSubsystem();
 
-	// public final Vision vision = new Vision(drivetrain::addVisionMeasurement);
+	public final Vision vision = new Vision(drivetrain::addVisionMeasurement);
 
 	// public SendableChooser<Command> autoChooser;
 
@@ -93,7 +93,7 @@ public class Robot extends TimedRobot {
 		// }
 
 		// Update vision
-		// vision.periodic();
+		vision.periodic();
 
 		// Test/Example only!
 		// Apply an offset to pose estimator to test vision correction
@@ -105,7 +105,7 @@ public class Robot extends TimedRobot {
 		// }
 
 		// Log values to the dashboard
-		// drivetrain.log();
+		drivetrain.log();
 	}
 
 	@Override
@@ -156,12 +156,14 @@ public class Robot extends TimedRobot {
 	@Override
 	public void simulationPeriodic() {
 		// SimSwerveDrivetrain simDrivetrain = (SimSwerveDrivetrain)drivetrain;
+		KitbotTankDrivetrain simDrivetrain = (KitbotTankDrivetrain)drivetrain;
 		// simDrivetrain.simulationPeriodic();
 		// // Update camera simulation
-		// vision.simulationPeriodic(simDrivetrain.getSimPose());
+		vision.simulationPeriodic(simDrivetrain.getSimPose());
 
-		// var debugField = vision.getSimDebugField();
-		// debugField.getObject("EstimatedRobot").setPose(simDrivetrain.getPose());
+		var debugField = vision.getSimDebugField();
+		debugField.getObject("SimulatedRobot").setPose(simDrivetrain.getSimPose());
+		debugField.getObject("EstimatedRobot").setPose(simDrivetrain.getPose());
 		// debugField.getObject("EstimatedRobotModules").setPoses(simDrivetrain.getModulePoses());
 
 		// // Update gamepiece launcher simulation

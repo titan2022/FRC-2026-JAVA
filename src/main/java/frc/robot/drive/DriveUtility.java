@@ -8,7 +8,7 @@ import frc.robot.drive.ctre.CTRESwerveDrivetrain;
 import frc.robot.drive.pvswerve.SimSwerveDrivetrain;
 
 public class DriveUtility {
-  public static CommandSwerveDrivetrain makeDrivetrain(Consumer<Pose2d> resetPose) {
+  public static Drivetrain makeDrivetrain(Consumer<Pose2d> resetPose) {
     if(RobotBase.isReal()) {
       return new CTRESwerveDrivetrain();
     } else {

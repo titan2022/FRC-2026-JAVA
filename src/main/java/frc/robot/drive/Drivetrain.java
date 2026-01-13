@@ -10,7 +10,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
-public interface CommandSwerveDrivetrain extends Subsystem {
+public interface Drivetrain extends Subsystem {
   /**
 	 * Adds a vision measurement to the Kalman Filter. This will correct the odometry pose estimate
 	 * while still accounting for measurement noise.

@@ -15,9 +15,18 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -28,15 +37,16 @@ import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotGearing;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotMotor;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotWheelSize;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.drive.Drivetrain;
+
 import static frc.robot.drive.kitbot.KitbotDriveConstants.*;
 
-public class KitbotTankDrivetrain extends SubsystemBase {
+public class KitbotTankDrivetrain extends SubsystemBase implements Drivetrain {
 	// private final SparkMax leftLeader;
 	// private final SparkMax leftFollower;
 	// private final SparkMax rightLeader;
@@ -59,9 +69,16 @@ public class KitbotTankDrivetrain extends SubsystemBase {
 	private final Pigeon2SimState imuSim = imu.getSimState();
 
 	private final DifferentialDrive drive = new DifferentialDrive(leftLeader, rightLeader);;
-	private DifferentialDriveOdometry odometry;
-
-	private final Field2d field = new Field2d();
+	private DifferentialDriveOdometry simOdometry;
+	
+	private DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(26.0));
+	
+	private DifferentialDrivePoseEstimator poseEstimator = new DifferentialDrivePoseEstimator(
+		kinematics,
+		new Rotation2d(),
+		0,
+		0,
+		new Pose2d());
 
 	private Pose2d pose = null;
 
@@ -109,15 +126,13 @@ public class KitbotTankDrivetrain extends SubsystemBase {
 		config.inverted(true);
 		leftLeader.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 	
-		odometry = null;
+		simOdometry = null;
 		if(RobotBase.isSimulation()) {
-			odometry = new DifferentialDriveOdometry(
+			simOdometry = new DifferentialDriveOdometry(
 				imu.getRotation2d(),
 				driveSim.getLeftPositionMeters(),
 				driveSim.getRightPositionMeters());
 		}
-
-		SmartDashboard.putData("Field", field);
 	}
 
 	@Override
@@ -151,13 +166,11 @@ public class KitbotTankDrivetrain extends SubsystemBase {
 		SmartDashboard.putNumber("Sim left position", driveSim.getLeftPositionMeters());
 		SmartDashboard.putNumber("Sim right position", driveSim.getRightPositionMeters());
 
-		pose = odometry.update(
+		simOdometry.update(
 			imu.getRotation2d(),
 			driveSim.getLeftPositionMeters(),
 			driveSim.getRightPositionMeters()
 		);
-
-		field.setRobotPose(odometry.getPoseMeters());
 
 		SmartDashboard.putNumber("Left voltage", leftLeader.get() * RobotController.getInputVoltage());
 		SmartDashboard.putNumber("Right voltage", rightLeader.get() * RobotController.getInputVoltage());
@@ -171,7 +184,48 @@ public class KitbotTankDrivetrain extends SubsystemBase {
 				() -> drive.arcadeDrive(xSpeed.getAsDouble(), zRotation.getAsDouble()));
 	}
 
+	/** See {@link DifferentialDrivePoseEstimator#addVisionMeasurement(Pose2d, double)}. */
+	public void addVisionMeasurement(Pose2d visionMeasurement, double timestampSeconds) {
+		poseEstimator.addVisionMeasurement(visionMeasurement, timestampSeconds);
+	}
+
+	/** See {@link DifferentialDrivePoseEstimator#addVisionMeasurement(Pose2d, double, Matrix)}. */
+	public void addVisionMeasurement(
+			Pose2d visionMeasurement, double timestampSeconds, Matrix<N3, N1> stdDevs) {
+		poseEstimator.addVisionMeasurement(visionMeasurement, timestampSeconds, stdDevs);
+	}
+
+	public void resetFieldOrientation() {
+		// TODO
+	}
+
+	public ChassisSpeeds getVelocities() {
+		return null;
+	}
+
 	public void brake() {
 		drive.stopMotor();
+	}
+
+	public void log() {
+	}
+
+	/** Get the estimated pose of the swerve drive on the field. */
+	public Pose2d getPose() {
+		return poseEstimator.getEstimatedPosition();
+	}
+
+	/** The heading of the swerve drive's estimated pose on the field. */
+	public Rotation2d getHeading() {
+		return getPose().getRotation();
+	}
+
+	public void driveRobotCentric(ChassisSpeeds speeds) {
+		DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(speeds);
+		drive.tankDrive(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond);
+	}
+
+	public Pose2d getSimPose() {
+		return simOdometry.getPoseMeters();
 	}
 }
