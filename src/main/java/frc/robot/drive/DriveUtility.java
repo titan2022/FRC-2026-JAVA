@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.drive.ctre.CTRESwerveDrivetrain;
-import frc.robot.drive.sim.SimSwerveDrivetrain;
+import frc.robot.drive.pvswerve.SimSwerveDrivetrain;
 
 public class DriveUtility {
   public static CommandSwerveDrivetrain makeDrivetrain(Consumer<Pose2d> resetPose) {

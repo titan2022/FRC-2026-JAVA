@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-package frc.robot.drive.sim;
+package frc.robot.drive.pvswerve;
 
-import static frc.robot.drive.sim.SimSwerveConstants.Swerve.*;
+import static frc.robot.drive.pvswerve.SimSwerveConstants.Swerve.*;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;

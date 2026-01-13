@@ -23,9 +23,9 @@
  * SOFTWARE.
  */
 
-package frc.robot.drive.sim;
+package frc.robot.drive.pvswerve;
 
-import static frc.robot.drive.sim.SimSwerveConstants.Swerve.*;
+import static frc.robot.drive.pvswerve.SimSwerveConstants.Swerve.*;
 
 import java.util.function.Consumer;
 
@@ -54,7 +54,7 @@ import edu.wpi.first.wpilibj.simulation.ADXRS450_GyroSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.drive.CommandSwerveDrivetrain;
-import frc.robot.drive.sim.SimSwerveConstants.Swerve.ModuleConstants;
+import frc.robot.drive.pvswerve.SimSwerveConstants.Swerve.ModuleConstants;
 import pabeles.concurrency.ConcurrencyOps.Reset;
 
 public class SimSwerveDrivetrain implements CommandSwerveDrivetrain {

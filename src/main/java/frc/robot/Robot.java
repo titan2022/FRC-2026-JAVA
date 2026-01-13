@@ -21,8 +21,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.drive.CommandSwerveDrivetrain;
 import frc.robot.drive.DriveUtility;
-import frc.robot.drive.sim.SimSwerveConstants;
-import frc.robot.drive.sim.SimSwerveDrivetrain;
+import frc.robot.drive.pvswerve.SimSwerveConstants;
+import frc.robot.drive.pvswerve.SimSwerveDrivetrain;
 import frc.robot.localization.Vision;
 import frc.robot.subsystems.GamepieceLauncher;
 
