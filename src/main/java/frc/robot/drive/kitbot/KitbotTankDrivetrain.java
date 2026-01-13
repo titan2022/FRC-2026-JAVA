@@ -20,6 +20,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
@@ -58,7 +59,7 @@ public class KitbotTankDrivetrain extends SubsystemBase {
 	private final Pigeon2SimState imuSim = imu.getSimState();
 
 	private final DifferentialDrive drive = new DifferentialDrive(leftLeader, rightLeader);;
-	private final DifferentialDriveOdometry odometry;
+	private DifferentialDriveOdometry odometry;
 
 	private final Field2d field = new Field2d();
 
@@ -108,28 +109,19 @@ public class KitbotTankDrivetrain extends SubsystemBase {
 		config.inverted(true);
 		leftLeader.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 	
-		odometry = new DifferentialDriveOdometry(
-			imu.getRotation2d(),
-			leftLeader.getEncoder().getPosition(),
-			rightLeader.getEncoder().getPosition());
+		odometry = null;
+		if(RobotBase.isSimulation()) {
+			odometry = new DifferentialDriveOdometry(
+				imu.getRotation2d(),
+				driveSim.getLeftPositionMeters(),
+				driveSim.getRightPositionMeters());
+		}
 
 		SmartDashboard.putData("Field", field);
 	}
 
 	@Override
 	public void periodic() {
-		pose = odometry.update(
-			imu.getRotation2d(),
-			leftLeader.getEncoder().getPosition(),
-			rightLeader.getEncoder().getPosition()
-		);
-
-		field.setRobotPose(odometry.getPoseMeters());
-
-		SmartDashboard.putNumber("Left voltage", leftLeader.get() * RobotController.getInputVoltage());
-		SmartDashboard.putNumber("Right voltage", rightLeader.get() * RobotController.getInputVoltage());
-		SmartDashboard.putNumber("Left encoder", leftLeader.getEncoder().getPosition());
-		SmartDashboard.putNumber("Right encoder", rightLeader.getEncoder().getPosition());
 	}
 
 	@Override
@@ -158,6 +150,19 @@ public class KitbotTankDrivetrain extends SubsystemBase {
 
 		SmartDashboard.putNumber("Sim left position", driveSim.getLeftPositionMeters());
 		SmartDashboard.putNumber("Sim right position", driveSim.getRightPositionMeters());
+
+		pose = odometry.update(
+			imu.getRotation2d(),
+			driveSim.getLeftPositionMeters(),
+			driveSim.getRightPositionMeters()
+		);
+
+		field.setRobotPose(odometry.getPoseMeters());
+
+		SmartDashboard.putNumber("Left voltage", leftLeader.get() * RobotController.getInputVoltage());
+		SmartDashboard.putNumber("Right voltage", rightLeader.get() * RobotController.getInputVoltage());
+		SmartDashboard.putNumber("Left encoder", leftLeader.getEncoder().getPosition());
+		SmartDashboard.putNumber("Right encoder", rightLeader.getEncoder().getPosition());
 	}
 
 	// Command factory to create command to drive the robot with joystick inputs.
