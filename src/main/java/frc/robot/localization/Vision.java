@@ -34,6 +34,8 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
@@ -46,13 +48,19 @@ import org.photonvision.simulation.VisionSystemSim;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class Vision {
-	private final PhotonCamera camera;
-	private final PhotonPoseEstimator photonEstimator;
+	private static class CameraWrapper {
+		public VisionConstants.CameraInfo cameraInfo = null;
+		public PhotonCamera camera = null;
+		public PhotonCameraSim cameraSim = null;
+		public PhotonPoseEstimator photonEstimator = null;
+	}
+	
 	private Matrix<N3, N1> curStdDevs;
 	private final EstimateConsumer estConsumer;
 
+	private ArrayList<CameraWrapper> cameras = new ArrayList<>();
+
 	// Simulation
-	private PhotonCameraSim cameraSim;
 	private VisionSystemSim visionSim;
 
 	/**
@@ -62,59 +70,70 @@ public class Vision {
 	public Vision(EstimateConsumer estConsumer) {
 		VisionConstants.setupConstants();
 		this.estConsumer = estConsumer;
-		camera = new PhotonCamera(kCameraName);
 
-		photonEstimator =
-				new PhotonPoseEstimator(kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, kRobotToCam);
-		photonEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
-
-		// ----- Simulation
 		if (RobotBase.isSimulation()) {
 			// Create the vision system simulation which handles cameras and targets on the field.
 			visionSim = new VisionSystemSim("main");
 			// Add all the AprilTags inside the tag layout as visible targets to this simulated field.
 			visionSim.addAprilTags(kTagLayout);
-			// Create simulated camera properties. These can be set to mimic your actual camera.
-			var cameraProp = new SimCameraProperties();
-			cameraProp.setCalibration(960, 720, Rotation2d.fromDegrees(90));
-			cameraProp.setCalibError(0.35, 0.10);
-			cameraProp.setFPS(15);
-			cameraProp.setAvgLatencyMs(50);
-			cameraProp.setLatencyStdDevMs(15);
-			// Create a PhotonCameraSim which will update the linked PhotonCamera's values with visible
-			// targets.
-			cameraSim = new PhotonCameraSim(camera, cameraProp, kTagLayout);
-			// Add the simulated camera to view the targets on this simulated field.
-			visionSim.addCamera(cameraSim, kRobotToCam);
+		}
 
-			cameraSim.enableDrawWireframe(true);
+		for(VisionConstants.CameraInfo cameraInfo : VisionConstants.cameraInfos) {
+			CameraWrapper cameraWrapper = new CameraWrapper();
+			cameraWrapper.camera = new PhotonCamera(cameraInfo.cameraName);
+
+			cameraWrapper.photonEstimator =
+					new PhotonPoseEstimator(kTagLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, cameraInfo.robotToCam);
+			cameraWrapper.photonEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+
+			// ----- Simulation
+			if (RobotBase.isSimulation()) {
+				// Create simulated camera properties. These can be set to mimic your actual camera.
+				var cameraProp = new SimCameraProperties();
+				cameraProp.setCalibration(960, 720, Rotation2d.fromDegrees(90));
+				cameraProp.setCalibError(0.35, 0.10);
+				cameraProp.setFPS(15);
+				cameraProp.setAvgLatencyMs(50);
+				cameraProp.setLatencyStdDevMs(15);
+				// Create a PhotonCameraSim which will update the linked PhotonCamera's values with visible
+				// targets.
+				cameraWrapper.cameraSim = new PhotonCameraSim(cameraWrapper.camera, cameraProp, kTagLayout);
+				// Add the simulated camera to view the targets on this simulated field.
+				visionSim.addCamera(cameraWrapper.cameraSim, cameraInfo.robotToCam);
+
+				cameraWrapper.cameraSim.enableDrawWireframe(true);
+			}
+
+			cameras.add(cameraWrapper);
 		}
 	}
 
 	public void periodic() {
 		Optional<EstimatedRobotPose> visionEst = Optional.empty();
-		for (var change : camera.getAllUnreadResults()) {
-			visionEst = photonEstimator.update(change);
-			updateEstimationStdDevs(visionEst, change.getTargets());
+		for(CameraWrapper cameraWrapper : cameras) {
+			for(var change : cameraWrapper.camera.getAllUnreadResults()) {
+				visionEst = cameraWrapper.photonEstimator.update(change);
+				updateEstimationStdDevs(visionEst, change.getTargets(), cameraWrapper);
 
-			if (RobotBase.isSimulation()) {
-				visionEst.ifPresentOrElse(
-						est ->
-								getSimDebugField()
-										.getObject("VisionEstimation")
-										.setPose(est.estimatedPose.toPose2d()),
-						() -> {
-							getSimDebugField().getObject("VisionEstimation").setPoses();
+				if (RobotBase.isSimulation()) {
+					visionEst.ifPresentOrElse(
+							est ->
+									getSimDebugField()
+											.getObject("VisionEstimation")
+											.setPose(est.estimatedPose.toPose2d()),
+							() -> {
+								getSimDebugField().getObject("VisionEstimation").setPoses();
+							});
+				}
+
+				visionEst.ifPresent(
+						est -> {
+							// Change our trust in the measurement based on the tags we can see
+							var estStdDevs = getEstimationStdDevs();
+
+							estConsumer.accept(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
 						});
 			}
-
-			visionEst.ifPresent(
-					est -> {
-						// Change our trust in the measurement based on the tags we can see
-						var estStdDevs = getEstimationStdDevs();
-
-						estConsumer.accept(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
-					});
 		}
 	}
 
@@ -126,7 +145,7 @@ public class Vision {
 	 * @param targets All targets in this camera frame
 	 */
 	private void updateEstimationStdDevs(
-			Optional<EstimatedRobotPose> estimatedPose, List<PhotonTrackedTarget> targets) {
+			Optional<EstimatedRobotPose> estimatedPose, List<PhotonTrackedTarget> targets, CameraWrapper cameraWrapper) {
 		if (estimatedPose.isEmpty()) {
 			// No pose input. Default to single-tag std devs
 			curStdDevs = kSingleTagStdDevs;
@@ -139,7 +158,7 @@ public class Vision {
 
 			// Precalculation - see how many tags we found, and calculate an average-distance metric
 			for (var tgt : targets) {
-				var tagPose = photonEstimator.getFieldTags().getTagPose(tgt.getFiducialId());
+				var tagPose = cameraWrapper.photonEstimator.getFieldTags().getTagPose(tgt.getFiducialId());
 				if (tagPose.isEmpty()) continue;
 				numTags++;
 				avgDist +=
