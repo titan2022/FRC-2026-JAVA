@@ -13,10 +13,30 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 
 public class VisionConstants {
-	public static final String kCameraName = "YOUR CAMERA NAME";
-	// Cam mounted facing forward, half a meter forward of center, half a meter up from center.
-	public static final Transform3d kRobotToCam =
-					new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, 0));
+	public static class CameraInfo {
+		public String cameraName;
+		public Transform3d robotToCam;
+
+		public CameraInfo(String cameraName, Transform3d robotToCam) {
+			this.cameraName = cameraName;
+			this.robotToCam = robotToCam;
+		}
+	}
+
+	public static final CameraInfo camera1info = new CameraInfo(
+		"1",
+		new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, 0))
+	);
+
+	public static final CameraInfo camera2info = new CameraInfo(
+		"2",
+		new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, Math.PI))
+	);
+
+	public static final CameraInfo[] cameraInfos = {
+		camera1info,
+		camera2info
+	};
 
 	// The standard deviations of our vision estimated poses, which affect correction rate
 	// (Fake values. Experiment and determine estimation noise on an actual robot.)
