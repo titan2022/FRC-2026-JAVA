@@ -7,6 +7,8 @@ public class KitbotDriveConstants {
 	public static final int RIGHT_LEADER_ID = 3;
 	public static final int RIGHT_FOLLOWER_ID = 4;
 
+	public static final int PIGEON_ID = 5;
+
 	// Current limit for drivetrain motors. 60A is a reasonable maximum to reduce
 	// likelihood of tripping breakers or damaging CIM motors
 	public static final int DRIVE_MOTOR_CURRENT_LIMIT = 60;
