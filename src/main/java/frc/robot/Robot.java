@@ -43,18 +43,19 @@ public class Robot extends TimedRobot {
   private final CommandXboxController operatorController = new CommandXboxController(
       OperatorConstants.kOperatorControllerPort);
 
-	public final KitbotTankDrivetrain drivetrain = new KitbotTankDrivetrain();
+	public final Drivetrain drivetrain = DriveUtility.makeDrivetrain(this::resetPose);
+	// public final KitbotTankDrivetrain drivetrain = new KitbotTankDrivetrain();
 	public final KitbotFuelSubsystem fuelSubsystem = new KitbotFuelSubsystem();
 
 	public final Vision vision = new Vision(drivetrain::addVisionMeasurement);
 
 	private Field2d debugField = new Field2d();
 
-	// public SendableChooser<Command> autoChooser;
+	public SendableChooser<Command> autoChooser;
 
 	public Robot() {
-		// autoChooser = AutoBuilder.buildAutoChooser();
-		// SmartDashboard.putData("Auto Chooser", autoChooser);
+		autoChooser = AutoBuilder.buildAutoChooser();
+		SmartDashboard.putData("Auto Chooser", autoChooser);
 
 		if(RobotBase.isReal()) {
 			SmartDashboard.putData("VisionSystemSim-main/Sim Field", debugField);
@@ -85,10 +86,10 @@ public class Robot extends TimedRobot {
 		// value). The X-axis is also inverted so a positive value (stick to the right)
 		// results in clockwise rotation (front of the robot turning right). Both axes
 		// are also scaled down so the rotation is more easily controllable.
-		drivetrain.setDefaultCommand(
-				drivetrain.driveArcade(
-						() -> -driverController.getLeftY() * OperatorConstants.DRIVE_SCALING,
-						() -> -driverController.getRightX() * OperatorConstants.ROTATION_SCALING));
+		// drivetrain.setDefaultCommand(
+		// 		drivetrain.driveArcade(
+		// 				() -> -driverController.getLeftY() * OperatorConstants.DRIVE_SCALING,
+		// 				() -> -driverController.getRightX() * OperatorConstants.ROTATION_SCALING));
 	}
 
 	@Override
@@ -111,7 +112,7 @@ public class Robot extends TimedRobot {
 		// 	drivetrain.resetPose(drivetrain.getPose().plus(disturbance), false);
 		// }
 
-		debugField.getObject("EstimatedRobot").setPose(drivetrain.getPose());
+		// debugField.getObject("EstimatedRobot").setPose(drivetrain.getPose());
 
 		// Log values to the dashboard
 		drivetrain.log();
@@ -127,12 +128,12 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void autonomousInit() {
-		// m_autonomousCommand = autoChooser.getSelected();
+		m_autonomousCommand = autoChooser.getSelected();
 
-		// // schedule the autonomous command (example)
-		// if (m_autonomousCommand != null) {
-		// 	m_autonomousCommand.schedule();
-		// }
+		// schedule the autonomous command (example)
+		if (m_autonomousCommand != null) {
+			m_autonomousCommand.schedule();
+		}
 	}
 
 	@Override
@@ -149,6 +150,13 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopPeriodic() {
+		// Calculate drivetrain commands from Joystick values
+		double forward = -driverController.getLeftY() * SimSwerveConstants.Swerve.kMaxLinearSpeed;
+		double strafe = -driverController.getLeftX() * SimSwerveConstants.Swerve.kMaxLinearSpeed;
+		double turn = -driverController.getRightX() * SimSwerveConstants.Swerve.kMaxAngularSpeed;
+
+		// Command drivetrain motors based on target speeds
+		drivetrain.driveRobotCentric(forward, strafe, turn);
 	}
 
 	@Override
@@ -164,16 +172,16 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void simulationPeriodic() {
-		// SimSwerveDrivetrain simDrivetrain = (SimSwerveDrivetrain)drivetrain;
-		KitbotTankDrivetrain simDrivetrain = (KitbotTankDrivetrain)drivetrain;
+		SimSwerveDrivetrain simDrivetrain = (SimSwerveDrivetrain)drivetrain;
+		// KitbotTankDrivetrain simDrivetrain = (KitbotTankDrivetrain)drivetrain;
 		// simDrivetrain.simulationPeriodic();
 		// // Update camera simulation
 		vision.simulationPeriodic(simDrivetrain.getSimPose());
 
 		debugField = vision.getSimDebugField();
 		// debugField.getObject("Robot").setPose(simDrivetrain.getSimPose());
-		// debugField.getObject("EstimatedRobot").setPose(simDrivetrain.getPose());
-		// debugField.getObject("EstimatedRobotModules").setPoses(simDrivetrain.getModulePoses());
+		debugField.getObject("EstimatedRobot").setPose(simDrivetrain.getPose());
+		debugField.getObject("EstimatedRobotModules").setPoses(simDrivetrain.getModulePoses());
 
 		// // Update gamepiece launcher simulation
 		// gpLauncher.simulationPeriodic();
@@ -188,13 +196,13 @@ public class Robot extends TimedRobot {
 	}
 
 	public void resetPose() {
-		// resetPose(new Pose2d(1, 1, new Rotation2d()));
+		resetPose(new Pose2d(1, 1, new Rotation2d()));
 	}
 
 	public void resetPose(Pose2d startPose) {
-		// if(RobotBase.isSimulation()) {
-		// 	((SimSwerveDrivetrain)drivetrain).resetPose(startPose, true);
-		// }
-		// vision.resetSimPose(startPose);
+		if(RobotBase.isSimulation()) {
+			((SimSwerveDrivetrain)drivetrain).resetPose(startPose, true);
+		}
+		vision.resetSimPose(startPose);
 	}
 }

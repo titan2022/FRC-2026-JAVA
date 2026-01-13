@@ -36,7 +36,7 @@ import frc.robot.drive.ctre.TunerConstants.TunerSwerveDrivetrain;
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements
  * Subsystem so it can easily be used in command-based projects.
  */
-public class CTRESwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem, Drivetrain {
+public class CTRESwerveDrivetrain extends TunerSwerveDrivetrain implements Drivetrain {
 	public CTRESwerveDrivetrain() {
 		this(TunerConstants.DrivetrainConstants, TunerConstants.FrontLeft, TunerConstants.FrontRight, TunerConstants.BackLeft, TunerConstants.BackRight);
 	}

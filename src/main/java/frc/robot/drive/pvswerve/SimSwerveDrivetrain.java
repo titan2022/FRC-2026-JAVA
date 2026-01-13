@@ -52,12 +52,13 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.simulation.ADXRS450_GyroSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.drive.Drivetrain;
 import frc.robot.drive.pvswerve.SimSwerveConstants.Swerve.ModuleConstants;
 import pabeles.concurrency.ConcurrencyOps.Reset;
 
-public class SimSwerveDrivetrain implements Drivetrain {
+public class SimSwerveDrivetrain extends SubsystemBase implements Drivetrain {
 	// Construct the swerve modules with their respective constants.
 	// The SwerveModule class will handle all the details of controlling the modules.
 	private final SwerveModule[] swerveMods = {
