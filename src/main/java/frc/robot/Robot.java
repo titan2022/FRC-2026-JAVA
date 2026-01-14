@@ -28,7 +28,6 @@ import frc.robot.drive.pvswerve.SimSwerveConstants;
 import frc.robot.drive.pvswerve.SimSwerveDrivetrain;
 import frc.robot.localization.Vision;
 import frc.robot.subsystems.GamepieceLauncher;
-import frc.robot.subsystems.KitbotFuelConstants;
 import frc.robot.subsystems.KitbotFuelSubsystem;
 import frc.robot.Constants.*;
 
@@ -71,7 +70,7 @@ public class Robot extends TimedRobot {
 		// While the right bumper on the operator controller is held, spin up for 1
 		// second, then launch fuel. When the button is released, stop.
 		operatorController.rightBumper()
-				.whileTrue(fuelSubsystem.spinUpCommand().withTimeout(KitbotFuelConstants.SPIN_UP_SECONDS)
+				.whileTrue(fuelSubsystem.spinUpCommand().withTimeout(KitbotFuelSubsystem.SPIN_UP_SECONDS)
 						.andThen(fuelSubsystem.launchCommand())
 						.finallyDo(() -> fuelSubsystem.stop()));
 		// While the A button is held on the operator controller, eject fuel back out
