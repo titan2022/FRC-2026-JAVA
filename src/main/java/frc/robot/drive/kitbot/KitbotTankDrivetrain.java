@@ -6,7 +6,9 @@ package frc.robot.drive.kitbot;
 
 import java.util.function.DoubleSupplier;
 
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.Pigeon2;
+import com.ctre.phoenix6.sim.CANcoderSimState;
 import com.ctre.phoenix6.sim.Pigeon2SimState;
 import com.revrobotics.sim.SparkMaxSim;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -28,7 +30,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -42,9 +44,8 @@ import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.drive.Drivetrain;
-
-import static frc.robot.drive.kitbot.KitbotDriveConstants.*;
 
 public class KitbotTankDrivetrain extends SubsystemBase implements Drivetrain {
 	// private final SparkMax leftLeader;
@@ -52,35 +53,54 @@ public class KitbotTankDrivetrain extends SubsystemBase implements Drivetrain {
 	// private final SparkMax rightLeader;
 	// private final SparkMax rightFollower;
 
+	// Motor controller IDs for drivetrain motors
+	public static final int LEFT_LEADER_ID = 1;
+	public static final int LEFT_FOLLOWER_ID = 2;
+	public static final int RIGHT_LEADER_ID = 3;
+	public static final int RIGHT_FOLLOWER_ID = 4;
+
+	public static final int LEFT_ENCODER_ID = 5;
+	public static final int RIGHT_ENCODER_ID = 6;
+
+	public static final int PIGEON_ID = 7;
+
+	// Current limit for drivetrain motors. 60A is a reasonable maximum to reduce
+	// likelihood of tripping breakers or damaging CIM motors
+	public static final int DRIVE_MOTOR_CURRENT_LIMIT = 60;
+
+	public static final double WHEEL_CIRCUMFERENCE = edu.wpi.first.math.util.Units.inchesToMeters(6) * Math.PI;
+
+	public static final double MAX_SPEED = 2; // m/s
+
 	private final SparkMax leftLeader = new SparkMax(LEFT_LEADER_ID, MotorType.kBrushed);
 	private final SparkMax leftFollower = new SparkMax(LEFT_FOLLOWER_ID, MotorType.kBrushed);
+	private final CANcoder leftEncoder = new CANcoder(LEFT_ENCODER_ID);
 	
 	private final DCMotor leftGearbox = DCMotor.getCIM(2);
 	private final SparkMaxSim leftLeaderSim = new SparkMaxSim(leftLeader, leftGearbox);
 	private final SparkMaxSim leftFollowerSim = new SparkMaxSim(leftFollower, leftGearbox);
-	
+	private final CANcoderSimState leftEncoderSim = leftEncoder.getSimState();
+
 	private final SparkMax rightLeader = new SparkMax(RIGHT_LEADER_ID, MotorType.kBrushed);
 	private final SparkMax rightFollower = new SparkMax(RIGHT_FOLLOWER_ID, MotorType.kBrushed);
+	private final CANcoder rightEncoder = new CANcoder(RIGHT_ENCODER_ID);
+	
 	private final DCMotor rightGearbox = DCMotor.getCIM(2);
 	private final SparkMaxSim rightLeaderSim = new SparkMaxSim(rightLeader, rightGearbox);
 	private final SparkMaxSim rightFollowerSim = new SparkMaxSim(rightFollower, rightGearbox);
+	private final CANcoderSimState rightEncoderSim = rightEncoder.getSimState();
 
 	private final Pigeon2 imu = new Pigeon2(PIGEON_ID);
 	private final Pigeon2SimState imuSim = imu.getSimState();
 
 	private final DifferentialDrive drive = new DifferentialDrive(leftLeader, rightLeader);;
-	private DifferentialDriveOdometry simOdometry;
-	
-	private DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Units.inchesToMeters(26.0));
-	
-	private DifferentialDrivePoseEstimator poseEstimator = new DifferentialDrivePoseEstimator(
-		kinematics,
-		new Rotation2d(),
-		0,
-		0,
-		new Pose2d());
+	// private final DifferentialDriveOdometry odometry;
 
-	private Pose2d pose = null;
+	private final DifferentialDriveOdometry simOdometry;
+	
+	private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(edu.wpi.first.math.util.Units.inchesToMeters(26.0));
+	
+	private final DifferentialDrivePoseEstimator poseEstimator;
 
 	// Create the simulation model of our drivetrain.
 	// https://andymark.com/products/am14u6-6-wheel-drop-center-robot-drive-base-2025-frc-kit-of-parts-drive-base
@@ -91,8 +111,11 @@ public class KitbotTankDrivetrain extends SubsystemBase implements Drivetrain {
 		null                         // No measurement noise.
 	);
 
-
 	public KitbotTankDrivetrain() {
+		this(new Pose2d());
+	}
+
+	public KitbotTankDrivetrain(Pose2d startingPose) {
 		// Set can timeout. Because this project only sets parameters once on
 		// construction, the timeout can be long without blocking robot operation. Code
 		// which sets or gets parameters during operation may need a shorter timeout.
@@ -126,17 +149,37 @@ public class KitbotTankDrivetrain extends SubsystemBase implements Drivetrain {
 		config.inverted(true);
 		leftLeader.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 	
-		simOdometry = null;
+		// odometry = new DifferentialDriveOdometry(
+		// 	imu.getRotation2d(),
+		// 	leftEncoder.getPosition().getValue().in(Units.Rotation) * WHEEL_CIRCUMFERENCE,
+		// 	rightEncoder.getPosition().getValue().in(Units.Rotation) * WHEEL_CIRCUMFERENCE,
+		// 	startingPose);
+
 		if(RobotBase.isSimulation()) {
 			simOdometry = new DifferentialDriveOdometry(
 				imu.getRotation2d(),
 				driveSim.getLeftPositionMeters(),
-				driveSim.getRightPositionMeters());
+				driveSim.getRightPositionMeters(),
+				startingPose);
+		} else {
+			simOdometry = null;
 		}
+		
+		poseEstimator = new DifferentialDrivePoseEstimator(
+			kinematics,
+			imu.getRotation2d(),
+			leftEncoder.getPosition().getValue().in(Units.Rotation) * WHEEL_CIRCUMFERENCE,
+			rightEncoder.getPosition().getValue().in(Units.Rotation) * WHEEL_CIRCUMFERENCE,
+			startingPose);
 	}
 
 	@Override
 	public void periodic() {
+		poseEstimator.update(
+			imu.getRotation2d(),
+			leftEncoder.getPosition().getValue().in(Units.Rotation) * WHEEL_CIRCUMFERENCE,
+			rightEncoder.getPosition().getValue().in(Units.Rotation) * WHEEL_CIRCUMFERENCE
+		);
 	}
 
 	@Override
@@ -153,13 +196,15 @@ public class KitbotTankDrivetrain extends SubsystemBase implements Drivetrain {
 		driveSim.update(0.02);
 
 		// Update all of our sensors.
-		leftLeaderSim.setPosition(driveSim.getLeftPositionMeters());
-		leftLeaderSim.setVelocity(driveSim.getLeftVelocityMetersPerSecond());
+		leftEncoderSim.setRawPosition(driveSim.getLeftPositionMeters() / WHEEL_CIRCUMFERENCE);
+		leftEncoderSim.setVelocity(driveSim.getLeftVelocityMetersPerSecond() / WHEEL_CIRCUMFERENCE);
 		leftLeaderSim.setMotorCurrent(driveSim.getLeftCurrentDrawAmps());
+		leftFollowerSim.setMotorCurrent(driveSim.getLeftCurrentDrawAmps());
 
-		rightLeaderSim.setPosition(driveSim.getRightPositionMeters());
-		rightLeaderSim.setVelocity(driveSim.getRightVelocityMetersPerSecond());
+		rightEncoderSim.setRawPosition(driveSim.getRightPositionMeters() / WHEEL_CIRCUMFERENCE);
+		rightEncoderSim.setVelocity(driveSim.getRightVelocityMetersPerSecond() / WHEEL_CIRCUMFERENCE);
 		rightLeaderSim.setMotorCurrent(driveSim.getRightCurrentDrawAmps());
+		rightFollowerSim.setMotorCurrent(driveSim.getRightCurrentDrawAmps());
 
 		imuSim.setRawYaw(-driveSim.getHeading().getDegrees());
 
@@ -222,7 +267,7 @@ public class KitbotTankDrivetrain extends SubsystemBase implements Drivetrain {
 
 	public void driveRobotCentric(ChassisSpeeds speeds) {
 		DifferentialDriveWheelSpeeds wheelSpeeds = kinematics.toWheelSpeeds(speeds);
-		drive.tankDrive(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond);
+		drive.tankDrive(wheelSpeeds.leftMetersPerSecond / MAX_SPEED, wheelSpeeds.rightMetersPerSecond / MAX_SPEED);
 	}
 
 	public Pose2d getSimPose() {

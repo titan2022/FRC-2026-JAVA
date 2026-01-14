@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
@@ -33,6 +34,9 @@ import frc.robot.Constants.*;
 
 public class Robot extends TimedRobot {
 	private Command m_autonomousCommand;
+
+	public static final double kMaxLinearSpeed = 2; // m/s
+	public static final double kMaxAngularSpeed = Units.rotationsToRadians(2);
 
 	// The driver's controller
   private final CommandXboxController driverController = new CommandXboxController(
@@ -150,9 +154,9 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 		// Calculate drivetrain commands from Joystick values
-		double forward = -driverController.getLeftY() * SimSwerveConstants.Swerve.kMaxLinearSpeed;
-		double strafe = -driverController.getLeftX() * SimSwerveConstants.Swerve.kMaxLinearSpeed;
-		double turn = -driverController.getRightX() * SimSwerveConstants.Swerve.kMaxAngularSpeed;
+		double forward = -driverController.getLeftY() * kMaxLinearSpeed;
+		double strafe = -driverController.getLeftX() * kMaxLinearSpeed;
+		double turn = -driverController.getRightX() * kMaxAngularSpeed;
 
 		// Command drivetrain motors based on target speeds
 		drivetrain.driveRobotCentric(forward, strafe, turn);
