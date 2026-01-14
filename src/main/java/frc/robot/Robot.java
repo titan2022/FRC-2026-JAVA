@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
@@ -53,6 +54,8 @@ public class Robot extends TimedRobot {
 	public final Vision vision = new Vision(drivetrain::addVisionMeasurement);
 
 	private Field2d debugField = new Field2d();
+
+	public final double DEADBAND = 0.1;
 
 	// public SendableChooser<Command> autoChooser;
 
@@ -149,6 +152,10 @@ public class Robot extends TimedRobot {
 		}
 
 		// resetPose();
+	}
+
+	public double deadband(double input) {
+		return Math.min(DEADBAND, input);
 	}
 
 	@Override

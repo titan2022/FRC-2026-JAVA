@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.sim.SparkMaxSim;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -11,8 +12,13 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,7 +29,7 @@ public class KitbotFuelSubsystem extends SubsystemBase {
 	public static final int INTAKE_LAUNCHER_MOTOR_ID = 5;
 
   public static final int INTAKE_LAUNCHER_ENCODER_A_CHANNEL = 1;
-  public static final int INTAKE_LAUNCHER_ENCODER_B_CHANNEL = 2;
+  public static final int INTAKE_LAUNCHER_ENCODER_B_CHANNEL = 0;
 
 	// Current limit and nominal voltage for fuel mechanism motors.
 	public static final int FEEDER_MOTOR_CURRENT_LIMIT = 60;
@@ -39,6 +45,8 @@ public class KitbotFuelSubsystem extends SubsystemBase {
 	public static final double SPIN_UP_FEEDER_VOLTAGE = -6;
 	public static final double SPIN_UP_SECONDS = 1;
 
+  public static final double LAUNCHER_WHEEL_CIRCUMFERENCE = Units.inchesToMeters(4) * Math.PI;
+
 	// Target velocity
   public double INTAKING_INTAKE_VELOCITY = 1; // m/s
 	public double LAUNCHING_LAUNCHER_VELOCITY = 3; // m/s
@@ -50,23 +58,32 @@ public class KitbotFuelSubsystem extends SubsystemBase {
   public double kI = 0.0;
   public double kD = 0.0;
 
+  // TODO find some non-arbitrary values
+  public double MAX_ACCELERATION = 5; // m/s^2
+  public double MAX_JERK = 5; // m/s^3
+
   public double kS = 0.0;
   public double kV = 0.0;
   public double kA = 0.0;
 
-  private PIDController pid = new PIDController(kP, kI, kD);
+  private ProfiledPIDController pid = new ProfiledPIDController(kP, kI, kD,
+    new TrapezoidProfile.Constraints(MAX_ACCELERATION, MAX_JERK));
   private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(kS, kV, kA);
-  private double intakeLauncherSetpoint = 0.0;
+  private double intakeLauncherTargetVelocity = 0.0;
 
-  private final SparkMax feederRoller;
-  private final SparkMax intakeLauncherRoller;
+  private final SparkMax feederMotor = new SparkMax(FEEDER_MOTOR_ID, MotorType.kBrushed);
+  private final SparkMax intakeLauncherMotor = new SparkMax(INTAKE_LAUNCHER_MOTOR_ID, MotorType.kBrushed);
   private final Encoder intakeLauncherEncoder = new Encoder(INTAKE_LAUNCHER_ENCODER_A_CHANNEL, INTAKE_LAUNCHER_ENCODER_B_CHANNEL);
+
+  private final DCMotor feederGearbox = DCMotor.getCIM(1);
+  private final DCMotor intakeLauncherGearbox = DCMotor.getCIM(1);
+  private final SparkMaxSim feederMotorSim = new SparkMaxSim(feederMotor, feederGearbox);
+  private final SparkMaxSim intakeLauncherMotorSim = new SparkMaxSim(intakeLauncherMotor, intakeLauncherGearbox);
+  private final EncoderSim intakeLauncherEncoderSim = new EncoderSim(intakeLauncherEncoder);
 
   /** Creates a new CANBallSubsystem. */
   public KitbotFuelSubsystem() {
-    // create brushed motors for each of the motors on the launcher mechanism
-    intakeLauncherRoller = new SparkMax(INTAKE_LAUNCHER_MOTOR_ID, MotorType.kBrushed);
-    feederRoller = new SparkMax(FEEDER_MOTOR_ID, MotorType.kBrushed);
+    intakeLauncherEncoder.setDistancePerPulse(LAUNCHER_WHEEL_CIRCUMFERENCE);
 
     sendValuesToDashboard();
 
@@ -74,7 +91,7 @@ public class KitbotFuelSubsystem extends SubsystemBase {
     // the config to the controller
     SparkMaxConfig feederConfig = new SparkMaxConfig();
     feederConfig.smartCurrentLimit(FEEDER_MOTOR_CURRENT_LIMIT);
-    feederRoller.configure(feederConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    feederMotor.configure(feederConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     // create the configuration for the launcher roller, set a current limit, set
     // the motor to inverted so that positive values are used for both intaking and
@@ -82,10 +99,10 @@ public class KitbotFuelSubsystem extends SubsystemBase {
     SparkMaxConfig launcherConfig = new SparkMaxConfig();
     launcherConfig.inverted(true);
     launcherConfig.smartCurrentLimit(LAUNCHER_MOTOR_CURRENT_LIMIT);
-    intakeLauncherRoller.configure(launcherConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    intakeLauncherMotor.configure(launcherConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   
     // Set the intake launcher setpoint to 0.0
-    intakeLauncherSetpoint = 0.0;
+    intakeLauncherTargetVelocity = 0.0;
   }
 
   public void sendValuesToDashboard() {
@@ -99,67 +116,74 @@ public class KitbotFuelSubsystem extends SubsystemBase {
     // SmartDashboard.putNumber("Launching launcher roller value", LAUNCHING_LAUNCHER_VOLTAGE);
     SmartDashboard.putNumber("Spin-up feeder roller value", SPIN_UP_FEEDER_VOLTAGE);
 
-    SmartDashboard.putData("KitbotFuelSubsystem/PID", pid);
+    SmartDashboard.putData("Intake Launcher/PID", pid);
 
-    SmartDashboard.putNumber("KitbotFuelSubsystem/kS", kS);
-    SmartDashboard.putNumber("KitbotFuelSubsystem/kV", kV);
-    SmartDashboard.putNumber("KitbotFuelSubsystem/kA", kA);
+    SmartDashboard.putNumber("Intake Launcher/kS", kS);
+    SmartDashboard.putNumber("Intake Launcher/kV", kV);
+    SmartDashboard.putNumber("Intake Launcher/kA", kA);
 
-    SmartDashboard.putNumber("KitbotFuelSubsystem/Intaking Intake Velocity", INTAKING_INTAKE_VELOCITY);
-    SmartDashboard.putNumber("KitbotFuelSubsystem/Launching Launcher Velocity", LAUNCHING_LAUNCHER_VELOCITY);
+    SmartDashboard.putNumber("Intake Launcher/Intaking Intake Velocity", INTAKING_INTAKE_VELOCITY);
+    SmartDashboard.putNumber("Intake Launcher/Launching Launcher Velocity", LAUNCHING_LAUNCHER_VELOCITY);
   }
 
   public void getValuesFromDashboard() {
-    kS = SmartDashboard.getNumber("KitbotFuelSubsystem/kS", kS);
-    kV = SmartDashboard.getNumber("KitbotFuelSubsystem/kV", kV);
-    kA = SmartDashboard.getNumber("KitbotFuelSubsystem/kA", kA);
+    kS = SmartDashboard.getNumber("Intake Launcher/kS", kS);
+    kV = SmartDashboard.getNumber("Intake Launcher/kV", kV);
+    kA = SmartDashboard.getNumber("Intake Launcher/kA", kA);
 
     feedforward.setKs(kS);
     feedforward.setKv(kV);
     feedforward.setKa(kA);
 
-    INTAKING_INTAKE_VELOCITY = SmartDashboard.getNumber("KitbotFuelSubsystem/Intaking Intake Velocity", INTAKING_INTAKE_VELOCITY);
-    LAUNCHING_LAUNCHER_VELOCITY = SmartDashboard.getNumber("KitbotFuelSubsystem/Launching Launcher Velocity", LAUNCHING_LAUNCHER_VELOCITY);
+    INTAKING_INTAKE_VELOCITY = SmartDashboard.getNumber("Intake Launcher/Intaking Intake Velocity", INTAKING_INTAKE_VELOCITY);
+    LAUNCHING_LAUNCHER_VELOCITY = SmartDashboard.getNumber("Intake Launcher/Launching Launcher Velocity", LAUNCHING_LAUNCHER_VELOCITY);
   }
 
   @Override
   public void periodic() {
-    intakeLauncherRoller.setVoltage(pid.calculate(intakeLauncherEncoder.getRate(), intakeLauncherSetpoint) + feedforward.calculate(intakeLauncherSetpoint));
+    intakeLauncherMotor.setVoltage(pid.calculate(intakeLauncherEncoder.getRate(), intakeLauncherTargetVelocity) + feedforward.calculate(pid.getSetpoint().position));
+
+    getValuesFromDashboard();
+
+    SmartDashboard.putNumber("Intake Launcher/Target Velocity", intakeLauncherTargetVelocity);
+    SmartDashboard.putNumber("Intake Launcher/Current Velocity", intakeLauncherEncoder.getRate());
+    SmartDashboard.putNumber("Intake Launcher/Current Velocity", intakeLauncherEncoder.getRate());
+    SmartDashboard.putNumber("Intake Launcher/Setpoint", pid.getSetpoint().position); // actually a velocity
   }
 
   // A method to set the rollers to values for intaking
   public void intake() {
-    feederRoller.setVoltage(SmartDashboard.getNumber("Intaking feeder roller value", INTAKING_FEEDER_VOLTAGE));
-    intakeLauncherSetpoint = INTAKING_INTAKE_VELOCITY;
+    feederMotor.setVoltage(SmartDashboard.getNumber("Intaking feeder roller value", INTAKING_FEEDER_VOLTAGE));
+    intakeLauncherTargetVelocity = INTAKING_INTAKE_VELOCITY;
   }
 
   // A method to set the rollers to values for ejecting fuel out the intake. Uses
   // the same values as intaking, but in the opposite direction.
   public void eject() {
-    feederRoller
+    feederMotor
         .setVoltage(-1 * SmartDashboard.getNumber("Intaking feeder roller value", INTAKING_FEEDER_VOLTAGE));
-    intakeLauncherSetpoint = -INTAKING_INTAKE_VELOCITY;
+    intakeLauncherTargetVelocity = -INTAKING_INTAKE_VELOCITY;
   }
 
   // A method to set the rollers to values for launching.
   public void launch() {
-    feederRoller.setVoltage(SmartDashboard.getNumber("Launching feeder roller value", LAUNCHING_FEEDER_VOLTAGE));
-    intakeLauncherSetpoint = LAUNCHING_LAUNCHER_VELOCITY;
+    feederMotor.setVoltage(SmartDashboard.getNumber("Launching feeder roller value", LAUNCHING_FEEDER_VOLTAGE));
+    intakeLauncherTargetVelocity = LAUNCHING_LAUNCHER_VELOCITY;
   }
 
   // A method to stop the rollers
   public void stop() {
-    feederRoller.set(0);
-    intakeLauncherSetpoint = 0.0;
-    intakeLauncherRoller.set(0);
+    feederMotor.set(0);
+    intakeLauncherTargetVelocity = 0.0;
+    intakeLauncherMotor.set(0);
   }
 
   // A method to spin up the launcher roller while spinning the feeder roller to
   // push Fuel away from the launcher
   public void spinUp() {
-    feederRoller
+    feederMotor
         .setVoltage(SmartDashboard.getNumber("Spin-up feeder roller value", SPIN_UP_FEEDER_VOLTAGE));
-    intakeLauncherSetpoint = LAUNCHING_LAUNCHER_VELOCITY;
+    intakeLauncherTargetVelocity = LAUNCHING_LAUNCHER_VELOCITY;
   }
 
   // A command factory to turn the spinUp method into a command that requires this

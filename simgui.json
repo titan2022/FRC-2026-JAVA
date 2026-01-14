@@ -3,7 +3,8 @@
     "types": {
       "/FMSInfo": "FMSInfo",
       "/SmartDashboard/Auto Chooser": "String Chooser",
-      "/SmartDashboard/KitbotFuelSubsystem/PID": "PIDController",
+      "/SmartDashboard/Intake Launcher/PID": "ProfiledPIDController",
+      "/SmartDashboard/KitbotFuelSubsystem/PID": "ProfiledPIDController",
       "/SmartDashboard/PathPlanner": "Alerts",
       "/SmartDashboard/PhotonAlerts": "Alerts",
       "/SmartDashboard/VisionSystemSim-main/Sim Field": "Field2d"
