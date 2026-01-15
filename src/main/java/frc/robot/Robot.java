@@ -49,11 +49,11 @@ public class Robot extends TimedRobot {
 
 	// public final Drivetrain drivetrain = DriveUtility.makeDrivetrain(this::resetPose);
 	public final KitbotTankDrivetrain drivetrain = new KitbotTankDrivetrain();
-	public final KitbotFuelSubsystem fuelSubsystem = new KitbotFuelSubsystem();
+	// public final KitbotFuelSubsystem fuelSubsystem = new KitbotFuelSubsystem();
 
-	public final Vision vision = new Vision(drivetrain::addVisionMeasurement);
+	// public final Vision vision = new Vision(drivetrain::addVisionMeasurement);
 
-	private Field2d debugField = new Field2d();
+	// private Field2d debugField = new Field2d();
 
 	public final double DEADBAND = 0.1;
 
@@ -63,27 +63,27 @@ public class Robot extends TimedRobot {
 		// autoChooser = AutoBuilder.buildAutoChooser();
 		// SmartDashboard.putData("Auto Chooser", autoChooser);
 
-		if(RobotBase.isReal()) {
-			SmartDashboard.putData("VisionSystemSim-main/Sim Field", debugField);
-		}
+		// if(RobotBase.isReal()) {
+		// 	SmartDashboard.putData("VisionSystemSim-main/Sim Field", debugField);
+		// }
 
 		configureBindings();
 	}
 
 	private void configureBindings() {
 		// While the left bumper on operator controller is held, intake Fuel
-		operatorController.leftBumper()
-				.whileTrue(fuelSubsystem.runEnd(() -> fuelSubsystem.intake(), () -> fuelSubsystem.stop()));
+		// operatorController.leftBumper()
+		// 		.whileTrue(fuelSubsystem.runEnd(() -> fuelSubsystem.intake(), () -> fuelSubsystem.stop()));
 		// While the right bumper on the operator controller is held, spin up for 1
 		// second, then launch fuel. When the button is released, stop.
-		operatorController.rightBumper()
-				.whileTrue(fuelSubsystem.spinUpCommand().withTimeout(KitbotFuelSubsystem.SPIN_UP_SECONDS)
-						.andThen(fuelSubsystem.launchCommand())
-						.finallyDo(() -> fuelSubsystem.stop()));
+		// operatorController.rightBumper()
+		// 		.whileTrue(fuelSubsystem.spinUpCommand().withTimeout(KitbotFuelSubsystem.SPIN_UP_SECONDS)
+		// 				.andThen(fuelSubsystem.launchCommand())
+		// 				.finallyDo(() -> fuelSubsystem.stop()));
 		// While the A button is held on the operator controller, eject fuel back out
 		// the intake
-		operatorController.a()
-				.whileTrue(fuelSubsystem.runEnd(() -> fuelSubsystem.eject(), () -> fuelSubsystem.stop()));
+		// operatorController.a()
+		// 		.whileTrue(fuelSubsystem.runEnd(() -> fuelSubsystem.eject(), () -> fuelSubsystem.stop()));
 
 		// Set the default command for the drive subsystem to the command provided by
 		// factory with the values provided by the joystick axes on the driver
@@ -107,7 +107,7 @@ public class Robot extends TimedRobot {
 		// }
 
 		// Update vision
-		vision.periodic();
+		// vision.periodic();
 
 		// Test/Example only!
 		// Apply an offset to pose estimator to test vision correction
@@ -143,7 +143,9 @@ public class Robot extends TimedRobot {
 	}
 
 	@Override
-	public void autonomousPeriodic() {}
+	public void autonomousPeriodic() {
+		drivetrain.lathe();
+	}
 
 	@Override
 	public void teleopInit() {
@@ -186,11 +188,11 @@ public class Robot extends TimedRobot {
 		KitbotTankDrivetrain simDrivetrain = (KitbotTankDrivetrain)drivetrain;
 		// simDrivetrain.simulationPeriodic();
 		// // Update camera simulation
-		vision.simulationPeriodic(simDrivetrain.getSimPose());
+		// vision.simulationPeriodic(simDrivetrain.getSimPose());
 
-		debugField = vision.getSimDebugField();
+		// debugField = vision.getSimDebugField();
 		// debugField.getObject("Robot").setPose(simDrivetrain.getSimPose());
-		debugField.getObject("EstimatedRobot").setPose(simDrivetrain.getPose());
+		// debugField.getObject("EstimatedRobot").setPose(simDrivetrain.getPose());
 		// debugField.getObject("EstimatedRobotModules").setPoses(simDrivetrain.getModulePoses());
 
 		// // Update gamepiece launcher simulation
@@ -213,6 +215,6 @@ public class Robot extends TimedRobot {
 		// if(RobotBase.isSimulation()) {
 		// 	((SimSwerveDrivetrain)drivetrain).resetPose(startPose, true);
 		// }
-		vision.resetSimPose(startPose);
+		// vision.resetSimPose(startPose);
 	}
 }
