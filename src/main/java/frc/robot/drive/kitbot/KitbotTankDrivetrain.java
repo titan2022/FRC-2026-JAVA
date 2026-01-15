@@ -5,37 +5,16 @@
 package frc.robot.drive.kitbot;
 
 import static edu.wpi.first.units.Units.*;
-import static frc.robot.Units.*;
-
 import java.util.function.DoubleSupplier;
 
-import com.ctre.phoenix6.BaseStatusSignal;
-import com.ctre.phoenix6.configs.Pigeon2Configuration;
-import com.ctre.phoenix6.configs.Pigeon2Configurator;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.configs.TalonFXConfigurator;
+import com.ctre.phoenix.motorcontrol.InvertType;
+import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix6.controls.DutyCycleOut;
-import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.hardware.Pigeon2;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.sim.CANcoderSimState;
-import com.ctre.phoenix6.sim.ChassisReference;
-import com.ctre.phoenix6.sim.Pigeon2SimState;
-import com.ctre.phoenix6.sim.TalonFXSimState;
-import com.revrobotics.sim.SparkMaxSim;
-import com.revrobotics.spark.SparkBase.PersistMode;
-import com.revrobotics.spark.SparkBase.ResetMode;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.config.SparkMaxConfig;
-
 import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -45,7 +24,6 @@ import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
@@ -53,19 +31,14 @@ import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotGearing;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotMotor;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotWheelSize;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Robot;
 import frc.robot.device.imu.IMU;
-import frc.robot.device.imu.PigeonIMU;
 import frc.robot.drive.Drivetrain;
 
 public class KitbotTankDrivetrain extends SubsystemBase implements Drivetrain {
@@ -89,29 +62,31 @@ public class KitbotTankDrivetrain extends SubsystemBase implements Drivetrain {
 	// likelihood of tripping breakers or damaging CIM motors
 	public static final int DRIVE_MOTOR_CURRENT_LIMIT = 60;
 
-	public static final double kGearRatio = 10.71;
+	public static final double kGearRatio = 8.45;
 	public static final Distance kWheelRadius = Inches.of(3);
+	final int kCountsPerRev = 4096;  //Encoder counts per revolution of the motor shaft.
+	final int k100msPerSecond = 10;
 
-	public static final double WHEEL_CIRCUMFERENCE = kWheelRadius.in(Meters) * Math.TAU;
+	public static final double WHEEL_CIRCUMFERENCE = kWheelRadius.in(Meters) * 2 * Math.PI;
 
 	public static final double MAX_SPEED = 2; // m/s
 
-	private final TalonFX leftLeader = new TalonFX(LEFT_LEADER_ID);
-	private final TalonFX leftFollower = new TalonFX(LEFT_FOLLOWER_ID);
+	private final WPI_TalonSRX leftLeader = new WPI_TalonSRX(LEFT_LEADER_ID);
+	private final WPI_TalonSRX leftFollower = new WPI_TalonSRX(LEFT_FOLLOWER_ID);
 	private final CANcoder leftEncoder = new CANcoder(LEFT_ENCODER_ID);
 	
 	private final DCMotor leftGearbox = DCMotor.getCIM(2);
-	private final TalonFXSimState leftLeaderSim = leftLeader.getSimState();
-	private final TalonFXSimState leftFollowerSim = leftFollower.getSimState();
+	private final TalonSRXSimCollection leftLeaderSim = leftLeader.getSimCollection();
+	private final TalonSRXSimCollection leftFollowerSim = leftFollower.getSimCollection();
 	private final CANcoderSimState leftEncoderSim = leftEncoder.getSimState();
 
-	private final TalonFX rightLeader = new TalonFX(RIGHT_LEADER_ID);
-	private final TalonFX rightFollower = new TalonFX(RIGHT_FOLLOWER_ID);
+	private final WPI_TalonSRX rightLeader = new WPI_TalonSRX(RIGHT_LEADER_ID);
+	private final WPI_TalonSRX rightFollower = new WPI_TalonSRX(RIGHT_FOLLOWER_ID);
 	private final CANcoder rightEncoder = new CANcoder(RIGHT_ENCODER_ID);
 	
 	private final DCMotor rightGearbox = DCMotor.getCIM(2);
-	private final TalonFXSimState rightLeaderSim = rightLeader.getSimState();
-	private final TalonFXSimState rightFollowerSim = rightFollower.getSimState();
+	private final TalonSRXSimCollection rightLeaderSim = rightLeader.getSimCollection();
+	private final TalonSRXSimCollection rightFollowerSim = rightFollower.getSimCollection();
 	private final CANcoderSimState rightEncoderSim = rightEncoder.getSimState();
 
 	private final DutyCycleOut m_leftOut = new DutyCycleOut(0); // Initialize with 0% output
@@ -141,44 +116,6 @@ public class KitbotTankDrivetrain extends SubsystemBase implements Drivetrain {
 		this(new Pose2d());
 	}
 
-	/**
-	 * Initialize a left drive TalonFX device from the configurator object
-	 * 
-	 * @param cfg Configurator of the TalonFX device
-	 */
-	private void initializeLeftDriveTalonFX(TalonFXConfigurator cfg) {
-		var toApply = new TalonFXConfiguration();
-
-		/*
-			* User can change configs if they want, or leave this blank for factory-default
-			*/
-		toApply.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-
-		cfg.apply(toApply);
-
-		/* And initialize position to 0 */
-		cfg.setPosition(0);
-	}
-
-	/**
-	 * Initialize a right drive TalonFX device from the configurator object
-	 * 
-	 * @param cfg Configurator of the TalonFX device
-	 */
-	private void initializeRightDriveTalonFX(TalonFXConfigurator cfg) {
-		var toApply = new TalonFXConfiguration();
-
-		/*
-			* User can change configs if they want, or leave this blank for factory-default
-			*/
-		toApply.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-
-		cfg.apply(toApply);
-
-		/* And initialize position to 0 */
-		cfg.setPosition(0);
-	}
-
 	// /**
 	//  * Initialize Pigeon2 device from the configurator object
 	//  * 
@@ -198,32 +135,28 @@ public class KitbotTankDrivetrain extends SubsystemBase implements Drivetrain {
 	// }
 
 	// https://raw.githubusercontent.com/CrossTheRoadElec/Phoenix6-Examples/refs/heads/main/java/CommandBasedDrive/src/main/java/frc/robot/subsystems/DriveSubsystem.java
+	// https://raw.githubusercontent.com/CrossTheRoadElec/Phoenix5-Examples/refs/heads/master/Java%20General/DifferentialDrive_Simulation/src/main/java/frc/robot/Robot.java
 	public KitbotTankDrivetrain(Pose2d startingPose) {
-		initializeLeftDriveTalonFX(leftLeader.getConfigurator());
-		initializeLeftDriveTalonFX(leftFollower.getConfigurator());
-		initializeRightDriveTalonFX(rightLeader.getConfigurator());
-		initializeRightDriveTalonFX(rightFollower.getConfigurator());
 		// initializePigeon2(imu.getConfigurator());
+		rightLeader.configFactoryDefault();
+		rightFollower.configFactoryDefault();
+		rightFollower.follow(rightLeader);
+		rightFollower.setInverted(InvertType.FollowMaster);
 
-		/* Set followers to follow leader */
-		leftFollower.setControl(new Follower(leftLeader.getDeviceID(), MotorAlignmentValue.Aligned));
-		rightFollower.setControl(new Follower(rightLeader.getDeviceID(), MotorAlignmentValue.Aligned));
+		leftLeader.configFactoryDefault();
+		leftFollower.configFactoryDefault();
+		leftFollower.follow(leftLeader);
+		leftFollower.setInverted(InvertType.FollowMaster);
 
-		/* Make sure all critical signals are synchronized */
-		/*
-			* Setting all these signals to 100hz means they get sent at the same time if
-			* they're all on a CANivore
-			*/
-		if(imu.isPigeon()) {
-			BaseStatusSignal.setUpdateFrequencyForAll(100,
-					leftLeader.getPosition(),
-					rightLeader.getPosition(),
-					((PigeonIMU)imu).getYaw());
-		} else {
-			BaseStatusSignal.setUpdateFrequencyForAll(100,
-					leftLeader.getPosition(),
-					rightLeader.getPosition());
-		}
+		/* The left side is positive forward and sensor is in phase by default */
+    leftLeader.setInverted(InvertType.None);
+    leftLeader.setSensorPhase(false);
+    /*
+     * The right side sensor is also already in phase in phase but the
+     * output needs to be inverted so positive is forward
+     */
+    rightLeader.setInverted(InvertType.InvertMotorOutput);
+    rightLeader.setSensorPhase(false);
 
 		/*
 			* Set the update frequency of the main requests to 0 so updates are sent
@@ -231,17 +164,6 @@ public class KitbotTankDrivetrain extends SubsystemBase implements Drivetrain {
 			*/
 		m_leftOut.UpdateFreqHz = 0;
 		m_rightOut.UpdateFreqHz = 0;
-
-		/*
-			* Set the orientation of the simulated TalonFX devices relative to the robot chassis.
-			* WPILib expects +V to be forward. Specify orientations to match that behavior.
-			*/
-		/* left TalonFXs are CCW+ */
-		leftLeaderSim.Orientation = ChassisReference.CounterClockwise_Positive;
-		leftFollowerSim.Orientation = ChassisReference.CounterClockwise_Positive;
-		/* right TalonFXs are CW+ */
-		rightLeaderSim.Orientation = ChassisReference.Clockwise_Positive;
-		rightFollowerSim.Orientation = ChassisReference.Clockwise_Positive;
 
 		if(RobotBase.isSimulation()) {
 			simOdometry = new DifferentialDriveOdometry(
@@ -272,8 +194,8 @@ public class KitbotTankDrivetrain extends SubsystemBase implements Drivetrain {
 
 	@Override
 	public void simulationPeriodic() {
-		driveSim.setInputs(leftLeader.getMotorVoltage().getValueAsDouble(),
-											 rightLeader.getMotorVoltage().getValueAsDouble());
+		driveSim.setInputs(leftLeader.getMotorOutputVoltage(),
+											 rightLeader.getMotorOutputVoltage());
 		
 		// Advance the model by 20 ms. Note that if you are running this
 		// subsystem in a separate thread or have changed the nominal timestep
@@ -281,19 +203,17 @@ public class KitbotTankDrivetrain extends SubsystemBase implements Drivetrain {
 		driveSim.update(0.02);
 
 		// Update all of our sensors.
-		leftLeaderSim.setRawRotorPosition(
-			metersToRotations(Meters.of(driveSim.getLeftPositionMeters()))
+		leftLeaderSim.setQuadratureRawPosition(
+			distanceToNativeUnits(driveSim.getLeftPositionMeters())
 		);
-		leftLeaderSim.setRotorVelocity(
-			// This is OK, since the time base is the same
-			metersToRotationsVel(MetersPerSecond.of(driveSim.getLeftVelocityMetersPerSecond()))
+		leftLeaderSim.setQuadratureVelocity(
+			distanceToNativeUnits(driveSim.getLeftPositionMeters())
 		);
-		leftFollowerSim.setRawRotorPosition(
-			metersToRotations(Meters.of(driveSim.getLeftPositionMeters()))
+		leftFollowerSim.setQuadratureRawPosition(
+			distanceToNativeUnits(driveSim.getLeftPositionMeters())
 		);
-		leftFollowerSim.setRotorVelocity(
-			// This is OK, since the time base is the same
-			metersToRotationsVel(MetersPerSecond.of(driveSim.getLeftVelocityMetersPerSecond()))
+		leftFollowerSim.setQuadratureVelocity(
+			distanceToNativeUnits(driveSim.getLeftPositionMeters())
 		);
 		leftEncoderSim.setRawPosition(
 			metersToRotations(Meters.of(driveSim.getLeftPositionMeters()))
@@ -302,19 +222,17 @@ public class KitbotTankDrivetrain extends SubsystemBase implements Drivetrain {
 			metersToRotationsVel(MetersPerSecond.of(driveSim.getLeftVelocityMetersPerSecond()))
 		);
 
-		rightLeaderSim.setRawRotorPosition(
-			metersToRotations(Meters.of(driveSim.getRightPositionMeters()))
+		rightLeaderSim.setQuadratureRawPosition(
+			distanceToNativeUnits(driveSim.getRightPositionMeters())
 		);
-		rightLeaderSim.setRotorVelocity(
-			// This is OK, since the time base is the same
-			metersToRotationsVel(MetersPerSecond.of(driveSim.getRightVelocityMetersPerSecond()))
+		rightLeaderSim.setQuadratureVelocity(
+			distanceToNativeUnits(driveSim.getRightPositionMeters())
 		);
-		rightFollowerSim.setRawRotorPosition(
-			metersToRotations(Meters.of(driveSim.getRightPositionMeters()))
+		rightFollowerSim.setQuadratureRawPosition(
+			distanceToNativeUnits(driveSim.getRightPositionMeters())
 		);
-		rightFollowerSim.setRotorVelocity(
-			// This is OK, since the time base is the same
-			metersToRotationsVel(MetersPerSecond.of(driveSim.getRightVelocityMetersPerSecond()))
+		rightFollowerSim.setQuadratureVelocity(
+			distanceToNativeUnits(driveSim.getRightPositionMeters())
 		);
 		rightEncoderSim.setRawPosition(
 			metersToRotations(Meters.of(driveSim.getRightPositionMeters()))
@@ -390,6 +308,28 @@ public class KitbotTankDrivetrain extends SubsystemBase implements Drivetrain {
 	public Pose2d getSimPose() {
 		return simOdometry.getPoseMeters();
 	}
+
+	private int distanceToNativeUnits(double positionMeters){
+    double wheelRotations = positionMeters/(2 * Math.PI * kWheelRadius.in(Meters));
+    double motorRotations = wheelRotations * kGearRatio;
+    int sensorCounts = (int)(motorRotations * kCountsPerRev);
+    return sensorCounts;
+  }
+
+  private int velocityToNativeUnits(double velocityMetersPerSecond){
+    double wheelRotationsPerSecond = velocityMetersPerSecond/(2 * Math.PI * kWheelRadius.in(Meters));
+    double motorRotationsPerSecond = wheelRotationsPerSecond * kGearRatio;
+    double motorRotationsPer100ms = motorRotationsPerSecond / k100msPerSecond;
+    int sensorCountsPer100ms = (int)(motorRotationsPer100ms * kCountsPerRev);
+    return sensorCountsPer100ms;
+  }
+
+  private double nativeUnitsToDistanceMeters(double sensorCounts){
+    double motorRotations = (double)sensorCounts / kCountsPerRev;
+    double wheelRotations = motorRotations / kGearRatio;
+    double positionMeters = wheelRotations * (2 * Math.PI * kWheelRadius.in(Meters));
+    return positionMeters;
+  }
 
 	private Distance rotationsToMeters(Angle rotations) {
 		/* Apply gear ratio to input rotations */
