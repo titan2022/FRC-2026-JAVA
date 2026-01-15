@@ -29,8 +29,6 @@ import frc.robot.drive.kitbot.KitbotTankDrivetrain;
 import frc.robot.drive.pvswerve.SimSwerveConstants;
 import frc.robot.drive.pvswerve.SimSwerveDrivetrain;
 import frc.robot.localization.Vision;
-import frc.robot.subsystems.GamepieceLauncher;
-import frc.robot.subsystems.KitbotFuelSubsystem;
 import frc.robot.Constants.*;
 
 public class Robot extends TimedRobot {
