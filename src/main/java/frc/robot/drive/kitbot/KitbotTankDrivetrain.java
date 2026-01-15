@@ -73,21 +73,21 @@ public class KitbotTankDrivetrain extends SubsystemBase implements Drivetrain {
 
 	private final WPI_TalonSRX leftLeader = new WPI_TalonSRX(LEFT_LEADER_ID);
 	private final WPI_TalonSRX leftFollower = new WPI_TalonSRX(LEFT_FOLLOWER_ID);
-	private final CANcoder leftEncoder = new CANcoder(LEFT_ENCODER_ID);
+	// private final CANcoder leftEncoder = new CANcoder(LEFT_ENCODER_ID);
 	
 	private final DCMotor leftGearbox = DCMotor.getCIM(2);
 	private final TalonSRXSimCollection leftLeaderSim = leftLeader.getSimCollection();
 	private final TalonSRXSimCollection leftFollowerSim = leftFollower.getSimCollection();
-	private final CANcoderSimState leftEncoderSim = leftEncoder.getSimState();
+	// private final CANcoderSimState leftEncoderSim = leftEncoder.getSimState();
 
 	private final WPI_TalonSRX rightLeader = new WPI_TalonSRX(RIGHT_LEADER_ID);
 	private final WPI_TalonSRX rightFollower = new WPI_TalonSRX(RIGHT_FOLLOWER_ID);
-	private final CANcoder rightEncoder = new CANcoder(RIGHT_ENCODER_ID);
+	// private final CANcoder rightEncoder = new CANcoder(RIGHT_ENCODER_ID);
 	
 	private final DCMotor rightGearbox = DCMotor.getCIM(2);
 	private final TalonSRXSimCollection rightLeaderSim = rightLeader.getSimCollection();
 	private final TalonSRXSimCollection rightFollowerSim = rightFollower.getSimCollection();
-	private final CANcoderSimState rightEncoderSim = rightEncoder.getSimState();
+	// private final CANcoderSimState rightEncoderSim = rightEncoder.getSimState();
 
 	private final DutyCycleOut m_leftOut = new DutyCycleOut(0); // Initialize with 0% output
 	private final DutyCycleOut m_rightOut = new DutyCycleOut(0); // Initialize with 0% output
@@ -101,7 +101,7 @@ public class KitbotTankDrivetrain extends SubsystemBase implements Drivetrain {
 	
 	private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(edu.wpi.first.math.util.Units.inchesToMeters(26.0));
 	
-	private final DifferentialDrivePoseEstimator poseEstimator;
+	// private final DifferentialDrivePoseEstimator poseEstimator;
 
 	// Create the simulation model of our drivetrain.
 	// https://andymark.com/products/am14u6-6-wheel-drop-center-robot-drive-base-2025-frc-kit-of-parts-drive-base
@@ -175,21 +175,21 @@ public class KitbotTankDrivetrain extends SubsystemBase implements Drivetrain {
 			simOdometry = null;
 		}
 		
-		poseEstimator = new DifferentialDrivePoseEstimator(
-			kinematics,
-			imu.getRotation2d(),
-			rotationsToMeters(leftEncoder.getPosition().getValue()).in(Meters),
-			rotationsToMeters(rightEncoder.getPosition().getValue()).in(Meters),
-			startingPose);
+		// poseEstimator = new DifferentialDrivePoseEstimator(
+		// 	kinematics,
+		// 	imu.getRotation2d(),
+		// 	rotationsToMeters(leftEncoder.getPosition().getValue()).in(Meters),
+		// 	rotationsToMeters(rightEncoder.getPosition().getValue()).in(Meters),
+		// 	startingPose);
 	}
 
 	@Override
 	public void periodic() {
-		poseEstimator.update(
-			imu.getRotation2d(),
-			rotationsToMeters(leftEncoder.getPosition().getValue()).in(Meters),
-			rotationsToMeters(rightEncoder.getPosition().getValue()).in(Meters)
-		);
+		// poseEstimator.update(
+		// 	imu.getRotation2d(),
+		// 	rotationsToMeters(leftEncoder.getPosition().getValue()).in(Meters),
+		// 	rotationsToMeters(rightEncoder.getPosition().getValue()).in(Meters)
+		// );
 	}
 
 	@Override
@@ -215,12 +215,12 @@ public class KitbotTankDrivetrain extends SubsystemBase implements Drivetrain {
 		leftFollowerSim.setQuadratureVelocity(
 			distanceToNativeUnits(driveSim.getLeftPositionMeters())
 		);
-		leftEncoderSim.setRawPosition(
-			metersToRotations(Meters.of(driveSim.getLeftPositionMeters()))
-		);
-		leftEncoderSim.setVelocity(
-			metersToRotationsVel(MetersPerSecond.of(driveSim.getLeftVelocityMetersPerSecond()))
-		);
+		// leftEncoderSim.setRawPosition(
+		// 	metersToRotations(Meters.of(driveSim.getLeftPositionMeters()))
+		// );
+		// leftEncoderSim.setVelocity(
+		// 	metersToRotationsVel(MetersPerSecond.of(driveSim.getLeftVelocityMetersPerSecond()))
+		// );
 
 		rightLeaderSim.setQuadratureRawPosition(
 			distanceToNativeUnits(driveSim.getRightPositionMeters())
@@ -234,12 +234,12 @@ public class KitbotTankDrivetrain extends SubsystemBase implements Drivetrain {
 		rightFollowerSim.setQuadratureVelocity(
 			distanceToNativeUnits(driveSim.getRightPositionMeters())
 		);
-		rightEncoderSim.setRawPosition(
-			metersToRotations(Meters.of(driveSim.getRightPositionMeters()))
-		);
-		rightEncoderSim.setVelocity(
-			metersToRotationsVel(MetersPerSecond.of(driveSim.getRightVelocityMetersPerSecond()))
-		);
+		// rightEncoderSim.setRawPosition(
+		// 	metersToRotations(Meters.of(driveSim.getRightPositionMeters()))
+		// );
+		// rightEncoderSim.setVelocity(
+		// 	metersToRotationsVel(MetersPerSecond.of(driveSim.getRightVelocityMetersPerSecond()))
+		// );
 
 		imu.simSetRawYaw(driveSim.getHeading());
 
@@ -254,8 +254,8 @@ public class KitbotTankDrivetrain extends SubsystemBase implements Drivetrain {
 
 		SmartDashboard.putNumber("Left voltage", leftLeader.get() * RobotController.getInputVoltage());
 		SmartDashboard.putNumber("Right voltage", rightLeader.get() * RobotController.getInputVoltage());
-		SmartDashboard.putNumber("Left encoder", rotationsToMeters(leftEncoder.getPosition().getValue()).in(Meters));
-		SmartDashboard.putNumber("Right encoder", rotationsToMeters(rightEncoder.getPosition().getValue()).in(Meters));
+		// SmartDashboard.putNumber("Left encoder", rotationsToMeters(leftEncoder.getPosition().getValue()).in(Meters));
+		// SmartDashboard.putNumber("Right encoder", rotationsToMeters(rightEncoder.getPosition().getValue()).in(Meters));
 	}
 
 	// Command factory to create command to drive the robot with joystick inputs.
@@ -266,13 +266,13 @@ public class KitbotTankDrivetrain extends SubsystemBase implements Drivetrain {
 
 	/** See {@link DifferentialDrivePoseEstimator#addVisionMeasurement(Pose2d, double)}. */
 	public void addVisionMeasurement(Pose2d visionMeasurement, double timestampSeconds) {
-		poseEstimator.addVisionMeasurement(visionMeasurement, timestampSeconds);
+		// poseEstimator.addVisionMeasurement(visionMeasurement, timestampSeconds);
 	}
 
 	/** See {@link DifferentialDrivePoseEstimator#addVisionMeasurement(Pose2d, double, Matrix)}. */
 	public void addVisionMeasurement(
 			Pose2d visionMeasurement, double timestampSeconds, Matrix<N3, N1> stdDevs) {
-		poseEstimator.addVisionMeasurement(visionMeasurement, timestampSeconds, stdDevs);
+		// poseEstimator.addVisionMeasurement(visionMeasurement, timestampSeconds, stdDevs);
 	}
 
 	public void resetFieldOrientation() {
@@ -292,7 +292,8 @@ public class KitbotTankDrivetrain extends SubsystemBase implements Drivetrain {
 
 	/** Get the estimated pose of the swerve drive on the field. */
 	public Pose2d getPose() {
-		return poseEstimator.getEstimatedPosition();
+		// return poseEstimator.getEstimatedPosition();
+		return new Pose2d();
 	}
 
 	/** The heading of the swerve drive's estimated pose on the field. */
