@@ -4,6 +4,9 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
+import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.sim.SparkMaxSim;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -18,6 +21,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -71,14 +75,14 @@ public class KitbotFuelSubsystem extends SubsystemBase {
   private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(kS, kV, kA);
   private double intakeLauncherTargetVelocity = 0.0;
 
-  private final SparkMax feederMotor = new SparkMax(FEEDER_MOTOR_ID, MotorType.kBrushed);
-  private final SparkMax intakeLauncherMotor = new SparkMax(INTAKE_LAUNCHER_MOTOR_ID, MotorType.kBrushed);
+  private final WPI_TalonSRX feederMotor = new WPI_TalonSRX(FEEDER_MOTOR_ID);
+  private final WPI_TalonSRX intakeLauncherMotor = new WPI_TalonSRX(INTAKE_LAUNCHER_MOTOR_ID);
   private final Encoder intakeLauncherEncoder = new Encoder(INTAKE_LAUNCHER_ENCODER_A_CHANNEL, INTAKE_LAUNCHER_ENCODER_B_CHANNEL);
 
   private final DCMotor feederGearbox = DCMotor.getCIM(1);
   private final DCMotor intakeLauncherGearbox = DCMotor.getCIM(1);
-  private final SparkMaxSim feederMotorSim = new SparkMaxSim(feederMotor, feederGearbox);
-  private final SparkMaxSim intakeLauncherMotorSim = new SparkMaxSim(intakeLauncherMotor, intakeLauncherGearbox);
+  private final TalonSRXSimCollection feederMotorSim = feederMotor.getSimCollection();
+  private final TalonSRXSimCollection intakeLauncherMotorSim = feederMotor.getSimCollection();
   private final EncoderSim intakeLauncherEncoderSim = new EncoderSim(intakeLauncherEncoder);
 
   /** Creates a new CANBallSubsystem. */
@@ -89,18 +93,14 @@ public class KitbotFuelSubsystem extends SubsystemBase {
 
     // create the configuration for the feeder roller, set a current limit and apply
     // the config to the controller
-    SparkMaxConfig feederConfig = new SparkMaxConfig();
-    feederConfig.smartCurrentLimit(FEEDER_MOTOR_CURRENT_LIMIT);
-    feederMotor.configure(feederConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    feederMotor.configPeakCurrentLimit(FEEDER_MOTOR_CURRENT_LIMIT);
 
     // create the configuration for the launcher roller, set a current limit, set
     // the motor to inverted so that positive values are used for both intaking and
     // launching, and apply the config to the controller
-    SparkMaxConfig launcherConfig = new SparkMaxConfig();
-    launcherConfig.inverted(true);
-    launcherConfig.smartCurrentLimit(LAUNCHER_MOTOR_CURRENT_LIMIT);
-    intakeLauncherMotor.configure(launcherConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-  
+    intakeLauncherMotor.configPeakCurrentLimit(LAUNCHER_MOTOR_CURRENT_LIMIT);
+    intakeLauncherMotor.setInverted(true);
+
     // Set the intake launcher setpoint to 0.0
     intakeLauncherTargetVelocity = 0.0;
   }
