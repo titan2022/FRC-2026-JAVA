@@ -28,11 +28,11 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class KitbotFuelSubsystem extends SubsystemBase {
   // Motor controller IDs for Fuel Mechanism motors
-	public static final int FEEDER_MOTOR_ID = 6;
-	public static final int INTAKE_LAUNCHER_MOTOR_ID = 5;
+	public static final int FEEDER_MOTOR_ID = 14;
+	public static final int INTAKE_LAUNCHER_MOTOR_ID = 15;
 
-  public static final int INTAKE_LAUNCHER_ENCODER_A_CHANNEL = 1;
-  public static final int INTAKE_LAUNCHER_ENCODER_B_CHANNEL = 0;
+  public static final int INTAKE_LAUNCHER_ENCODER_A_CHANNEL = 2;
+  public static final int INTAKE_LAUNCHER_ENCODER_B_CHANNEL = 1;
 
 	// Current limit and nominal voltage for fuel mechanism motors.
 	public static final int FEEDER_MOTOR_CURRENT_LIMIT = 60;

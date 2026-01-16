@@ -48,14 +48,15 @@ public class KitbotTankDrivetrain extends SubsystemBase implements Drivetrain {
 	// private final SparkMax rightFollower;
 
 	// Motor controller IDs for drivetrain motors
-	public static final int LEFT_LEADER_ID = 1;
-	public static final int LEFT_FOLLOWER_ID = 2;
-	public static final int RIGHT_LEADER_ID = 3;
-	public static final int RIGHT_FOLLOWER_ID = 4;
+	public static final int LEFT_LEADER_ID = 13;
+	public static final int LEFT_FOLLOWER_ID = 12;
+	public static final int RIGHT_LEADER_ID = 11;
+	public static final int RIGHT_FOLLOWER_ID = 10;
 
-	public static final int LEFT_ENCODER_ID = 5;
-	public static final int RIGHT_ENCODER_ID = 6;
+	// public static final int LEFT_ENCODER_ID = 5;
+	// public static final int RIGHT_ENCODER_ID = 6;
 
+	// Only used in sim
 	public static final int PIGEON_ID = 7;
 
 	// Current limit for drivetrain motors. 60A is a reasonable maximum to reduce
