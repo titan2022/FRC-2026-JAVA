@@ -66,16 +66,11 @@ public class KitbotFuelSubsystem extends SubsystemBase {
   public double kI = 0.0;
   public double kD = 0.0;
 
-  // TODO find some non-arbitrary values
-  public double MAX_ACCELERATION = 5; // m/s^2
-  public double MAX_JERK = 5; // m/s^3
-
   public double kS = 0.0;
   public double kV = 0.0;
   public double kA = 0.0;
 
-  private ProfiledPIDController pid = new ProfiledPIDController(kP, kI, kD,
-    new TrapezoidProfile.Constraints(MAX_ACCELERATION, MAX_JERK));
+  private PIDController pid = new PIDController(kP, kI, kD);
   private SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(kS, kV, kA);
   private double intakeLauncherTargetVelocity = 0.0;
 
@@ -94,7 +89,7 @@ public class KitbotFuelSubsystem extends SubsystemBase {
     intakeLauncherGearbox
   );
   private final TalonSRXSimCollection feederMotorSim = feederMotor.getSimCollection();
-  private final TalonSRXSimCollection intakeLauncherMotorSim = feederMotor.getSimCollection();
+  private final TalonSRXSimCollection intakeLauncherMotorSim = intakeLauncherMotor.getSimCollection();
   private final EncoderSim intakeLauncherEncoderSim = new EncoderSim(intakeLauncherEncoder);
 
   /** Creates a new CANBallSubsystem. */
@@ -154,7 +149,7 @@ public class KitbotFuelSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     double pidfCalculation = pid.calculate(intakeLauncherEncoder.getRate(), intakeLauncherTargetVelocity)
-      + feedforward.calculate(pid.getSetpoint().position);
+      + feedforward.calculate(intakeLauncherTargetVelocity);
     intakeLauncherMotor.setVoltage(pidfCalculation);
 
     getValuesFromDashboard();
@@ -162,7 +157,7 @@ public class KitbotFuelSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Intake Launcher/Target Velocity", intakeLauncherTargetVelocity);
     SmartDashboard.putNumber("Intake Launcher/Current Velocity", intakeLauncherEncoder.getRate());
     SmartDashboard.putNumber("Intake Launcher/Current Voltage", pidfCalculation);
-    SmartDashboard.putNumber("Intake Launcher/Setpoint", pid.getSetpoint().position); // actually a velocity
+    // SmartDashboard.putNumber("Intake Launcher/Setpoint", pid.getSetpoint()); // actually a velocity
   }
 
   @Override
