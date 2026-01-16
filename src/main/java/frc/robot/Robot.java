@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.drive.Drivetrain;
 import frc.robot.drive.DriveUtility;
@@ -46,6 +47,12 @@ public class Robot extends TimedRobot {
   // The operator's controller
   private final CommandXboxController operatorController = new CommandXboxController(
       OperatorConstants.kOperatorControllerPort);
+
+	private final CommandGenericHID operatorKeyboard = new CommandGenericHID(
+		OperatorConstants.kOperatorControllerPort
+	);
+
+	private static final boolean useKeyboard = true;
 
 	// public final Drivetrain drivetrain = DriveUtility.makeDrivetrain(this::resetPose);
 	public final KitbotTankDrivetrain drivetrain = new KitbotTankDrivetrain();
@@ -72,18 +79,25 @@ public class Robot extends TimedRobot {
 
 	private void configureBindings() {
 		// While the left bumper on operator controller is held, intake Fuel
-		operatorController.leftBumper()
+		// `z` on keyboard
+		(useKeyboard ? operatorKeyboard.button(1) : operatorController.leftBumper())
 				.whileTrue(fuelSubsystem.runEnd(() -> fuelSubsystem.intake(), () -> fuelSubsystem.stop()));
 		// While the right bumper on the operator controller is held, spin up for 1
 		// second, then launch fuel. When the button is released, stop.
-		operatorController.rightBumper()
+		// `x` on keyboard
+		(useKeyboard ? operatorKeyboard.button(2) : operatorController.rightBumper())
 				.whileTrue(fuelSubsystem.spinUpCommand().withTimeout(KitbotFuelSubsystem.SPIN_UP_SECONDS)
 						.andThen(fuelSubsystem.launchCommand())
 						.finallyDo(() -> fuelSubsystem.stop()));
 		// While the A button is held on the operator controller, eject fuel back out
 		// the intake
-		operatorController.a()
+		// `c` on keyboard
+		(useKeyboard ? operatorKeyboard.button(3) : operatorController.a())
 				.whileTrue(fuelSubsystem.runEnd(() -> fuelSubsystem.eject(), () -> fuelSubsystem.stop()));
+
+		// `v` on keyboard
+		operatorKeyboard.button(4)
+			.whileTrue(fuelSubsystem.launchCommand());
 
 		// Set the default command for the drive subsystem to the command provided by
 		// factory with the values provided by the joystick axes on the driver

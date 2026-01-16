@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import static frc.robot.ToSI.*;
+
 import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -18,10 +20,12 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
+import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -81,6 +85,14 @@ public class KitbotFuelSubsystem extends SubsystemBase {
 
   private final DCMotor feederGearbox = DCMotor.getCIM(1);
   private final DCMotor intakeLauncherGearbox = DCMotor.getCIM(1);
+  private final DCMotorSim intakeLauncherMechanismSim = new DCMotorSim(
+    LinearSystemId.createDCMotorSystem(
+      intakeLauncherGearbox,
+      2.152 * in * in * lb, // https://discord.com/channels/176186766946992128/368993897495527424/1461521331190370335
+      1 // TODO
+    ),
+    intakeLauncherGearbox
+  );
   private final TalonSRXSimCollection feederMotorSim = feederMotor.getSimCollection();
   private final TalonSRXSimCollection intakeLauncherMotorSim = feederMotor.getSimCollection();
   private final EncoderSim intakeLauncherEncoderSim = new EncoderSim(intakeLauncherEncoder);
@@ -141,14 +153,25 @@ public class KitbotFuelSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    intakeLauncherMotor.setVoltage(pid.calculate(intakeLauncherEncoder.getRate(), intakeLauncherTargetVelocity) + feedforward.calculate(pid.getSetpoint().position));
+    double pidfCalculation = pid.calculate(intakeLauncherEncoder.getRate(), intakeLauncherTargetVelocity)
+      + feedforward.calculate(pid.getSetpoint().position);
+    intakeLauncherMotor.setVoltage(pidfCalculation);
 
     getValuesFromDashboard();
 
     SmartDashboard.putNumber("Intake Launcher/Target Velocity", intakeLauncherTargetVelocity);
     SmartDashboard.putNumber("Intake Launcher/Current Velocity", intakeLauncherEncoder.getRate());
-    SmartDashboard.putNumber("Intake Launcher/Current Velocity", intakeLauncherEncoder.getRate());
+    SmartDashboard.putNumber("Intake Launcher/Current Voltage", pidfCalculation);
     SmartDashboard.putNumber("Intake Launcher/Setpoint", pid.getSetpoint().position); // actually a velocity
+  }
+
+  @Override
+  public void simulationPeriodic () {
+    intakeLauncherMechanismSim.setInputVoltage(intakeLauncherMotorSim.getMotorOutputLeadVoltage());
+    intakeLauncherMechanismSim.update(0.020);
+
+    intakeLauncherEncoderSim.setDistance(intakeLauncherMechanismSim.getAngularPositionRotations() * LAUNCHER_WHEEL_CIRCUMFERENCE);
+    intakeLauncherEncoderSim.setRate(intakeLauncherMechanismSim.getAngularVelocityRadPerSec() / (2 * Math.PI) * LAUNCHER_WHEEL_CIRCUMFERENCE);
   }
 
   // A method to set the rollers to values for intaking

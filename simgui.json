@@ -114,6 +114,9 @@
         "open": true
       },
       "SmartDashboard": {
+        "Intake Launcher": {
+          "open": true
+        },
         "VisionSystemSim-main": {
           "open": true
         },
