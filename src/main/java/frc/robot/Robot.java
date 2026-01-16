@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -54,7 +55,7 @@ public class Robot extends TimedRobot {
 	);
 
 	private static final boolean useKeyboard = true;
-	private static final boolean useSysId = true;
+	private static final boolean useSysId = false;
 
 	// public final Drivetrain drivetrain = DriveUtility.makeDrivetrain(this::resetPose);
 	public final KitbotTankDrivetrain drivetrain = new KitbotTankDrivetrain();
@@ -99,8 +100,11 @@ public class Robot extends TimedRobot {
 					.whileTrue(fuelSubsystem.runEnd(() -> fuelSubsystem.eject(), () -> fuelSubsystem.stop()));
 
 			// `v` on keyboard
-			operatorKeyboard.button(4)
+			(useKeyboard ? operatorKeyboard.button(4) : operatorController.b())
 				.whileTrue(fuelSubsystem.launchCommand());
+			
+			if(!useKeyboard) operatorController.x()
+				.whileTrue(Commands.run((fuelSubsystem::stop)));
 		} else {
 			operatorController.y().whileTrue(fuelSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
 			operatorController.a().whileTrue(fuelSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));

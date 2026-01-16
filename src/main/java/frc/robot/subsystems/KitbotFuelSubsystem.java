@@ -206,6 +206,7 @@ public class KitbotFuelSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Intake Launcher/Target Velocity", intakeLauncherTargetVelocity);
     SmartDashboard.putNumber("Intake Launcher/Current Velocity", intakeLauncherEncoder.getRate());
     SmartDashboard.putNumber("Intake Launcher/Current Voltage", pidfCalculation);
+    SmartDashboard.putNumber("Intake Launcher/Current Voltage (from motor)", intakeLauncherMotor.getMotorOutputVoltage());
     // SmartDashboard.putNumber("Intake Launcher/Setpoint", pid.getSetpoint()); // actually a velocity
   }
 
