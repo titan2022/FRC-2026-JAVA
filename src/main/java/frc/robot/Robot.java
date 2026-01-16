@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.drive.Drivetrain;
 import frc.robot.drive.DriveUtility;
@@ -84,6 +85,13 @@ public class Robot extends TimedRobot {
 		operatorController.a()
 				.whileTrue(fuelSubsystem.runEnd(() -> fuelSubsystem.eject(), () -> fuelSubsystem.stop()));
 
+
+		operatorController.b()
+			.whileTrue(fuelSubsystem.launchCommand());
+		
+		operatorController.x()
+			.whileTrue(Commands.run(() -> fuelSubsystem.stop()));
+		
 		// Set the default command for the drive subsystem to the command provided by
 		// factory with the values provided by the joystick axes on the driver
 		// controller. The Y axis of the controller is inverted so that pushing the
