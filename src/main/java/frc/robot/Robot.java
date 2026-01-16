@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.drive.Drivetrain;
 import frc.robot.drive.DriveUtility;
 import frc.robot.drive.kitbot.KitbotTankDrivetrain;
@@ -53,6 +54,7 @@ public class Robot extends TimedRobot {
 	);
 
 	private static final boolean useKeyboard = true;
+	private static final boolean useSysId = true;
 
 	// public final Drivetrain drivetrain = DriveUtility.makeDrivetrain(this::resetPose);
 	public final KitbotTankDrivetrain drivetrain = new KitbotTankDrivetrain();
@@ -78,26 +80,33 @@ public class Robot extends TimedRobot {
 	}
 
 	private void configureBindings() {
-		// While the left bumper on operator controller is held, intake Fuel
-		// `z` on keyboard
-		(useKeyboard ? operatorKeyboard.button(1) : operatorController.leftBumper())
-				.whileTrue(fuelSubsystem.runEnd(() -> fuelSubsystem.intake(), () -> fuelSubsystem.stop()));
-		// While the right bumper on the operator controller is held, spin up for 1
-		// second, then launch fuel. When the button is released, stop.
-		// `x` on keyboard
-		(useKeyboard ? operatorKeyboard.button(2) : operatorController.rightBumper())
-				.whileTrue(fuelSubsystem.spinUpCommand().withTimeout(KitbotFuelSubsystem.SPIN_UP_SECONDS)
-						.andThen(fuelSubsystem.launchCommand())
-						.finallyDo(() -> fuelSubsystem.stop()));
-		// While the A button is held on the operator controller, eject fuel back out
-		// the intake
-		// `c` on keyboard
-		(useKeyboard ? operatorKeyboard.button(3) : operatorController.a())
-				.whileTrue(fuelSubsystem.runEnd(() -> fuelSubsystem.eject(), () -> fuelSubsystem.stop()));
+		if(!useSysId) {
+			// While the left bumper on operator controller is held, intake Fuel
+			// `z` on keyboard
+			(useKeyboard ? operatorKeyboard.button(1) : operatorController.leftBumper())
+					.whileTrue(fuelSubsystem.runEnd(() -> fuelSubsystem.intake(), () -> fuelSubsystem.stop()));
+			// While the right bumper on the operator controller is held, spin up for 1
+			// second, then launch fuel. When the button is released, stop.
+			// `x` on keyboard
+			(useKeyboard ? operatorKeyboard.button(2) : operatorController.rightBumper())
+					.whileTrue(fuelSubsystem.spinUpCommand().withTimeout(KitbotFuelSubsystem.SPIN_UP_SECONDS)
+							.andThen(fuelSubsystem.launchCommand())
+							.finallyDo(() -> fuelSubsystem.stop()));
+			// While the A button is held on the operator controller, eject fuel back out
+			// the intake
+			// `c` on keyboard
+			(useKeyboard ? operatorKeyboard.button(3) : operatorController.a())
+					.whileTrue(fuelSubsystem.runEnd(() -> fuelSubsystem.eject(), () -> fuelSubsystem.stop()));
 
-		// `v` on keyboard
-		operatorKeyboard.button(4)
-			.whileTrue(fuelSubsystem.launchCommand());
+			// `v` on keyboard
+			operatorKeyboard.button(4)
+				.whileTrue(fuelSubsystem.launchCommand());
+		} else {
+			operatorController.y().whileTrue(fuelSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+			operatorController.a().whileTrue(fuelSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+			operatorController.b().whileTrue(fuelSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
+			operatorController.x().whileTrue(fuelSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+		}
 
 		// Set the default command for the drive subsystem to the command provided by
 		// factory with the values provided by the joystick axes on the driver

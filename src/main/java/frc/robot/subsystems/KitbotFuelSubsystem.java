@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import static frc.robot.ToSI.*;
+import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -13,12 +14,17 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.MutAngle;
+import edu.wpi.first.units.measure.MutAngularVelocity;
+import edu.wpi.first.units.measure.MutVoltage;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class KitbotFuelSubsystem extends SubsystemBase {
   // Motor controller IDs for Fuel Mechanism motors
@@ -81,6 +87,57 @@ public class KitbotFuelSubsystem extends SubsystemBase {
   private final TalonSRXSimCollection feederMotorSim = feederMotor.getSimCollection();
   private final TalonSRXSimCollection intakeLauncherMotorSim = intakeLauncherMotor.getSimCollection();
   private final EncoderSim intakeLauncherEncoderSim = new EncoderSim(intakeLauncherEncoder);
+
+  // MARK - SysId 
+
+  // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
+  private final MutVoltage m_appliedVoltage = Volts.mutable(0);
+  // Mutable holder for unit-safe linear distance values, persisted to avoid reallocation.
+  private final MutAngle m_angle = Radians.mutable(0);
+  // Mutable holder for unit-safe linear velocity values, persisted to avoid reallocation.
+  private final MutAngularVelocity m_velocity = RadiansPerSecond.mutable(0);
+
+  // Create a new SysId routine for characterizing the shooter.
+  private final SysIdRoutine m_sysIdRoutine =
+    new SysIdRoutine(
+      // Empty config defaults to 1 volt/second ramp rate and 7 volt step voltage.
+      new SysIdRoutine.Config(),
+      new SysIdRoutine.Mechanism(
+        // Tell SysId how to plumb the driving voltage to the motor(s).
+        intakeLauncherMotor::setVoltage,
+        // Tell SysId how to record a frame of data for each motor on the mechanism being
+        // characterized.
+        log -> {
+          // Record a frame for the shooter motor.
+          log.motor("shooter-wheel")
+            .voltage(
+              m_appliedVoltage.mut_replace(
+                intakeLauncherMotor.get() * RobotController.getBatteryVoltage(), Volts))
+            .angularPosition(m_angle.mut_replace(intakeLauncherEncoder.getDistance() / LAUNCHER_WHEEL_CIRCUMFERENCE, Rotations))
+            .angularVelocity(
+              m_velocity.mut_replace(intakeLauncherEncoder.getRate() / LAUNCHER_WHEEL_CIRCUMFERENCE, RotationsPerSecond));
+        },
+        // Tell SysId to make generated commands require this subsystem, suffix test state in
+        // WPILog with this subsystem's name ("shooter")
+        this));
+
+  /**
+   * Returns a command that will execute a quasistatic test in the given direction.
+   *
+   * @param direction The direction (forward or reverse) to run the test in
+   */
+  public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+    return m_sysIdRoutine.quasistatic(direction);
+  }
+
+  /**
+   * Returns a command that will execute a dynamic test in the given direction.
+   *
+   * @param direction The direction (forward or reverse) to run the test in
+   */
+  public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+    return m_sysIdRoutine.dynamic(direction);
+  }
 
   /** Creates a new CANBallSubsystem. */
   public KitbotFuelSubsystem() {
