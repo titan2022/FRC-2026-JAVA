@@ -31,8 +31,8 @@ public class KitbotFuelSubsystem extends SubsystemBase {
 	public static final int FEEDER_MOTOR_ID = 14;
 	public static final int INTAKE_LAUNCHER_MOTOR_ID = 15;
 
-  public static final int INTAKE_LAUNCHER_ENCODER_A_CHANNEL = 2;
-  public static final int INTAKE_LAUNCHER_ENCODER_B_CHANNEL = 1;
+  public static final int INTAKE_LAUNCHER_ENCODER_A_CHANNEL = 1;
+  public static final int INTAKE_LAUNCHER_ENCODER_B_CHANNEL = 0;
 
 	// Current limit and nominal voltage for fuel mechanism motors.
 	public static final int FEEDER_MOTOR_CURRENT_LIMIT = 60;
@@ -63,7 +63,7 @@ public class KitbotFuelSubsystem extends SubsystemBase {
   public double kD = 0.0;
 
   public double kS = 0.0;
-  public double kV = 0.0;
+  public double kV = 2.5;
   public double kA = 0.0;
 
   private PIDController pid = new PIDController(kP, kI, kD);
@@ -154,8 +154,10 @@ public class KitbotFuelSubsystem extends SubsystemBase {
     // launching, and apply the config to the controller
     intakeLauncherMotor.configPeakCurrentLimit(LAUNCHER_MOTOR_CURRENT_LIMIT);
 
+    // feederMotor.setInverted(true);
+
     // intakeLauncherMotor.setInverted(true);
-    // intakeLauncherEncoder.setReverseDirection(true);
+    intakeLauncherEncoder.setReverseDirection(true);
 
     // Set the intake launcher setpoint to 0.0
     intakeLauncherTargetVelocity = 0.0;
@@ -205,6 +207,7 @@ public class KitbotFuelSubsystem extends SubsystemBase {
 
     SmartDashboard.putNumber("Intake Launcher/Target Velocity", intakeLauncherTargetVelocity);
     SmartDashboard.putNumber("Intake Launcher/Current Velocity", intakeLauncherEncoder.getRate());
+    SmartDashboard.putNumber("Intake Launcher/Encoder Value", intakeLauncherEncoder.getRaw());
     SmartDashboard.putNumber("Intake Launcher/Current Voltage", pidfCalculation);
     SmartDashboard.putNumber("Intake Launcher/Current Voltage (from motor)", intakeLauncherMotor.getMotorOutputVoltage());
     // SmartDashboard.putNumber("Intake Launcher/Setpoint", pid.getSetpoint()); // actually a velocity
@@ -235,7 +238,8 @@ public class KitbotFuelSubsystem extends SubsystemBase {
 
   // A method to set the rollers to values for launching.
   public void launch() {
-    feederMotor.setVoltage(SmartDashboard.getNumber("Launching feeder roller value", LAUNCHING_FEEDER_VOLTAGE));
+    feederMotor.setVoltage(-1 * SmartDashboard.getNumber("Launching feeder roller value", LAUNCHING_FEEDER_VOLTAGE));
+    // feederMotor.set(0);
     intakeLauncherTargetVelocity = LAUNCHING_LAUNCHER_VELOCITY;
   }
 
@@ -250,7 +254,7 @@ public class KitbotFuelSubsystem extends SubsystemBase {
   // push Fuel away from the launcher
   public void spinUp() {
     feederMotor
-        .setVoltage(SmartDashboard.getNumber("Spin-up feeder roller value", SPIN_UP_FEEDER_VOLTAGE));
+        .setVoltage(-1 * SmartDashboard.getNumber("Spin-up feeder roller value", SPIN_UP_FEEDER_VOLTAGE));
     intakeLauncherTargetVelocity = LAUNCHING_LAUNCHER_VELOCITY;
   }
 

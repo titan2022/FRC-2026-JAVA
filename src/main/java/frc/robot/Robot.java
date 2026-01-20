@@ -53,7 +53,7 @@ public class Robot extends TimedRobot {
 		OperatorConstants.kOperatorControllerPort
 	);
 
-	private static final boolean useKeyboard = true;
+	private static final boolean useKeyboard = false;
 	private static final boolean useSysId = false;
 
 	// public final Drivetrain drivetrain = DriveUtility.makeDrivetrain(this::resetPose);
