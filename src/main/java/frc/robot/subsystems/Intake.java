@@ -37,6 +37,11 @@ public class Intake extends SubsystemBase {
     isIntaking = true;
   }
 
+  public void reverseIntake() {
+    intakeMotor.setVoltage(-INTAKE_VOLTAGE);
+    isIntaking = false;
+  }
+
   public void stopIntake() {
     intakeMotor.stopMotor();
     isIntaking = false;
@@ -64,6 +69,30 @@ public class Intake extends SubsystemBase {
 
   public Command intakeCommand() {
     return new IntakeCommand(this);
+  }
+
+  //Add function to check reverse intake, pinion status
+  public class ReverseIntakeCommand extends Command {
+    private final Intake intake;
+
+    public ReverseIntakeCommand(Intake intake) {
+      this.intake = intake;
+      addRequirements(intake);
+    }
+
+    @Override
+    public void initialize() {
+      intake.reverseIntake();
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+      intake.stopIntake();
+    }
+  }
+
+  public Command reverseIntakeCommand() {
+    return new ReverseIntakeCommand(this);
   }
 
 }
