@@ -3,10 +3,11 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
-public class FuelIntakeSubsystem extends SubsystemBase {
+public class Intake extends SubsystemBase {
   private static final double INTAKE_VOLTAGE = 1.0;
   private static final double PINION_VOLTAGE = 1.0;
 
@@ -16,7 +17,7 @@ public class FuelIntakeSubsystem extends SubsystemBase {
   private boolean isIntaking = false;
   private boolean isExtending = false;
   
-  public FuelIntakeSubsystem() {
+  public Intake() {
     pinionMotor.setNeutralMode(NeutralModeValue.Brake);
     intakeMotor.setNeutralMode(NeutralModeValue.Brake);
   }
@@ -42,5 +43,28 @@ public class FuelIntakeSubsystem extends SubsystemBase {
   }
 
   // Add function to check intake, pinion status
+  public class IntakeCommand extends Command {
+    private final Intake intake;
+
+    public IntakeCommand(Intake intake) {
+      this.intake = intake;
+      addRequirements(intake);
+    }
+
+    @Override
+    public void initialize() {
+      intake.runIntake();
+    }
+
+    @Override
+    public boolean isFinished() {
+      return false;
+    }
+  }
+
+  public Command intakeCommand() {
+    return new IntakeCommand(this);
+  }
 
 }
+
