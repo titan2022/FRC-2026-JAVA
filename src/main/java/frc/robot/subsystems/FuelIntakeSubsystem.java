@@ -6,7 +6,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
-public class Intake extends SubsystemBase {
+public class FuelIntakeSubsystem extends SubsystemBase {
   private static final double INTAKE_VOLTAGE = 1.0;
   private static final double PINION_VOLTAGE = 1.0;
 
@@ -16,7 +16,7 @@ public class Intake extends SubsystemBase {
   private boolean isIntaking = false;
   private boolean isExtending = false;
   
-  public Intake() {
+  public FuelIntakeSubsystem() {
     pinionMotor.setNeutralMode(NeutralModeValue.Brake);
     intakeMotor.setNeutralMode(NeutralModeValue.Brake);
   }
@@ -40,5 +40,7 @@ public class Intake extends SubsystemBase {
     intakeMotor.stopMotor();
     isIntaking = false;
   }
+
+  // Add function to check intake, pinion status
 
 }

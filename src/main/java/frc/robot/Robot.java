@@ -25,7 +25,7 @@ import frc.robot.drive.sim.SimSwerveConstants;
 import frc.robot.drive.sim.SimSwerveDrivetrain;
 import frc.robot.localization.Vision;
 import frc.robot.subsystems.GamepieceLauncher;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.FuelIntakeSubsystem;
 
 public class Robot extends TimedRobot {
 	private Command m_autonomousCommand;
@@ -38,7 +38,7 @@ public class Robot extends TimedRobot {
 
 	public final GamepieceLauncher gpLauncher = new GamepieceLauncher();
 
-	public final Intake intake = new Intake();
+	public final FuelIntakeSubsystem intake = new FuelIntakeSubsystem();
 
 	public SendableChooser<Command> autoChooser;
 
