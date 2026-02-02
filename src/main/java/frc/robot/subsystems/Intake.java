@@ -57,8 +57,8 @@ public class Intake extends SubsystemBase {
     }
 
     @Override
-    public boolean isFinished() {
-      return false;
+    public void end(boolean interrupted) {
+      intake.stopIntake();
     }
   }
 
