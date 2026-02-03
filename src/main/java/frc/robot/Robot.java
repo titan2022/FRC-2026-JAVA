@@ -54,7 +54,7 @@ public class Robot extends TimedRobot {
 	);
 
 	private static final boolean useKeyboard = false;
-	private static final boolean useSysId = false;
+	private static final boolean useSysId = true;
 
 	// public final Drivetrain drivetrain = DriveUtility.makeDrivetrain(this::resetPose);
 	public final KitbotTankDrivetrain drivetrain = new KitbotTankDrivetrain();

@@ -9,6 +9,8 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
+import dev.doglog.DogLog;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -101,7 +103,12 @@ public class KitbotFuelSubsystem extends SubsystemBase {
   private final SysIdRoutine m_sysIdRoutine =
     new SysIdRoutine(
       // Empty config defaults to 1 volt/second ramp rate and 7 volt step voltage.
-      new SysIdRoutine.Config(),
+      new SysIdRoutine.Config(
+        Volts.of(1).per(Second),
+        Volts.of(7),
+        Seconds.of(10),
+        (state) -> DogLog.log("Intake Launcher/SysID State", state)
+      ),
       new SysIdRoutine.Mechanism(
         // Tell SysId how to plumb the driving voltage to the motor(s).
         intakeLauncherMotor::setVoltage,
