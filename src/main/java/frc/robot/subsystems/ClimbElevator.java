@@ -29,7 +29,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  * Elevator subsystem using TalonFX with Krakenx60 motor
  */
 @Logged(name = "Climb")
-public class Climb extends SubsystemBase {
+public class ClimbElevator extends SubsystemBase {
 
   // Constants
   private final DCMotor dcMotor = DCMotor.getKrakenX60(1);
@@ -77,7 +77,7 @@ public class Climb extends SubsystemBase {
   /**
    * Creates a new Elevator Subsystem.
    */
-  public Climb() {
+  public ClimbElevator() {
     // Initialize motor controller
     motor = new TalonFX(canID);
 

@@ -16,9 +16,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 /**
  * Visualization for the elevator subsystem in simulation.
  */
-public class ClimbSim extends SubsystemBase {
+public class ClimbElevatorSim extends SubsystemBase {
 
-  private final Climb elevator;
+  private final ClimbElevator elevator;
 
   // Simulation display
   private final Mechanism2d mech;
@@ -41,7 +41,7 @@ public class ClimbSim extends SubsystemBase {
    *
    * @param elevatorSubsystem The elevator subsystem to visualize
    */
-  public ClimbSim(Climb elevatorSubsystem) {
+  public ClimbElevatorSim(ClimbElevator elevatorSubsystem) {
     this.elevator = elevatorSubsystem;
 
     // Get elevator parameters from simulation
