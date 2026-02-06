@@ -7,14 +7,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
+
+  // Both of these need to be replaced with proper voltage values
+
   private static final double INTAKE_VOLTAGE = 1.0;
   private static final double PINION_VOLTAGE = 1.0;
 
+  // Use better ID values?
   private static final TalonFX pinionMotor = new TalonFX(60, "rio");
   private static final TalonFX intakeMotor = new TalonFX(70, "rio");
-
-  private boolean isIntaking = false;
-  private boolean isExtending = false;
 
   public Intake() {
     pinionMotor.setNeutralMode(NeutralModeValue.Brake);
@@ -23,46 +24,42 @@ public class Intake extends SubsystemBase {
 
   public void extendPinion() {
     pinionMotor.setVoltage(PINION_VOLTAGE);
-    isExtending = true;
   }
 
-  public void reversePinion() {
+  public void retractPinion() {
     pinionMotor.setVoltage(-PINION_VOLTAGE);
-    isExtending = false;
   }
 
   public void stopPinion() {
     pinionMotor.stopMotor();
-    isExtending = false;
   }
 
-  public void runIntake() {
+  public void forwardIntake() {
     intakeMotor.setVoltage(INTAKE_VOLTAGE);
-    isIntaking = true;
   }
 
   public void reverseIntake() {
     intakeMotor.setVoltage(-INTAKE_VOLTAGE);
-    isIntaking = false;
   }
 
   public void stopIntake() {
     intakeMotor.stopMotor();
-    isIntaking = false;
   }
 
-  // Add function to check intake, pinion status
-  public class IntakeCommand extends Command {
+  // Might be worth converting the below to lambda form
+
+  // Command to intake
+  public class forwardIntakeCommand extends Command {
     private final Intake intake;
 
-    public IntakeCommand(Intake intake) {
+    public forwardIntakeCommand(Intake intake) {
       this.intake = intake;
       addRequirements(intake);
     }
 
     @Override
     public void initialize() {
-      intake.runIntake();
+      intake.forwardIntake();
     }
 
     @Override
@@ -71,15 +68,15 @@ public class Intake extends SubsystemBase {
     }
   }
 
-  public Command intakeCommand() {
-    return new IntakeCommand(this);
+  public Command forwardIntakeCommand() {
+    return new forwardIntakeCommand(this);
   }
 
-  // Add function to check reverse intake, pinion status
-  public class ReverseIntakeCommand extends Command {
+  // Command to reverse intake
+  public class reverseIntakeCommand extends Command {
     private final Intake intake;
 
-    public ReverseIntakeCommand(Intake intake) {
+    public reverseIntakeCommand(Intake intake) {
       this.intake = intake;
       addRequirements(intake);
     }
@@ -95,21 +92,20 @@ public class Intake extends SubsystemBase {
     }
   }
 
-  public Command reverseIntakeCommand() {
-    return new ReverseIntakeCommand(this);
-  }
+  
 
-  public class ReversePinionCommand extends Command {
+  // Command to extend pinion
+  public class extendPinionCommand extends Command {
     private final Intake intake;
 
-    public ReversePinionCommand(Intake intake) {
+    public extendPinionCommand(Intake intake) {
       this.intake = intake;
       addRequirements(intake);
     }
 
     @Override
     public void initialize() {
-      intake.reversePinion();
+      intake.extendPinion();
     }
 
     @Override
@@ -119,8 +115,33 @@ public class Intake extends SubsystemBase {
 
   }
 
-  public Command ReversePinionCommand() {
-    return new ReversePinionCommand(this);
+  public Command extendPinionCommand() {
+    return new extendPinionCommand(this);
+  }
+
+  // Command to retract pinion
+  public class retractPinionCommand extends Command {
+    private final Intake intake;
+
+    public retractPinionCommand(Intake intake) {
+      this.intake = intake;
+      addRequirements(intake);
+    }
+
+    @Override
+    public void initialize() {
+      intake.retractPinion();
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+      intake.stopPinion();
+    }
+
+  }
+
+  public Command retractPinionCommand() {
+    return new retractPinionCommand(this);
   }
 
 }
