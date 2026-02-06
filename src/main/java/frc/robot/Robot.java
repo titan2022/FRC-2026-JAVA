@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.*;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -21,17 +23,26 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.drive.CommandSwerveDrivetrain;
 import frc.robot.drive.DriveUtility;
+import frc.robot.drive.ctre.CTRESwerveDrivetrain;
+import frc.robot.drive.ctre.CTRESwerveTelemetry;
+import frc.robot.drive.ctre.TunerConstants;
 import frc.robot.drive.sim.SimSwerveConstants;
 import frc.robot.drive.sim.SimSwerveDrivetrain;
 import frc.robot.localization.Vision;
 import frc.robot.subsystems.GamepieceLauncher;
 
 public class Robot extends TimedRobot {
+	private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+	private double MaxAngularRate =
+					RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+	
+	private final CTRESwerveTelemetry logger = new CTRESwerveTelemetry(MaxSpeed);
+
 	private Command m_autonomousCommand;
 
 	public final XboxController controller = new XboxController(0);
 
-	public final CommandSwerveDrivetrain drivetrain = DriveUtility.makeDrivetrain(this::resetPose);
+	public final CTRESwerveDrivetrain drivetrain = new CTRESwerveDrivetrain();
 
 	public final Vision vision = new Vision(drivetrain::addVisionMeasurement);
 
@@ -42,30 +53,20 @@ public class Robot extends TimedRobot {
 	public Robot() {
 		autoChooser = AutoBuilder.buildAutoChooser();
 		SmartDashboard.putData("Auto Chooser", autoChooser);
+
+		drivetrain.registerTelemetry(logger::telemeterize);
 	}
 
 	@Override
 	public void robotPeriodic() {
 		CommandScheduler.getInstance().run();
 
-		if(RobotBase.isSimulation()) {
-			((SimSwerveDrivetrain)drivetrain).periodic();
-		}
+		// if(RobotBase.isSimulation()) {
+		// 	((SimSwerveDrivetrain)drivetrain).periodic();
+		// }
 
 		// Update vision
 		vision.periodic();
-
-		// Test/Example only!
-		// Apply an offset to pose estimator to test vision correction
-		// You probably don't want this on a real robot, just delete it.
-		// if (controller.getBButtonPressed()) {
-		// 	var disturbance =
-		// 		new Transform2d(new Translation2d(1.0, 1.0), new Rotation2d(0.17 * 2 * Math.PI));
-		// 	drivetrain.resetPose(drivetrain.getPose().plus(disturbance), false);
-		// }
-
-		// Log values to the dashboard
-		drivetrain.log();
 	}
 
 	@Override
@@ -127,25 +128,25 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void simulationPeriodic() {
-		SimSwerveDrivetrain simDrivetrain = (SimSwerveDrivetrain)drivetrain;
-		simDrivetrain.simulationPeriodic();
-		// Update camera simulation
-		vision.simulationPeriodic(simDrivetrain.getSimPose());
+		// SimSwerveDrivetrain simDrivetrain = (SimSwerveDrivetrain)drivetrain;
+		// simDrivetrain.simulationPeriodic();
+		// // Update camera simulation
+		// vision.simulationPeriodic(simDrivetrain.getSimPose());
 
-		var debugField = vision.getSimDebugField();
-		debugField.getObject("EstimatedRobot").setPose(simDrivetrain.getPose());
-		debugField.getObject("EstimatedRobotModules").setPoses(simDrivetrain.getModulePoses());
+		// var debugField = vision.getSimDebugField();
+		// debugField.getObject("EstimatedRobot").setPose(simDrivetrain.getPose());
+		// debugField.getObject("EstimatedRobotModules").setPoses(simDrivetrain.getModulePoses());
 
-		// Update gamepiece launcher simulation
-		gpLauncher.simulationPeriodic();
+		// // Update gamepiece launcher simulation
+		// gpLauncher.simulationPeriodic();
 
-		// Calculate battery voltage sag due to current draw
-		var batteryVoltage =
-			BatterySim.calculateDefaultBatteryLoadedVoltage(simDrivetrain.getCurrentDraw());
+		// // Calculate battery voltage sag due to current draw
+		// var batteryVoltage =
+		// 	BatterySim.calculateDefaultBatteryLoadedVoltage(simDrivetrain.getCurrentDraw());
 
-		// Using max(0.1, voltage) here isn't a *physically correct* solution,
-		// but it avoids problems with battery voltage measuring 0.
-		RoboRioSim.setVInVoltage(Math.max(0.1, batteryVoltage));
+		// // Using max(0.1, voltage) here isn't a *physically correct* solution,
+		// // but it avoids problems with battery voltage measuring 0.
+		// RoboRioSim.setVInVoltage(Math.max(0.1, batteryVoltage));
 	}
 
 	public void resetPose() {
@@ -153,9 +154,9 @@ public class Robot extends TimedRobot {
 	}
 
 	public void resetPose(Pose2d startPose) {
-		if(RobotBase.isSimulation()) {
-			((SimSwerveDrivetrain)drivetrain).resetPose(startPose, true);
-		}
+		// if(RobotBase.isSimulation()) {
+		// 	((SimSwerveDrivetrain)drivetrain).resetPose(startPose, true);
+		// }
 		vision.resetSimPose(startPose);
 	}
 }

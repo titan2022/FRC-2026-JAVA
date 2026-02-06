@@ -45,8 +45,6 @@ public interface CommandSwerveDrivetrain extends Subsystem {
 
 	public void brake();
 
-	public void log();
-
 	/** Get the estimated pose of the swerve drive on the field. */
 	public Pose2d getPose();
 
