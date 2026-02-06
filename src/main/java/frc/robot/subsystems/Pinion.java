@@ -8,11 +8,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Pinion extends SubsystemBase {
 
-  // Both of these need to be replaced with proper voltage values
+  // NEEDS to be replaced with proper voltage value
 
   private static final double PINION_VOLTAGE = 1.0;
 
-  // Use better ID values?
+  // Use better ID value?
   private static final TalonFX pinionMotor = new TalonFX(60, "rio");
 
   public Pinion() {
