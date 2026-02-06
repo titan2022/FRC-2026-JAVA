@@ -7,6 +7,7 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import static frc.robot.ToSI.*;
 
+import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
@@ -16,9 +17,6 @@ import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
  * Example of an arm or a pivot
  */
 public class ArmPivot extends PositionPIDFBase {
-  {
-    SUBSYSTEM_NAME = "ArmPivot";
-  }
   // If it's a pivot, use the example values below.
   // If it's an arm, get values from the CAD.
   public boolean IS_ARM = false;
@@ -27,11 +25,18 @@ public class ArmPivot extends PositionPIDFBase {
   // You can estimate it using SingleJointedArmSim.estimateMOI(armLength, 5).
 
   // Simulation
-  protected final SingleJointedArmSim sim;
+  protected SingleJointedArmSim sim;
 
-  protected final ArmPivotSimVisualization simVisualization;
+  protected ArmPivotSimVisualization simVisualization;
 
   public ArmPivot() {
+  }
+
+  // This method MUST be called at the end of subsystem initializers!
+  @Override
+  protected void initialize() {
+    super.initialize();
+
     if(RobotBase.isSimulation()) {
       sim = new SingleJointedArmSim(
         gearbox, // Motor type
@@ -44,9 +49,6 @@ public class ArmPivot extends PositionPIDFBase {
         STARTING_POSITION // Starting position (rad)
       );
       simVisualization = new ArmPivotSimVisualization(this);
-    } else {
-      sim = null;
-      simVisualization = null;
     }
   }
 

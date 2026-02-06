@@ -2,20 +2,29 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Alerts": "Alerts",
       "/SmartDashboard/ArmPivot": "Mechanism2d",
       "/SmartDashboard/Auto Chooser": "String Chooser",
       "/SmartDashboard/PathPlanner": "Alerts",
       "/SmartDashboard/PhotonAlerts": "Alerts",
       "/SmartDashboard/PositionPIDFBase": "Mechanism2d",
-      "/SmartDashboard/VisionSystemSim-main/Sim Field": "Field2d"
+      "/SmartDashboard/ShooterPitch": "Mechanism2d",
+      "/SmartDashboard/ShooterYaw": "Mechanism2d",
+      "/SmartDashboard/VisionSystemSim-main/Sim Field": "Field2d",
+      "/SmartDashboard/WARNING NAME NOT SET": "Mechanism2d"
     },
     "windows": {
-      "/SmartDashboard/ArmPivot": {
+      "/SmartDashboard/PositionPIDFBase": {
         "window": {
           "visible": true
         }
       },
-      "/SmartDashboard/PositionPIDFBase": {
+      "/SmartDashboard/ShooterPitch": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/ShooterYaw": {
         "window": {
           "visible": true
         }

@@ -18,6 +18,7 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.units.measure.*;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -25,74 +26,36 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
  * Base for all subsystems which are a single mechanism controlled by position PIDF.
  */
 public class PositionPIDFBase extends SubsystemBase {
-  public String SUBSYSTEM_NAME = "PositionPIDFBase";
+// The following fields must be defined by subclasses.
+  public String SUBSYSTEM_NAME = "WARNING NAME NOT SET";
 
   // Hardware devices
-  public TalonFX motor = new TalonFX(70);
+  public TalonFX motor;
   
   // Mechanism constants
-  public DCMotor gearbox = DCMotor.getFalcon500(1);
-  public double GEAR_RATIO = 15;
+  public DCMotor gearbox;
+  public double GEAR_RATIO;
 
   // Configuration
-  public double MAX_POSITION = 1;
-  public double MIN_POSITION = 0;
-  public double STARTING_POSITION = 0;
+  public double MAX_POSITION;
+  public double MIN_POSITION;
+  public double STARTING_POSITION;
 
-  public TalonFXConfiguration motorConfig = new TalonFXConfiguration();
-  {
-    motorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-    motorConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = MAX_POSITION;
-    motorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-    motorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = MIN_POSITION;
-    
-    motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    motorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-    
-    motorConfig.Feedback.SensorToMechanismRatio = GEAR_RATIO * 2 * Math.PI; // We want everything to be in radians
+  public TalonFXConfiguration motorConfig;
 
-    // Feedforward
-    motorConfig.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
-    motorConfig.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
-    motorConfig.Slot0.kG = 0.0;
-    motorConfig.Slot0.kS = 0.0;
-    motorConfig.Slot0.kV = 0.0;
-    motorConfig.Slot0.kA = 0.0;
-
-    // PID
-    motorConfig.Slot0.kP = 0.0;
-    motorConfig.Slot0.kI = 0.0;
-    motorConfig.Slot0.kD = 0.0;
-
-    motorConfig.MotionMagic.MotionMagicCruiseVelocity = 5 * radian/s;
-    motorConfig.MotionMagic.MotionMagicAcceleration = 5 * radian/(s*s);
-
-    // TODO - Figure out what supply and stator current limits we want
-    motorConfig.CurrentLimits.SupplyCurrentLimitEnable = false;
-    motorConfig.CurrentLimits.SupplyCurrentLowerLimit = 30;
-    motorConfig.CurrentLimits.SupplyCurrentLimit = 60;
-    motorConfig.CurrentLimits.SupplyCurrentLowerTime = 1;
-  }
+// The following fields are part of this class.
 
   // Tunable PIDF and profile
-  protected DoubleSubscriber kG_subscriber = DogLog.tunable(
-    SUBSYSTEM_NAME + "/kG", motorConfig.Slot0.kG, this::configureFromTunable);
-  protected DoubleSubscriber kS_subscriber = DogLog.tunable(
-    SUBSYSTEM_NAME + "/kS", motorConfig.Slot0.kS, this::configureFromTunable);
-  protected DoubleSubscriber kV_subscriber = DogLog.tunable(
-    SUBSYSTEM_NAME + "/kV", motorConfig.Slot0.kV, this::configureFromTunable);
-  protected DoubleSubscriber kA_subscriber = DogLog.tunable(
-    SUBSYSTEM_NAME + "/kA", motorConfig.Slot0.kA, this::configureFromTunable);
-  protected DoubleSubscriber kP_subscriber = DogLog.tunable(
-    SUBSYSTEM_NAME + "/kP", motorConfig.Slot0.kP, this::configureFromTunable);
-  protected DoubleSubscriber kI_subscriber = DogLog.tunable(
-    SUBSYSTEM_NAME + "/kI", motorConfig.Slot0.kI, this::configureFromTunable);
-  protected DoubleSubscriber kD_subscriber = DogLog.tunable(
-    SUBSYSTEM_NAME + "/kD", motorConfig.Slot0.kD, this::configureFromTunable);
-  protected DoubleSubscriber maxVelocity_subscriber = DogLog.tunable(
-    SUBSYSTEM_NAME + "/max velocity", motorConfig.MotionMagic.MotionMagicCruiseVelocity, this::configureFromTunable);
-  protected DoubleSubscriber maxAcceleration_subscriber = DogLog.tunable(
-    SUBSYSTEM_NAME + "/max acceleration", motorConfig.MotionMagic.MotionMagicAcceleration, this::configureFromTunable);
+  // These fields are initialized in initialize()
+  protected DoubleSubscriber kG_subscriber;
+  protected DoubleSubscriber kS_subscriber;
+  protected DoubleSubscriber kV_subscriber;
+  protected DoubleSubscriber kA_subscriber;
+  protected DoubleSubscriber kP_subscriber;
+  protected DoubleSubscriber kI_subscriber;
+  protected DoubleSubscriber kD_subscriber;
+  protected DoubleSubscriber maxVelocity_subscriber;
+  protected DoubleSubscriber maxAcceleration_subscriber;
 
   // Motor controller requests
   protected PositionVoltage positionRequest = new PositionVoltage(0).withSlot(0);
@@ -106,10 +69,17 @@ public class PositionPIDFBase extends SubsystemBase {
   protected StatusSignal<Current> statorCurrentSignal;
   protected StatusSignal<Temperature> temperatureSignal;
 
+  // Setpoint
+  protected double setpoint;
+
   /**
    * Creates a new Pivot Subsystem.
    */
   public PositionPIDFBase() {
+  }
+
+  // This method MUST be called at the end of subsystem initializers!
+  protected void initialize() {
     // get status signals
     positionSignal = motor.getPosition();
     velocitySignal = motor.getVelocity();
@@ -122,6 +92,25 @@ public class PositionPIDFBase extends SubsystemBase {
 
     // Reset encoder position
     motor.setPosition(STARTING_POSITION);
+
+    kG_subscriber = DogLog.tunable(
+      SUBSYSTEM_NAME + "/kG", motorConfig.Slot0.kG, this::configureFromTunable);
+    kS_subscriber = DogLog.tunable(
+      SUBSYSTEM_NAME + "/kS", motorConfig.Slot0.kS, this::configureFromTunable);
+    kV_subscriber = DogLog.tunable(
+      SUBSYSTEM_NAME + "/kV", motorConfig.Slot0.kV, this::configureFromTunable);
+    kA_subscriber = DogLog.tunable(
+      SUBSYSTEM_NAME + "/kA", motorConfig.Slot0.kA, this::configureFromTunable);
+    kP_subscriber = DogLog.tunable(
+      SUBSYSTEM_NAME + "/kP", motorConfig.Slot0.kP, this::configureFromTunable);
+    kI_subscriber = DogLog.tunable(
+      SUBSYSTEM_NAME + "/kI", motorConfig.Slot0.kI, this::configureFromTunable);
+    kD_subscriber = DogLog.tunable(
+      SUBSYSTEM_NAME + "/kD", motorConfig.Slot0.kD, this::configureFromTunable);
+    maxVelocity_subscriber = DogLog.tunable(
+      SUBSYSTEM_NAME + "/max velocity", motorConfig.MotionMagic.MotionMagicCruiseVelocity, this::configureFromTunable);
+    maxAcceleration_subscriber = DogLog.tunable(
+      SUBSYSTEM_NAME + "/max acceleration", motorConfig.MotionMagic.MotionMagicAcceleration, this::configureFromTunable);
   }
 
   public void configureFromTunable(double unused) {
@@ -155,10 +144,13 @@ public class PositionPIDFBase extends SubsystemBase {
 
     // Log values
     DogLog.log(SUBSYSTEM_NAME + "/Position", getPosition(), "rad");
+    DogLog.log(SUBSYSTEM_NAME + "/Position (degrees)", getPosition() / degree, "°");
     DogLog.log(SUBSYSTEM_NAME + "/Velocity", getVelocity(), "rad/s");
     DogLog.log(SUBSYSTEM_NAME + "/Voltage", getVoltage(), "V");
     DogLog.log(SUBSYSTEM_NAME + "/Stator Current", getCurrent(), "A");
     DogLog.log(SUBSYSTEM_NAME + "/Temperature", getTemperature(), "°C");
+    DogLog.log(SUBSYSTEM_NAME + "/Position setpoint", getSetpoint(), "rad");
+    DogLog.log(SUBSYSTEM_NAME + "/Position setpoint (degrees)", getSetpoint() / degree, "°");
   }
 
   /**
@@ -202,6 +194,10 @@ public class PositionPIDFBase extends SubsystemBase {
     return temperatureSignal.getValueAsDouble();
   }
 
+  public double getSetpoint() {
+    return setpoint;
+  }
+
   /**
    * Set motor voltage directly.
    * @param voltage The voltage to apply
@@ -216,6 +212,7 @@ public class PositionPIDFBase extends SubsystemBase {
    * @param position The target angle in radians
    */
   public void setPosition(double position) {
+    setpoint = position;
     motor.setControl(motionRequest.withPosition(position));
   }
 

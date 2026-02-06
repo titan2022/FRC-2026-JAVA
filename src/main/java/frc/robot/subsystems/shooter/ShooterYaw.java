@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter;
 
 import static frc.robot.ToSI.*;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -16,7 +17,7 @@ public class ShooterYaw extends ArmPivot {
     SUBSYSTEM_NAME = "ShooterYaw";
 
     // Hardware devices
-    motor = new TalonFX(70);
+    motor = new TalonFX(40);
   
     // Mechanism constants
     gearbox = DCMotor.getFalcon500(1);
@@ -35,6 +36,8 @@ public class ShooterYaw extends ArmPivot {
     STARTING_POSITION = 90 * degree;
 
     // Basic motor configuration
+    motorConfig = new TalonFXConfiguration();
+    
     motorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
     motorConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = MAX_POSITION;
     motorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
@@ -69,6 +72,6 @@ public class ShooterYaw extends ArmPivot {
   }
 
   public ShooterYaw() {
-    super();
+    initialize();
   }
 }

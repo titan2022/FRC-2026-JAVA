@@ -45,13 +45,15 @@ public class Robot extends TimedRobot {
 	public Robot() {
 		autoChooser = AutoBuilder.buildAutoChooser();
 		SmartDashboard.putData("Auto Chooser", autoChooser);
+
+		configureBindings();
 	}
 
 	public void configureBindings() {
-		controller.a().whileTrue(shooterPitch.setPositionCommand(90 * degree));
-		controller.b().whileTrue(shooterPitch.setPositionCommand(180 * degree));
-		controller.x().whileTrue(shooterPitch.setPositionCommand(270 * degree));
-		controller.y().whileTrue(shooterPitch.setPositionCommand(360 * degree));
+		controller.a().whileTrue(shooterYaw.setPositionCommand(90 * degree));
+		controller.b().whileTrue(shooterYaw.setPositionCommand(180 * degree));
+		controller.x().whileTrue(shooterYaw.setPositionCommand(270 * degree));
+		controller.y().whileTrue(shooterYaw.setPositionCommand(360 * degree));
 	}
 
 	@Override
