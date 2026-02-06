@@ -16,6 +16,9 @@ import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
  * Example of an arm or a pivot
  */
 public class ArmPivot extends PositionPIDFBase {
+  {
+    SUBSYSTEM_NAME = "ArmPivot";
+  }
   // If it's a pivot, use the example values below.
   // If it's an arm, get values from the CAD.
   public boolean IS_ARM = false;
@@ -29,8 +32,6 @@ public class ArmPivot extends PositionPIDFBase {
   protected final ArmPivotSimVisualization simVisualization;
 
   public ArmPivot() {
-    super();
-
     if(RobotBase.isSimulation()) {
       sim = new SingleJointedArmSim(
         gearbox, // Motor type

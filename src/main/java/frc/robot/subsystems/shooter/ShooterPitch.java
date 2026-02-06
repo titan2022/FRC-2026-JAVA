@@ -30,9 +30,9 @@ public class ShooterPitch extends ArmPivot {
     // You can estimate it using SingleJointedArmSim.estimateMOI(armLength, 5).
 
     // Configuration
-    MAX_POSITION = 1;
-    MIN_POSITION = 0;
-    STARTING_POSITION = 0;
+    MAX_POSITION = 360 * degree;
+    MIN_POSITION = 0 * degree;
+    STARTING_POSITION = 90 * degree;
 
     // Basic motor configuration
     motorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;

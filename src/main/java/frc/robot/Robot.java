@@ -4,12 +4,12 @@
 
 package frc.robot;
 
+import static frc.robot.ToSI.*;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
@@ -19,29 +19,39 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.drive.CommandSwerveDrivetrain;
 import frc.robot.drive.DriveUtility;
 import frc.robot.drive.sim.SimSwerveConstants;
 import frc.robot.drive.sim.SimSwerveDrivetrain;
 import frc.robot.localization.Vision;
-import frc.robot.subsystems.GamepieceLauncher;
+import frc.robot.subsystems.shooter.ShooterPitch;
+import frc.robot.subsystems.shooter.ShooterYaw;
 
 public class Robot extends TimedRobot {
 	private Command m_autonomousCommand;
 
-	public final XboxController controller = new XboxController(0);
+	public final CommandXboxController controller = new CommandXboxController(0);
 
 	public final CommandSwerveDrivetrain drivetrain = DriveUtility.makeDrivetrain(this::resetPose);
 
 	public final Vision vision = new Vision(drivetrain::addVisionMeasurement);
 
-	public final GamepieceLauncher gpLauncher = new GamepieceLauncher();
+	public final ShooterPitch shooterPitch = new ShooterPitch();
+	public final ShooterYaw shooterYaw = new ShooterYaw();
 
 	public SendableChooser<Command> autoChooser;
 
 	public Robot() {
 		autoChooser = AutoBuilder.buildAutoChooser();
 		SmartDashboard.putData("Auto Chooser", autoChooser);
+	}
+
+	public void configureBindings() {
+		controller.a().whileTrue(shooterPitch.setPositionCommand(90 * degree));
+		controller.b().whileTrue(shooterPitch.setPositionCommand(180 * degree));
+		controller.x().whileTrue(shooterPitch.setPositionCommand(270 * degree));
+		controller.y().whileTrue(shooterPitch.setPositionCommand(360 * degree));
 	}
 
 	@Override
@@ -111,7 +121,6 @@ public class Robot extends TimedRobot {
 		// Calculate whether the gamepiece launcher runs based on our global pose estimate.
 		var curPose = drivetrain.getPose();
 		var shouldRun = (curPose.getY() > 2.0 && curPose.getX() < 4.0); // Close enough to blue speaker
-		gpLauncher.setRunning(shouldRun);
 	}
 
 	@Override
@@ -135,9 +144,6 @@ public class Robot extends TimedRobot {
 		var debugField = vision.getSimDebugField();
 		debugField.getObject("EstimatedRobot").setPose(simDrivetrain.getPose());
 		debugField.getObject("EstimatedRobotModules").setPoses(simDrivetrain.getModulePoses());
-
-		// Update gamepiece launcher simulation
-		gpLauncher.simulationPeriodic();
 
 		// Calculate battery voltage sag due to current draw
 		var batteryVoltage =
