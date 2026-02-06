@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.example;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
@@ -12,9 +12,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 /**
  * Visualization for the arm subsystem in simulation.
  */
-public class ShooterPitchSim extends SubsystemBase {
-
-  private final ShooterPitch arm;
+public class ArmPivotSim extends SubsystemBase {
+  private final ArmPivot arm;
 
   // Simulation display
   private final Mechanism2d mech;
@@ -28,7 +27,7 @@ public class ShooterPitchSim extends SubsystemBase {
   private final double ARM_WIDTH = 10.0;
 
   // Arm parameters
-  private final double armLength;
+  private final double armLength = ArmPivot.ARM_LENGTH;
   private final double visualScaleFactor;
 
   /**
@@ -36,11 +35,8 @@ public class ShooterPitchSim extends SubsystemBase {
    *
    * @param armSubsystem The arm subsystem to visualize
    */
-  public ShooterPitchSim(ShooterPitch armSubsystem) {
+  public ArmPivotSim(ArmPivot armSubsystem) {
     this.arm = armSubsystem;
-
-    // Get arm length from subsystem (in meters)
-    armLength = 1;
 
     // Calculate scale factor to keep visualization in reasonable bounds
     visualScaleFactor = 200.0 / armLength; // Scale to ~200 pixels
@@ -88,7 +84,7 @@ public class ShooterPitchSim extends SubsystemBase {
     );
 
     // Initialize visualization
-    SmartDashboard.putData("Arm Sim", mech);
+    SmartDashboard.putData(ArmPivot.SUBSYSTEM_NAME, mech);
   }
 
   @Override
@@ -99,15 +95,15 @@ public class ShooterPitchSim extends SubsystemBase {
 
     // Add telemetry data
     SmartDashboard.putNumber(
-      "Arm Angle (deg)",
+      ArmPivot.SUBSYSTEM_NAME + "/Simulation/Angle (deg)",
       Units.radiansToDegrees(currentAngleRad)
     );
     SmartDashboard.putNumber(
-      "Arm Velocity (deg/s)",
+      ArmPivot.SUBSYSTEM_NAME + "/Simulation/Velocity (deg/s)",
       Units.radiansToDegrees(arm.getSimulation().getVelocityRadPerSec())
     );
     SmartDashboard.putNumber(
-      "Arm Current (A)",
+      ArmPivot.SUBSYSTEM_NAME + "/Simulation/Current (A)",
       arm.getSimulation().getCurrentDrawAmps()
     );
   }
