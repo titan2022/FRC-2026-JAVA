@@ -81,9 +81,4 @@ public final class ToSI {
 
   // Now we can define the slug
   public static final double slug = lbf * (s * s) / ft;
-
-  // Units of angle
-  public static final double radian = 1;
-  public static final double rotation = 2*Math.PI;
-  public static final double degree = rotation / 360;
 }

@@ -9,10 +9,15 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
+import dev.doglog.DogLog;
 import edu.wpi.first.math.system.plant.DCMotor;
 import frc.robot.subsystems.base.ArmPivot;
 
 public class ShooterPitch extends ArmPivot {
+  // Rotation is 1 because that's what Phoenix 6 expects.
+  public static final double rotation = 1;
+  public static final double degree = rotation/360;
+
   {
     SUBSYSTEM_NAME = "ShooterPitch";
 
@@ -46,7 +51,7 @@ public class ShooterPitch extends ArmPivot {
     motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     motorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     
-    motorConfig.Feedback.SensorToMechanismRatio = GEAR_RATIO * 2 * Math.PI; // We want everything to be in radians
+    motorConfig.Feedback.SensorToMechanismRatio = GEAR_RATIO;
 
     // Feedforward
     motorConfig.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
@@ -61,8 +66,8 @@ public class ShooterPitch extends ArmPivot {
     motorConfig.Slot0.kI = 0.0;
     motorConfig.Slot0.kD = 0.0;
 
-    motorConfig.MotionMagic.MotionMagicCruiseVelocity = 5 * radian/s;
-    motorConfig.MotionMagic.MotionMagicAcceleration = 5 * radian/(s*s);
+    motorConfig.MotionMagic.MotionMagicCruiseVelocity = 5 * rotation/s;
+    motorConfig.MotionMagic.MotionMagicAcceleration = 5 * rotation/(s*s);
 
     // TODO - Figure out what supply and stator current limits we want
     motorConfig.CurrentLimits.SupplyCurrentLimitEnable = false;
@@ -73,5 +78,13 @@ public class ShooterPitch extends ArmPivot {
 
   public ShooterPitch() {
     initialize();
+  }
+
+  @Override
+  public void periodic() {
+    super.periodic();
+
+    DogLog.log(SUBSYSTEM_NAME + "/Position (degrees)", getPosition() / degree, "°");
+    DogLog.log(SUBSYSTEM_NAME + "/Position setpoint (degrees)", getSetpoint() / degree, "°");
   }
 }

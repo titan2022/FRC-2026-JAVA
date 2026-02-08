@@ -143,19 +143,17 @@ public class PositionPIDFBase extends SubsystemBase {
     );
 
     // Log values
-    DogLog.log(SUBSYSTEM_NAME + "/Position", getPosition(), "rad");
-    DogLog.log(SUBSYSTEM_NAME + "/Position (degrees)", getPosition() / degree, "°");
-    DogLog.log(SUBSYSTEM_NAME + "/Velocity", getVelocity(), "rad/s");
+    DogLog.log(SUBSYSTEM_NAME + "/Position", getPosition(), "rotation");
+    DogLog.log(SUBSYSTEM_NAME + "/Velocity", getVelocity(), "rotation/s");
     DogLog.log(SUBSYSTEM_NAME + "/Voltage", getVoltage(), "V");
     DogLog.log(SUBSYSTEM_NAME + "/Stator Current", getCurrent(), "A");
     DogLog.log(SUBSYSTEM_NAME + "/Temperature", getTemperature(), "°C");
-    DogLog.log(SUBSYSTEM_NAME + "/Position setpoint", getSetpoint(), "rad");
-    DogLog.log(SUBSYSTEM_NAME + "/Position setpoint (degrees)", getSetpoint() / degree, "°");
+    DogLog.log(SUBSYSTEM_NAME + "/Position setpoint", getSetpoint(), "rotation");
   }
 
   /**
-   * Get the current position in radians.
-   * @return Position in radians
+   * Get the current position in rotations.
+   * @return Position in rotations
    */
   public double getPosition() {
     // Rotations
@@ -163,8 +161,8 @@ public class PositionPIDFBase extends SubsystemBase {
   }
 
   /**
-   * Get the current velocity in radians per second.
-   * @return Velocity in radians per second
+   * Get the current velocity in rotations per second.
+   * @return Velocity in rotations per second
    */
   public double getVelocity() {
     return velocitySignal.getValueAsDouble();
@@ -209,7 +207,7 @@ public class PositionPIDFBase extends SubsystemBase {
   /**
    * Sets the PIDF setpoint to a specific angle.
    * Motion Magic is used to make a trapezoidal profile and apply a PIDF controller.
-   * @param position The target angle in radians
+   * @param position The target angle in rotations
    */
   public void setPosition(double position) {
     setpoint = position;
@@ -219,7 +217,7 @@ public class PositionPIDFBase extends SubsystemBase {
   /**
    * Creates a command to set the PIDF setpoint to a specific angle.
    * Motion Magic is used to make a trapezoidal profile and apply a PIDF controller.
-   * @param position The target angle in radians
+   * @param position The target angle in rotations
    * @return A command that sets the PIDF setpoint to the specified angle
    */
   public Command setPositionCommand(double position) {
