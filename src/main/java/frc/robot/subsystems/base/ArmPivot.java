@@ -7,7 +7,6 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import static frc.robot.ToSI.*;
 
-import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
@@ -43,10 +42,10 @@ public class ArmPivot extends PositionPIDFBase {
         GEAR_RATIO,
         ARM_MOI, // Arm moment of inertia - Small value since there are no arm parameters
         ARM_LENGTH, // Arm length (m) - Small value since there are no arm parameters
-        MIN_POSITION, // Min angle (rad)
-        MAX_POSITION, // Max angle (rad)
-        false, // Simulate gravity - Disable gravity for pivot
-        STARTING_POSITION // Starting position (rad)
+        Rotations.of(MIN_POSITION).in(Radians), // Min angle (rad)
+        Rotations.of(MAX_POSITION).in(Radians), // Max angle (rad)
+        IS_ARM, // Simulate gravity - Disable gravity for pivot
+        Rotations.of(STARTING_POSITION).in(Radians) // Starting position (rad)
       );
       simVisualization = new ArmPivotSimVisualization(this);
     }
