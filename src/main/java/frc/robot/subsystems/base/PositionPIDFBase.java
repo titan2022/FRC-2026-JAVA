@@ -37,9 +37,9 @@ public class PositionPIDFBase extends SubsystemBase {
   public double GEAR_RATIO;
 
   // Configuration
-  public double MAX_POSITION;
-  public double MIN_POSITION;
-  public double STARTING_POSITION;
+  public double MAX_ANGULAR_POSITION;
+  public double MIN_ANGULAR_POSITION;
+  public double STARTING_ANGULAR_POSITION;
 
   public TalonFXConfiguration motorConfig;
 
@@ -91,7 +91,7 @@ public class PositionPIDFBase extends SubsystemBase {
     motor.getConfigurator().apply(motorConfig);
 
     // Reset encoder position
-    motor.setPosition(STARTING_POSITION);
+    motor.setPosition(STARTING_ANGULAR_POSITION);
 
     kG_subscriber = DogLog.tunable(
       SUBSYSTEM_NAME + "/kG", motorConfig.Slot0.kG, this::configureFromTunable);
@@ -143,8 +143,8 @@ public class PositionPIDFBase extends SubsystemBase {
     );
 
     // Log values
-    DogLog.log(SUBSYSTEM_NAME + "/Position", getPosition(), "rotation");
-    DogLog.log(SUBSYSTEM_NAME + "/Velocity", getVelocity(), "rotation/s");
+    DogLog.log(SUBSYSTEM_NAME + "/Angular Position", getAngularPosition(), "rotation");
+    DogLog.log(SUBSYSTEM_NAME + "/Angular Velocity", getAngularVelocity(), "rotation/s");
     DogLog.log(SUBSYSTEM_NAME + "/Voltage", getVoltage(), "V");
     DogLog.log(SUBSYSTEM_NAME + "/Stator Current", getCurrent(), "A");
     DogLog.log(SUBSYSTEM_NAME + "/Temperature", getTemperature(), "°C");
@@ -155,7 +155,7 @@ public class PositionPIDFBase extends SubsystemBase {
    * Get the current position in rotations.
    * @return Position in rotations
    */
-  public double getPosition() {
+  public double getAngularPosition() {
     // Rotations
     return positionSignal.getValueAsDouble();
   }
@@ -164,7 +164,7 @@ public class PositionPIDFBase extends SubsystemBase {
    * Get the current velocity in rotations per second.
    * @return Velocity in rotations per second
    */
-  public double getVelocity() {
+  public double getAngularVelocity() {
     return velocitySignal.getValueAsDouble();
   }
 
@@ -209,7 +209,7 @@ public class PositionPIDFBase extends SubsystemBase {
    * Motion Magic is used to make a trapezoidal profile and apply a PIDF controller.
    * @param position The target angle in rotations
    */
-  public void setPosition(double position) {
+  public void setAngularPosition(double position) {
     setpoint = position;
     motor.setControl(motionRequest.withPosition(position));
   }
@@ -220,8 +220,8 @@ public class PositionPIDFBase extends SubsystemBase {
    * @param position The target angle in rotations
    * @return A command that sets the PIDF setpoint to the specified angle
    */
-  public Command setPositionCommand(double position) {
-    return runOnce(() -> setPosition(position));
+  public Command setAngularPositionCommand(double position) {
+    return runOnce(() -> setAngularPosition(position));
   }
 
   /**

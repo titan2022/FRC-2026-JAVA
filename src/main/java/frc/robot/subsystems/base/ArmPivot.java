@@ -42,10 +42,10 @@ public class ArmPivot extends PositionPIDFBase {
         GEAR_RATIO,
         ARM_MOI, // Arm moment of inertia - Small value since there are no arm parameters
         ARM_LENGTH, // Arm length (m) - Small value since there are no arm parameters
-        Rotations.of(MIN_POSITION).in(Radians), // Min angle (rad)
-        Rotations.of(MAX_POSITION).in(Radians), // Max angle (rad)
+        Rotations.of(MIN_ANGULAR_POSITION).in(Radians), // Min angle (rad)
+        Rotations.of(MAX_ANGULAR_POSITION).in(Radians), // Max angle (rad)
         IS_ARM, // Simulate gravity - Disable gravity for pivot
-        Rotations.of(STARTING_POSITION).in(Radians) // Starting position (rad)
+        Rotations.of(STARTING_ANGULAR_POSITION).in(Radians) // Starting position (rad)
       );
       simVisualization = new ArmPivotSimVisualization(this);
     }

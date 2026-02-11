@@ -36,17 +36,17 @@ public class ShooterPitch extends ArmPivot {
     // You can estimate it using SingleJointedArmSim.estimateMOI(armLength, 5).
 
     // Configuration
-    MAX_POSITION = 360 * degree;
-    MIN_POSITION = 0 * degree;
-    STARTING_POSITION = 90 * degree;
+    MAX_ANGULAR_POSITION = 360 * degree;
+    MIN_ANGULAR_POSITION = 0 * degree;
+    STARTING_ANGULAR_POSITION = 90 * degree;
 
     // Basic motor configuration
     motorConfig = new TalonFXConfiguration();
 
     motorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-    motorConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = MAX_POSITION;
+    motorConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = MAX_ANGULAR_POSITION;
     motorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-    motorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = MIN_POSITION;
+    motorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = MIN_ANGULAR_POSITION;
     
     motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     motorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
@@ -84,7 +84,7 @@ public class ShooterPitch extends ArmPivot {
   public void periodic() {
     super.periodic();
 
-    DogLog.log(SUBSYSTEM_NAME + "/Position (degrees)", getPosition() / degree, "°");
+    DogLog.log(SUBSYSTEM_NAME + "/Position (degrees)", getAngularPosition() / degree, "°");
     DogLog.log(SUBSYSTEM_NAME + "/Position setpoint (degrees)", getSetpoint() / degree, "°");
   }
 }

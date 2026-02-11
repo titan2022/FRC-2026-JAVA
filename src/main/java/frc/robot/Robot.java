@@ -50,10 +50,10 @@ public class Robot extends TimedRobot {
 	}
 
 	public void configureBindings() {
-		controller.a().whileTrue(shooterYaw.setPositionCommand(90 * ShooterYaw.degree));
-		controller.b().whileTrue(shooterYaw.setPositionCommand(180 * ShooterYaw.degree));
-		controller.x().whileTrue(shooterYaw.setPositionCommand(270 * ShooterYaw.degree));
-		controller.y().whileTrue(shooterYaw.setPositionCommand(360 * ShooterYaw.degree));
+		controller.a().whileTrue(shooterYaw.setAngularPositionCommand(90 * ShooterYaw.degree));
+		controller.b().whileTrue(shooterYaw.setAngularPositionCommand(180 * ShooterYaw.degree));
+		controller.x().whileTrue(shooterYaw.setAngularPositionCommand(270 * ShooterYaw.degree));
+		controller.y().whileTrue(shooterYaw.setAngularPositionCommand(360 * ShooterYaw.degree));
 	}
 
 	@Override
