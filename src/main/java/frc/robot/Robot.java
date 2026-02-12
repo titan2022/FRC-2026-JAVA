@@ -25,8 +25,27 @@ import frc.robot.drive.sim.SimSwerveConstants;
 import frc.robot.drive.sim.SimSwerveDrivetrain;
 import frc.robot.localization.Vision;
 import frc.robot.subsystems.GamepieceLauncher;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathfindingCommand;
+import com.pathplanner.lib.path.PathConstraints;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.drive.ctre.TunerConstants;
+
 
 public class Robot extends TimedRobot {
+	private static final double kDeadband = 0.08;
+
+	private static final double kCancelStickThreshold = 0.18;
+
+	private static final PathConstraints kPathfindConstraints = new PathConstraints(
+    3.0, 3.0,
+    Units.degreesToRadians(540),
+    Units.degreesToRadians(720)
+	);
+
+	private Command m_driveToPoseCmd = null;
 	private Command m_autonomousCommand;
 
 	public final XboxController controller = new XboxController(0);
@@ -40,9 +59,30 @@ public class Robot extends TimedRobot {
 	public SendableChooser<Command> autoChooser;
 
 	public Robot() {
-		autoChooser = AutoBuilder.buildAutoChooser();
-		SmartDashboard.putData("Auto Chooser", autoChooser);
-	}
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
+
+    PathfindingCommand.warmupCommand().schedule();
+
+    CommandScheduler.getInstance().setDefaultCommand(
+        drivetrain,
+        Commands.run(() -> {
+            double maxLin = RobotBase.isReal()
+                ? TunerConstants.kMaxLinearSpeedMps
+                : SimSwerveConstants.Swerve.kMaxLinearSpeed;
+
+            double maxAng = SimSwerveConstants.Swerve.kMaxAngularSpeed;
+
+            double forward = -MathUtil.applyDeadband(controller.getLeftY(), kDeadband) * maxLin;
+            double strafe  = -MathUtil.applyDeadband(controller.getLeftX(), kDeadband) * maxLin;
+            double turn    = -MathUtil.applyDeadband(controller.getRightX(), kDeadband) * maxAng;
+
+            drivetrain.driveRobotCentric(forward, strafe, turn);
+        }, drivetrain)
+    );
+}
+
+
 
 	@Override
 	public void robotPeriodic() {
@@ -74,6 +114,10 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledPeriodic() {
 		drivetrain.brake();
+		if (m_driveToPoseCmd != null) {
+        m_driveToPoseCmd.cancel();
+        m_driveToPoseCmd = null;
+    }
 	}
 
 	@Override
@@ -90,29 +134,60 @@ public class Robot extends TimedRobot {
 	public void autonomousPeriodic() {}
 
 	@Override
-	public void teleopInit() {
-		if (m_autonomousCommand != null) {
-			m_autonomousCommand.cancel();
-		}
+public void teleopInit() {
+    if (m_autonomousCommand != null) {
+        m_autonomousCommand.cancel();
+    }
 
-		resetPose();
-	}
+    AutoBuilder.resetOdom(new Pose2d(1, 1, new Rotation2d())).schedule();
+
+    if (m_driveToPoseCmd != null) {
+        m_driveToPoseCmd.cancel();
+        m_driveToPoseCmd = null;
+    }
+
+    if (RobotBase.isSimulation()) {
+        resetPose();
+    }
+}
+
 
 	@Override
-	public void teleopPeriodic() {
-		// Calculate drivetrain commands from Joystick values
-		double forward = -controller.getLeftY() * SimSwerveConstants.Swerve.kMaxLinearSpeed;
-		double strafe = -controller.getLeftX() * SimSwerveConstants.Swerve.kMaxLinearSpeed;
-		double turn = -controller.getRightX() * SimSwerveConstants.Swerve.kMaxAngularSpeed;
+public void teleopPeriodic() {
+    if (controller.getAButtonPressed()) {
+        Pose2d targetBluePose = new Pose2d(4.0, 2.0, Rotation2d.fromDegrees(180.0));
 
-		// Command drivetrain motors based on target speeds
-		drivetrain.driveRobotCentric(forward, strafe, turn);
+        if (m_driveToPoseCmd != null) {
+            m_driveToPoseCmd.cancel();
+        }
 
-		// Calculate whether the gamepiece launcher runs based on our global pose estimate.
-		var curPose = drivetrain.getPose();
-		var shouldRun = (curPose.getY() > 2.0 && curPose.getX() < 4.0); // Close enough to blue speaker
-		gpLauncher.setRunning(shouldRun);
-	}
+        m_driveToPoseCmd = AutoBuilder
+            .pathfindToPoseFlipped(targetBluePose, kPathfindConstraints, 0.0)
+            .andThen(Commands.runOnce(drivetrain::brake, drivetrain));
+
+        m_driveToPoseCmd.schedule();
+    }
+
+    if (controller.getBButtonPressed() && m_driveToPoseCmd != null) {
+        m_driveToPoseCmd.cancel();
+        m_driveToPoseCmd = null;
+    }
+
+    boolean stickMoved =
+        Math.abs(controller.getLeftX()) > kCancelStickThreshold ||
+        Math.abs(controller.getLeftY()) > kCancelStickThreshold ||
+        Math.abs(controller.getRightX()) > kCancelStickThreshold;
+
+    if (stickMoved && m_driveToPoseCmd != null && m_driveToPoseCmd.isScheduled()) {
+        m_driveToPoseCmd.cancel();
+        m_driveToPoseCmd = null;
+    }
+
+    Pose2d curPose = drivetrain.getPose();
+    boolean shouldRun = (curPose.getY() > 2.0 && curPose.getX() < 4.0);
+    gpLauncher.setRunning(shouldRun);
+}
+
 
 	@Override
 	public void testInit() {
