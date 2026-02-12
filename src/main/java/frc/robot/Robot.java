@@ -12,7 +12,6 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -25,13 +24,14 @@ import frc.robot.drive.sim.SimSwerveConstants;
 import frc.robot.drive.sim.SimSwerveDrivetrain;
 import frc.robot.localization.Vision;
 import frc.robot.subsystems.GamepieceLauncher;
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.path.PathConstraints;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.drive.ctre.TunerConstants;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 
 public class Robot extends TimedRobot {
@@ -48,7 +48,7 @@ public class Robot extends TimedRobot {
 	private Command m_driveToPoseCmd = null;
 	private Command m_autonomousCommand;
 
-	public final XboxController controller = new XboxController(0);
+	public final CommandXboxController controller = new CommandXboxController(0);
 
 	public final CommandSwerveDrivetrain drivetrain = DriveUtility.makeDrivetrain(this::resetPose);
 
@@ -80,7 +80,43 @@ public class Robot extends TimedRobot {
             drivetrain.driveRobotCentric(forward, strafe, turn);
         }, drivetrain)
     );
+
+	configureBindings();
+
 }
+
+ public void configureBindings() {
+        Pose2d targetBluePose = new Pose2d(4.0, 2.0, Rotation2d.fromDegrees(180.0));
+
+        controller.a().onTrue(Commands.runOnce(() -> startDriveToPose(targetBluePose)));
+        controller.b().onTrue(Commands.runOnce(this::cancelDriveToPose));
+
+        new Trigger(this::stickMovedForCancel)
+            .onTrue(Commands.runOnce(this::cancelDriveToPose));
+
+ }
+private void startDriveToPose(Pose2d targetBluePose) {
+        cancelDriveToPose();
+
+        m_driveToPoseCmd = AutoBuilder
+            .pathfindToPoseFlipped(targetBluePose, kPathfindConstraints, 0.0)
+            .andThen(Commands.runOnce(drivetrain::brake, drivetrain));
+
+        m_driveToPoseCmd.schedule();
+    }
+
+    private void cancelDriveToPose() {
+		if (m_driveToPoseCmd != null) {
+        	m_driveToPoseCmd.cancel();
+        	m_driveToPoseCmd = null;
+    	}
+    }
+
+    private boolean stickMovedForCancel() {
+        return Math.abs(controller.getLeftX()) > kCancelStickThreshold
+            || Math.abs(controller.getLeftY()) > kCancelStickThreshold
+            || Math.abs(controller.getRightX()) > kCancelStickThreshold;
+    }
 
 
 
@@ -114,11 +150,10 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledPeriodic() {
 		drivetrain.brake();
-		if (m_driveToPoseCmd != null) {
-        m_driveToPoseCmd.cancel();
-        m_driveToPoseCmd = null;
+		cancelDriveToPose();
+
     }
-	}
+	
 
 	@Override
 	public void autonomousInit() {
@@ -135,9 +170,8 @@ public class Robot extends TimedRobot {
 
 	@Override
 public void teleopInit() {
-    if (m_autonomousCommand != null) {
-        m_autonomousCommand.cancel();
-    }
+    cancelDriveToPose();
+
 
     AutoBuilder.resetOdom(new Pose2d(1, 1, new Rotation2d())).schedule();
 
@@ -154,38 +188,9 @@ public void teleopInit() {
 
 	@Override
 public void teleopPeriodic() {
-    if (controller.getAButtonPressed()) {
-        Pose2d targetBluePose = new Pose2d(4.0, 2.0, Rotation2d.fromDegrees(180.0));
-
-        if (m_driveToPoseCmd != null) {
-            m_driveToPoseCmd.cancel();
-        }
-
-        m_driveToPoseCmd = AutoBuilder
-            .pathfindToPoseFlipped(targetBluePose, kPathfindConstraints, 0.0)
-            .andThen(Commands.runOnce(drivetrain::brake, drivetrain));
-
-        m_driveToPoseCmd.schedule();
-    }
-
-    if (controller.getBButtonPressed() && m_driveToPoseCmd != null) {
-        m_driveToPoseCmd.cancel();
-        m_driveToPoseCmd = null;
-    }
-
-    boolean stickMoved =
-        Math.abs(controller.getLeftX()) > kCancelStickThreshold ||
-        Math.abs(controller.getLeftY()) > kCancelStickThreshold ||
-        Math.abs(controller.getRightX()) > kCancelStickThreshold;
-
-    if (stickMoved && m_driveToPoseCmd != null && m_driveToPoseCmd.isScheduled()) {
-        m_driveToPoseCmd.cancel();
-        m_driveToPoseCmd = null;
-    }
-
     Pose2d curPose = drivetrain.getPose();
-    boolean shouldRun = (curPose.getY() > 2.0 && curPose.getX() < 4.0);
-    gpLauncher.setRunning(shouldRun);
+        boolean shouldRun = (curPose.getY() > 2.0 && curPose.getX() < 4.0);
+        gpLauncher.setRunning(shouldRun);
 }
 
 
@@ -233,4 +238,6 @@ public void teleopPeriodic() {
 		}
 		vision.resetSimPose(startPose);
 	}
+
+	
 }
