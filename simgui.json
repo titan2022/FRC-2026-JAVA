@@ -5,6 +5,8 @@
       "/SmartDashboard/Alerts": "Alerts",
       "/SmartDashboard/ArmPivot": "Mechanism2d",
       "/SmartDashboard/Auto Chooser": "String Chooser",
+      "/SmartDashboard/Elevator Sim": "Mechanism2d",
+      "/SmartDashboard/IntakePinion": "Mechanism2d",
       "/SmartDashboard/PathPlanner": "Alerts",
       "/SmartDashboard/PhotonAlerts": "Alerts",
       "/SmartDashboard/PositionPIDFBase": "Mechanism2d",
@@ -14,6 +16,11 @@
       "/SmartDashboard/WARNING NAME NOT SET": "Mechanism2d"
     },
     "windows": {
+      "/SmartDashboard/IntakePinion": {
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/PositionPIDFBase": {
         "window": {
           "visible": true

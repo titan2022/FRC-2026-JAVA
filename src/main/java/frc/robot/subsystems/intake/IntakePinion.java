@@ -13,15 +13,11 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import frc.robot.subsystems.base.Elevator;
 
 public class IntakePinion extends Elevator {
-  // Rotation is 1 because that's what Phoenix 6 expects.
-  public static final double rotation = 1;
-  public static final double degree = rotation/360;
-
   {
-    SUBSYSTEM_NAME = "ShooterPitch";
+    SUBSYSTEM_NAME = "IntakePinion";
 
     // Hardware devices
-    motor = new TalonFX(41);
+    motor = new TalonFX(21);
   
     // Mechanism constants
     gearbox = DCMotor.getFalcon500(1);
@@ -31,9 +27,9 @@ public class IntakePinion extends Elevator {
     CARRIAGE_MASS = 5*kg;
 
     // Configuration
-    MAX_LINEAR_POSITION = 360 * degree;
-    MIN_LINEAR_POSITION = 0 * degree;
-    STARTING_LINEAR_POSITION = 90 * degree;
+    MAX_LINEAR_POSITION = 1*m;
+    MIN_LINEAR_POSITION = 0*m;
+    STARTING_LINEAR_POSITION = 0.5*m;
     // The conversion to angular is done in Elevator.initialize()
 
     // Basic motor configuration
@@ -47,7 +43,7 @@ public class IntakePinion extends Elevator {
     motorConfig.Feedback.SensorToMechanismRatio = GEAR_RATIO;
 
     // Feedforward
-    motorConfig.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
+    motorConfig.Slot0.GravityType = GravityTypeValue.Elevator_Static;
     motorConfig.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
     motorConfig.Slot0.kG = 0.0;
     motorConfig.Slot0.kS = 0.0;
@@ -59,8 +55,8 @@ public class IntakePinion extends Elevator {
     motorConfig.Slot0.kI = 0.0;
     motorConfig.Slot0.kD = 0.0;
 
-    motorConfig.MotionMagic.MotionMagicCruiseVelocity = 5 * rotation/s;
-    motorConfig.MotionMagic.MotionMagicAcceleration = 5 * rotation/(s*s);
+    motorConfig.MotionMagic.MotionMagicCruiseVelocity = 1 * m/s;
+    motorConfig.MotionMagic.MotionMagicAcceleration = 1 * m/(s*s);
 
     // TODO - Figure out what supply and stator current limits we want
     motorConfig.CurrentLimits.SupplyCurrentLimitEnable = false;

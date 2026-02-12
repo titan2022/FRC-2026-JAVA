@@ -25,6 +25,7 @@ import frc.robot.drive.DriveUtility;
 import frc.robot.drive.sim.SimSwerveConstants;
 import frc.robot.drive.sim.SimSwerveDrivetrain;
 import frc.robot.localization.Vision;
+import frc.robot.subsystems.intake.IntakePinion;
 import frc.robot.subsystems.shooter.ShooterPitch;
 import frc.robot.subsystems.shooter.ShooterYaw;
 
@@ -40,6 +41,8 @@ public class Robot extends TimedRobot {
 	public final ShooterPitch shooterPitch = new ShooterPitch();
 	public final ShooterYaw shooterYaw = new ShooterYaw();
 
+	public final IntakePinion intakePinion = new IntakePinion();
+
 	public SendableChooser<Command> autoChooser;
 
 	public Robot() {
@@ -50,10 +53,10 @@ public class Robot extends TimedRobot {
 	}
 
 	public void configureBindings() {
-		controller.a().whileTrue(shooterYaw.setAngularPositionCommand(90 * ShooterYaw.degree));
-		controller.b().whileTrue(shooterYaw.setAngularPositionCommand(180 * ShooterYaw.degree));
-		controller.x().whileTrue(shooterYaw.setAngularPositionCommand(270 * ShooterYaw.degree));
-		controller.y().whileTrue(shooterYaw.setAngularPositionCommand(360 * ShooterYaw.degree));
+		controller.a().whileTrue(intakePinion.setLinearPositionCommand(0*m));
+		controller.b().whileTrue(intakePinion.setLinearPositionCommand(0.3*m));
+		controller.x().whileTrue(intakePinion.setLinearPositionCommand(0.7*m));
+		controller.y().whileTrue(intakePinion.setLinearPositionCommand(1*m));
 	}
 
 	@Override

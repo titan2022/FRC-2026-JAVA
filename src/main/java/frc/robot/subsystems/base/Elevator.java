@@ -30,9 +30,7 @@ public class Elevator extends PositionPIDFBase {
   // This method MUST be called at the end of subsystem initializers!
   @Override
   protected void initialize() {
-    super.initialize();
-
-    METERS_PER_ROTATION = (1 / (2.0 * Math.PI * DRUM_RADIUS)) * GEAR_RATIO;
+    METERS_PER_ROTATION = (2.0 * Math.PI * DRUM_RADIUS) / GEAR_RATIO;
 
     MIN_ANGULAR_POSITION = MIN_LINEAR_POSITION / METERS_PER_ROTATION;
     MAX_ANGULAR_POSITION = MAX_LINEAR_POSITION / METERS_PER_ROTATION;
@@ -42,6 +40,8 @@ public class Elevator extends PositionPIDFBase {
     motorConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = MAX_ANGULAR_POSITION;
     motorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
     motorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = MIN_ANGULAR_POSITION;
+
+    super.initialize();
 
     if(RobotBase.isSimulation()) {
       sim = new ElevatorSim(
@@ -89,6 +89,7 @@ public class Elevator extends PositionPIDFBase {
     super.periodic();
 
     DogLog.log(SUBSYSTEM_NAME + "/Linear Position", getLinearPosition(), "m");
+    DogLog.log(SUBSYSTEM_NAME + "/Linear Position Setpoint", setpoint / METERS_PER_ROTATION, "m");
     DogLog.log(SUBSYSTEM_NAME + "/Linear Velocity", getLinearVelocity(), "m/s");
   }
 
@@ -115,7 +116,7 @@ public class Elevator extends PositionPIDFBase {
 
   /// Get the linear velocity in meters.
   public double getLinearVelocity() {
-    return getAngularPosition() * METERS_PER_ROTATION;
+    return getAngularVelocity() * METERS_PER_ROTATION;
   }
 
   /// Set the linear position in meters.

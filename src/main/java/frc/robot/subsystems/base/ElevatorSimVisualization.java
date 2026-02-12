@@ -86,7 +86,7 @@ public class ElevatorSimVisualization extends SubsystemBase {
     );
 
     // Initialize visualization
-    SmartDashboard.putData("Elevator Sim", mech);
+    SmartDashboard.putData(elevator.SUBSYSTEM_NAME, mech);
   }
 
   @Override
@@ -98,13 +98,13 @@ public class ElevatorSimVisualization extends SubsystemBase {
     elevatorMech.setLength(displayHeight);
 
     // Add telemetry data
-    SmartDashboard.putNumber("Elevator Height (m)", currentHeight);
+    SmartDashboard.putNumber(elevator.SUBSYSTEM_NAME + "/Simulation/Height (m)", currentHeight);
     SmartDashboard.putNumber(
-      "Elevator Velocity (m/s)",
+      elevator.SUBSYSTEM_NAME + "/Simulation/Velocity (m/s)",
       elevator.getSimulation().getVelocityMetersPerSecond()
     );
     SmartDashboard.putNumber(
-      "Elevator Current (A)",
+      elevator.SUBSYSTEM_NAME + "/Simulation/Current (A)",
       elevator.getSimulation().getCurrentDrawAmps()
     );
   }
