@@ -1,7 +1,5 @@
 package frc.robot.subsystems.base;
 
-import static frc.robot.ToSI.*;
-
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -9,16 +7,10 @@ import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.GravityTypeValue;
-import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
-
 import dev.doglog.DogLog;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.units.measure.*;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -120,8 +112,8 @@ public class VelocityPIDFBase extends SubsystemBase {
     motorConfig.Slot0.kI = kI_subscriber.get();
     motorConfig.Slot0.kD = kD_subscriber.get();
 
-    motorConfig.MotionMagic.MotionMagicCruiseVelocity = maxJerk_subscriber.get();
     motorConfig.MotionMagic.MotionMagicAcceleration = maxAcceleration_subscriber.get();
+    motorConfig.MotionMagic.MotionMagicJerk = maxJerk_subscriber.get();
 
     // Apply configuration
     motor.getConfigurator().apply(motorConfig);
@@ -146,7 +138,7 @@ public class VelocityPIDFBase extends SubsystemBase {
     DogLog.log(SUBSYSTEM_NAME + "/Voltage", getVoltage(), "V");
     DogLog.log(SUBSYSTEM_NAME + "/Stator Current", getCurrent(), "A");
     DogLog.log(SUBSYSTEM_NAME + "/Temperature", getTemperature(), "°C");
-    DogLog.log(SUBSYSTEM_NAME + "/Position setpoint", getSetpoint(), "rotation");
+    DogLog.log(SUBSYSTEM_NAME + "/Velocity setpoint", getSetpoint(), "rotation/s");
   }
 
   /**

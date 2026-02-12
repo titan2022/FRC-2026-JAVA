@@ -26,6 +26,7 @@ import frc.robot.drive.sim.SimSwerveConstants;
 import frc.robot.drive.sim.SimSwerveDrivetrain;
 import frc.robot.localization.Vision;
 import frc.robot.subsystems.intake.IntakePinion;
+import frc.robot.subsystems.shooter.ShooterFlywheel;
 import frc.robot.subsystems.shooter.ShooterPitch;
 import frc.robot.subsystems.shooter.ShooterYaw;
 
@@ -40,6 +41,7 @@ public class Robot extends TimedRobot {
 
 	public final ShooterPitch shooterPitch = new ShooterPitch();
 	public final ShooterYaw shooterYaw = new ShooterYaw();
+	public final ShooterFlywheel shooterFlywheel = new ShooterFlywheel();
 
 	public final IntakePinion intakePinion = new IntakePinion();
 
