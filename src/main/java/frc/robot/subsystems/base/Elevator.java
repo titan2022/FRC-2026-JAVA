@@ -1,12 +1,10 @@
 package frc.robot.subsystems.base;
 
+import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj2.command.Command;
 
-/**
- * Example of an arm or a pivot
- */
 public class Elevator extends PositionPIDFBase {
   // The following constants must be provided by your subclass.
   public double DRUM_RADIUS = 0.0254; // metres
@@ -39,6 +37,11 @@ public class Elevator extends PositionPIDFBase {
     MIN_ANGULAR_POSITION = MIN_LINEAR_POSITION / METERS_PER_ROTATION;
     MAX_ANGULAR_POSITION = MAX_LINEAR_POSITION / METERS_PER_ROTATION;
     STARTING_ANGULAR_POSITION = STARTING_LINEAR_POSITION / METERS_PER_ROTATION;
+
+    motorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+    motorConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = MAX_ANGULAR_POSITION;
+    motorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+    motorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = MIN_ANGULAR_POSITION;
 
     if(RobotBase.isSimulation()) {
       sim = new ElevatorSim(
@@ -79,6 +82,14 @@ public class Elevator extends PositionPIDFBase {
 
     motor.getSimState().setRawRotorPosition(motorPosition);
     motor.getSimState().setRotorVelocity(motorVelocity);
+  }
+
+  @Override
+  public void periodic() {
+    super.periodic();
+
+    DogLog.log(SUBSYSTEM_NAME + "/Linear Position", getLinearPosition(), "m");
+    DogLog.log(SUBSYSTEM_NAME + "/Linear Velocity", getLinearVelocity(), "m/s");
   }
 
   /**
