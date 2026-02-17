@@ -25,6 +25,12 @@ import frc.robot.drive.DriveUtility;
 import frc.robot.drive.sim.SimSwerveConstants;
 import frc.robot.drive.sim.SimSwerveDrivetrain;
 import frc.robot.localization.Vision;
+// Uncomment these imports when enabling indexer bindings:
+// import frc.robot.commands.indexer.RunIndexer;
+// import frc.robot.commands.indexer.ShootWhenReady;
+import frc.robot.subsystems.indexer.IndexerFlywheel;
+import frc.robot.subsystems.indexer.IndexerSpindexer;
+import frc.robot.subsystems.indexer.IndexerVerticalIndexer;
 import frc.robot.subsystems.intake.IntakePinion;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
 import frc.robot.subsystems.shooter.ShooterPitch;
@@ -45,6 +51,11 @@ public class Robot extends TimedRobot {
 
 	public final IntakePinion intakePinion = new IntakePinion();
 
+	// Indexer subsystems
+	public final IndexerSpindexer indexerSpindexer = new IndexerSpindexer();
+	public final IndexerVerticalIndexer indexerVerticalIndexer = new IndexerVerticalIndexer();
+	public final IndexerFlywheel indexerFlywheel = new IndexerFlywheel();
+
 	public SendableChooser<Command> autoChooser;
 
 	public Robot() {
@@ -59,6 +70,23 @@ public class Robot extends TimedRobot {
 		controller.b().whileTrue(intakePinion.setLinearPositionCommand(0.3*m));
 		controller.x().whileTrue(intakePinion.setLinearPositionCommand(0.7*m));
 		controller.y().whileTrue(intakePinion.setLinearPositionCommand(1*m));
+
+		// Example indexer bindings (use a second controller?)
+		// Run all indexer components
+		// controller.rightBumper()
+		// 	.whileTrue(new RunIndexer(indexerSpindexer, indexerVerticalIndexer, indexerFlywheel));
+		
+		// Shoot when ready (waits for flywheel to spin up)
+		// controller.leftBumper()
+		// 	.whileTrue(new ShootWhenReady(indexerSpindexer, indexerVerticalIndexer, indexerFlywheel));
+		
+		// Run only spindexer
+		// controller.povUp()
+		// 	.whileTrue(new RunIndexer(indexerSpindexer, indexerVerticalIndexer, indexerFlywheel, true, false, false));
+		
+		// Reverse spindexer for jam clearing
+		// controller.povDown()
+		// 	.whileTrue(indexerSpindexer.reverseCommand());
 	}
 
 	@Override
@@ -71,15 +99,6 @@ public class Robot extends TimedRobot {
 
 		// Update vision
 		vision.periodic();
-
-		// Test/Example only!
-		// Apply an offset to pose estimator to test vision correction
-		// You probably don't want this on a real robot, just delete it.
-		// if (controller.getBButtonPressed()) {
-		// 	var disturbance =
-		// 		new Transform2d(new Translation2d(1.0, 1.0), new Rotation2d(0.17 * 2 * Math.PI));
-		// 	drivetrain.resetPose(drivetrain.getPose().plus(disturbance), false);
-		// }
 
 		// Log values to the dashboard
 		drivetrain.log();
@@ -156,7 +175,7 @@ public class Robot extends TimedRobot {
 		var batteryVoltage =
 			BatterySim.calculateDefaultBatteryLoadedVoltage(simDrivetrain.getCurrentDraw());
 
-		// Using max(0.1, voltage) here isn't a *physically correct* solution,
+		// Using max(0.1, voltage) here isn't a physically correct solution,
 		// but it avoids problems with battery voltage measuring 0.
 		RoboRioSim.setVInVoltage(Math.max(0.1, batteryVoltage));
 	}
