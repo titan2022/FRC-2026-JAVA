@@ -327,8 +327,10 @@ public class CTRESwerveDrivetrain extends TunerSwerveDrivetrain implements Subsy
 
 	@Override
 	public void resetPose(Pose2d pose) {
-		if (this.mapleSimSwerveDrivetrain != null) mapleSimSwerveDrivetrain.mapleSimDrive.setSimulationWorldPose(pose);
-		Timer.delay(0.1); // wait for simulation to update
+		if (this.mapleSimSwerveDrivetrain != null) {
+			mapleSimSwerveDrivetrain.mapleSimDrive.setSimulationWorldPose(pose);
+			Timer.delay(0.1); // wait for simulation to update
+		}
 		super.resetPose(pose);
 	}
 }
