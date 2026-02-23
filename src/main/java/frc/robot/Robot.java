@@ -10,6 +10,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
@@ -25,7 +26,8 @@ import frc.robot.drive.DriveUtility;
 import frc.robot.drive.sim.SimSwerveConstants;
 import frc.robot.drive.sim.SimSwerveDrivetrain;
 import frc.robot.localization.Vision;
-import frc.robot.subsystems.intake.IntakePinion;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.Pinion;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
 import frc.robot.subsystems.shooter.ShooterPitch;
 import frc.robot.subsystems.shooter.ShooterYaw;
@@ -43,7 +45,8 @@ public class Robot extends TimedRobot {
 	public final ShooterYaw shooterYaw = new ShooterYaw();
 	public final ShooterFlywheel shooterFlywheel = new ShooterFlywheel();
 
-	public final IntakePinion intakePinion = new IntakePinion();
+	public final Intake intake = new Intake();
+	public final Pinion pinion = new Pinion();
 
 	public SendableChooser<Command> autoChooser;
 
@@ -55,10 +58,10 @@ public class Robot extends TimedRobot {
 	}
 
 	public void configureBindings() {
-		controller.a().whileTrue(intakePinion.setLinearPositionCommand(0*m));
-		controller.b().whileTrue(intakePinion.setLinearPositionCommand(0.3*m));
-		controller.x().whileTrue(intakePinion.setLinearPositionCommand(0.7*m));
-		controller.y().whileTrue(intakePinion.setLinearPositionCommand(1*m));
+		controller.a().whileTrue(pinion.setLinearPositionCommand(0*m));
+		controller.b().whileTrue(pinion.setLinearPositionCommand(0.3*m));
+		controller.x().whileTrue(pinion.setLinearPositionCommand(0.7*m));
+		controller.y().whileTrue(pinion.setLinearPositionCommand(1*m));
 	}
 
 	@Override
