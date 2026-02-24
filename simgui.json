@@ -2,17 +2,40 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
-      "/Pose": "Field2d",
+      "/SmartDashboard/Alerts": "Alerts",
+      "/SmartDashboard/ArmPivot": "Mechanism2d",
       "/SmartDashboard/Auto Chooser": "String Chooser",
-      "/SmartDashboard/Module 0": "Mechanism2d",
-      "/SmartDashboard/Module 1": "Mechanism2d",
-      "/SmartDashboard/Module 2": "Mechanism2d",
-      "/SmartDashboard/Module 3": "Mechanism2d",
+      "/SmartDashboard/Elevator Sim": "Mechanism2d",
+      "/SmartDashboard/IntakePinion": "Mechanism2d",
       "/SmartDashboard/PathPlanner": "Alerts",
       "/SmartDashboard/PhotonAlerts": "Alerts",
-      "/SmartDashboard/VisionSystemSim-main/Sim Field": "Field2d"
+      "/SmartDashboard/PositionPIDFBase": "Mechanism2d",
+      "/SmartDashboard/ShooterPitch": "Mechanism2d",
+      "/SmartDashboard/ShooterYaw": "Mechanism2d",
+      "/SmartDashboard/VisionSystemSim-main/Sim Field": "Field2d",
+      "/SmartDashboard/WARNING NAME NOT SET": "Mechanism2d"
     },
     "windows": {
+      "/SmartDashboard/IntakePinion": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/PositionPIDFBase": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/ShooterPitch": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/ShooterYaw": {
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/VisionSystemSim-main/Sim Field": {
         "EstimatedRobot": {
           "arrowWeight": 3.0,
