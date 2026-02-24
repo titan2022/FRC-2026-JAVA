@@ -27,13 +27,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.drive.CommandSwerveDrivetrain;
-import frc.robot.drive.DriveUtility;
+import frc.robot.Constants.DriverConstants;
+import frc.robot.drive.SwerveDrivetrain;
 import frc.robot.drive.ctre.CTRESwerveDrivetrain;
 import frc.robot.drive.ctre.CTRESwerveTelemetry;
 import frc.robot.drive.ctre.TunerConstants;
-import frc.robot.drive.sim.SimSwerveConstants;
-import frc.robot.drive.sim.SimSwerveDrivetrain;
+import frc.robot.drive.ctre.commands.DrivingCommand;
 import frc.robot.localization.Vision;
 import frc.robot.subsystems.intake.IntakePinion;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
@@ -45,11 +44,11 @@ public class Robot extends TimedRobot {
 	private double MaxAngularRate =
 					RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 	
-	private final CTRESwerveTelemetry logger = new CTRESwerveTelemetry(MaxSpeed);
+	private final CTRESwerveTelemetry logger = new CTRESwerveTelemetry(DriverConstants.MAX_SPEED);
 
 	private Command m_autonomousCommand;
 
-	public final CommandXboxController controller = new CommandXboxController(0);
+	public final CommandXboxController driveController = new CommandXboxController(0);
 
 	public final CTRESwerveDrivetrain drivetrain = new CTRESwerveDrivetrain();
 
@@ -60,6 +59,8 @@ public class Robot extends TimedRobot {
 	public final ShooterFlywheel shooterFlywheel = new ShooterFlywheel();
 
 	public final IntakePinion intakePinion = new IntakePinion();
+
+	private final DrivingCommand drivingCommand = new DrivingCommand(drivetrain, driveController);
 
 	public SendableChooser<Command> autoChooser;
 
@@ -82,10 +83,12 @@ public class Robot extends TimedRobot {
 	}
 
 	public void configureBindings() {
-		controller.a().whileTrue(intakePinion.setLinearPositionCommand(0*m));
-		controller.b().whileTrue(intakePinion.setLinearPositionCommand(0.3*m));
-		controller.x().whileTrue(intakePinion.setLinearPositionCommand(0.7*m));
-		controller.y().whileTrue(intakePinion.setLinearPositionCommand(1*m));
+		drivetrain.setDefaultCommand(drivingCommand);
+
+		// driveController.a().whileTrue(intakePinion.setLinearPositionCommand(0*m));
+		// driveController.b().whileTrue(intakePinion.setLinearPositionCommand(0.3*m));
+		// driveController.x().whileTrue(intakePinion.setLinearPositionCommand(0.7*m));
+		// driveController.y().whileTrue(intakePinion.setLinearPositionCommand(1*m));
 	}
 
 	@Override
@@ -131,19 +134,7 @@ public class Robot extends TimedRobot {
 	}
 
 	@Override
-	public void teleopPeriodic() {
-		// Calculate drivetrain commands from Joystick values
-		double forward = -controller.getLeftY() * SimSwerveConstants.Swerve.kMaxLinearSpeed;
-		double strafe = -controller.getLeftX() * SimSwerveConstants.Swerve.kMaxLinearSpeed;
-		double turn = -controller.getRightX() * SimSwerveConstants.Swerve.kMaxAngularSpeed;
-
-		// Command drivetrain motors based on target speeds
-		drivetrain.driveRobotCentric(forward, strafe, turn);
-
-		// Calculate whether the gamepiece launcher runs based on our global pose estimate.
-		var curPose = drivetrain.getPose();
-		var shouldRun = (curPose.getY() > 2.0 && curPose.getX() < 4.0); // Close enough to blue speaker
-	}
+	public void teleopPeriodic() {}
 
 	@Override
 	public void testInit() {

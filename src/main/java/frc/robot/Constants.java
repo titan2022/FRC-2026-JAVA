@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static frc.robot.ToSI.*;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -15,5 +19,18 @@ package frc.robot;
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+  }
+
+  public static class DriverConstants {
+    /// The max speed, in meters per second
+    public static final double MAX_SPEED = 6.0 * m/s;
+    // alternately TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+
+    /// The max angular speed, in radians per second
+    public static final double MAX_ANGULAR_SPEED = RotationsPerSecond.of(0.75).in(RadiansPerSecond);
+    /// The deadband, as a fraction of 1
+    public static final double DEADBAND = 0.15;
+    /// The speed of dpad strafing, in meters per second
+    public static final double DPAD_STRAFE_SPEED = 0.5 * m/s;
   }
 }

@@ -33,7 +33,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.drive.CommandSwerveDrivetrain;
+import frc.robot.drive.SwerveDrivetrain;
 import frc.robot.drive.ctre.TunerConstants.TunerSwerveDrivetrain;
 
 // https://github.com/Shenzhen-Robotics-Alliance/CTRE-Swerve-MapleSim/blob/main/src/main/java/frc/robot/subsystems/CommandSwerveDrivetrain.java
@@ -41,7 +41,7 @@ import frc.robot.drive.ctre.TunerConstants.TunerSwerveDrivetrain;
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements
  * Subsystem so it can easily be used in command-based projects.
  */
-public class CTRESwerveDrivetrain extends TunerSwerveDrivetrain implements CommandSwerveDrivetrain {
+public class CTRESwerveDrivetrain extends TunerSwerveDrivetrain implements SwerveDrivetrain {
 	public CTRESwerveDrivetrain() {
 		this(TunerConstants.DrivetrainConstants, TunerConstants.FrontLeft, TunerConstants.FrontRight, TunerConstants.BackLeft, TunerConstants.BackRight);
 	}
