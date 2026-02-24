@@ -340,4 +340,8 @@ public class CTRESwerveDrivetrain extends TunerSwerveDrivetrain implements Comma
 		}
 		super.resetPose(pose);
 	}
+
+	public Pose2d getSimPose() {
+		return mapleSimSwerveDrivetrain.mapleSimDrive.getSimulatedDriveTrainPose();
+	}
 }

@@ -142,6 +142,9 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void simulationPeriodic() {
+		// Update camera simulation
+		vision.simulationPeriodic(drivetrain.getSimPose());
+
 		SimulatedArena.getInstance().simulationPeriodic();	
 	}
 
