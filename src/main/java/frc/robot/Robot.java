@@ -6,12 +6,17 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import org.ironmaple.simulation.SimulatedArena;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 
+import dev.doglog.DogLog;
+import dev.doglog.DogLogOptions;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
@@ -54,7 +59,16 @@ public class Robot extends TimedRobot {
 		autoChooser = AutoBuilder.buildAutoChooser();
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 
+		DogLog.setOptions(new DogLogOptions()
+						.withLogExtras(true)
+						.withCaptureDs(true)
+						.withNtPublish(true)
+						.withCaptureNt(true));
+		DogLog.setPdh(new PowerDistribution());
+
 		drivetrain.registerTelemetry(logger::telemeterize);
+
+		resetPose();
 	}
 
 	@Override
@@ -128,25 +142,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void simulationPeriodic() {
-		// SimSwerveDrivetrain simDrivetrain = (SimSwerveDrivetrain)drivetrain;
-		// simDrivetrain.simulationPeriodic();
-		// // Update camera simulation
-		// vision.simulationPeriodic(simDrivetrain.getSimPose());
-
-		// var debugField = vision.getSimDebugField();
-		// debugField.getObject("EstimatedRobot").setPose(simDrivetrain.getPose());
-		// debugField.getObject("EstimatedRobotModules").setPoses(simDrivetrain.getModulePoses());
-
-		// // Update gamepiece launcher simulation
-		// gpLauncher.simulationPeriodic();
-
-		// // Calculate battery voltage sag due to current draw
-		// var batteryVoltage =
-		// 	BatterySim.calculateDefaultBatteryLoadedVoltage(simDrivetrain.getCurrentDraw());
-
-		// // Using max(0.1, voltage) here isn't a *physically correct* solution,
-		// // but it avoids problems with battery voltage measuring 0.
-		// RoboRioSim.setVInVoltage(Math.max(0.1, batteryVoltage));
+		SimulatedArena.getInstance().simulationPeriodic();	
 	}
 
 	public void resetPose() {
@@ -154,9 +150,7 @@ public class Robot extends TimedRobot {
 	}
 
 	public void resetPose(Pose2d startPose) {
-		// if(RobotBase.isSimulation()) {
-		// 	((SimSwerveDrivetrain)drivetrain).resetPose(startPose, true);
-		// }
+		drivetrain.resetPose(startPose);
 		vision.resetSimPose(startPose);
 	}
 }

@@ -25,10 +25,12 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.drive.CommandSwerveDrivetrain;
@@ -39,7 +41,7 @@ import frc.robot.drive.ctre.TunerConstants.TunerSwerveDrivetrain;
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements
  * Subsystem so it can easily be used in command-based projects.
  */
-public class CTRESwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem, CommandSwerveDrivetrain {
+public class CTRESwerveDrivetrain extends TunerSwerveDrivetrain implements CommandSwerveDrivetrain {
 	public CTRESwerveDrivetrain() {
 		this(TunerConstants.DrivetrainConstants, TunerConstants.FrontLeft, TunerConstants.FrontRight, TunerConstants.BackLeft, TunerConstants.BackRight);
 	}
@@ -154,6 +156,7 @@ public class CTRESwerveDrivetrain extends TunerSwerveDrivetrain implements Subsy
 		if (Utils.isSimulation()) {
 			startSimThread();
 		}
+		CommandScheduler.getInstance().registerSubsystem(this);
 		configureAutoBuilder();
 	}
 
@@ -179,6 +182,7 @@ public class CTRESwerveDrivetrain extends TunerSwerveDrivetrain implements Subsy
 		if (Utils.isSimulation()) {
 			startSimThread();
 		}
+		CommandScheduler.getInstance().registerSubsystem(this);
 		configureAutoBuilder();
 	}
 
@@ -212,6 +216,7 @@ public class CTRESwerveDrivetrain extends TunerSwerveDrivetrain implements Subsy
 		if (Utils.isSimulation()) {
 			startSimThread();
 		}
+		CommandScheduler.getInstance().registerSubsystem(this);
 		configureAutoBuilder();
 	}
 
@@ -292,6 +297,8 @@ public class CTRESwerveDrivetrain extends TunerSwerveDrivetrain implements Subsy
 				m_hasAppliedOperatorPerspective = true;
 			});
 		}
+
+		SmartDashboard.putBoolean("Drivebase periodic running", true);
 
 		DogLog.log("BatteryVoltage", RobotController.getBatteryVoltage());
 		DogLog.log("Drive/OdometryPose", getState().Pose);
