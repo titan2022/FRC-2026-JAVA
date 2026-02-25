@@ -26,9 +26,8 @@ import frc.robot.drive.sim.SimSwerveConstants;
 import frc.robot.drive.sim.SimSwerveDrivetrain;
 import frc.robot.localization.Vision;
 // Uncomment these imports when enabling indexer bindings:
-// import frc.robot.commands.indexer.RunIndexer;
-// import frc.robot.commands.indexer.ShootWhenReady;
-import frc.robot.subsystems.indexer.IndexerFlywheel;
+// import frc.robot.commands.indexer.SpinSpindexer;
+// import frc.robot.commands.indexer.SpinVerticalIndexer;
 import frc.robot.subsystems.indexer.IndexerSpindexer;
 import frc.robot.subsystems.indexer.IndexerVerticalIndexer;
 import frc.robot.subsystems.intake.IntakePinion;
@@ -54,7 +53,6 @@ public class Robot extends TimedRobot {
 	// Indexer subsystems
 	public final IndexerSpindexer indexerSpindexer = new IndexerSpindexer();
 	public final IndexerVerticalIndexer indexerVerticalIndexer = new IndexerVerticalIndexer();
-	public final IndexerFlywheel indexerFlywheel = new IndexerFlywheel();
 
 	public SendableChooser<Command> autoChooser;
 
@@ -72,21 +70,13 @@ public class Robot extends TimedRobot {
 		controller.y().whileTrue(intakePinion.setLinearPositionCommand(1*m));
 
 		// Example indexer bindings (use a second controller?)
-		// Run all indexer components
+		// Spin the spindexer
 		// controller.rightBumper()
-		// 	.whileTrue(new RunIndexer(indexerSpindexer, indexerVerticalIndexer, indexerFlywheel));
+		// 	.whileTrue(new SpinSpindexer(indexerSpindexer));
 		
-		// Shoot when ready (waits for flywheel to spin up)
+		// Spin the vertical indexer
 		// controller.leftBumper()
-		// 	.whileTrue(new ShootWhenReady(indexerSpindexer, indexerVerticalIndexer, indexerFlywheel));
-		
-		// Run only spindexer
-		// controller.povUp()
-		// 	.whileTrue(new RunIndexer(indexerSpindexer, indexerVerticalIndexer, indexerFlywheel, true, false, false));
-		
-		// Reverse spindexer for jam clearing
-		// controller.povDown()
-		// 	.whileTrue(indexerSpindexer.reverseCommand());
+		// 	.whileTrue(new SpinVerticalIndexer(indexerVerticalIndexer));
 	}
 
 	@Override
