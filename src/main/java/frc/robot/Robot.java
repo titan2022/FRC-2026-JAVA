@@ -7,6 +7,7 @@ package frc.robot;
 import static edu.wpi.first.units.Units.*;
 
 import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.seasonspecific.rebuilt2026.RebuiltFuelOnField;
 
 import static frc.robot.ToSI.*;
 
@@ -15,7 +16,11 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -144,13 +149,26 @@ public class Robot extends TimedRobot {
 	@Override
 	public void testPeriodic() {}
 
+	private final StructArrayPublisher<Pose3d> fuelPoses = NetworkTableInstance.getDefault()
+      .getStructArrayTopic("MyPoseArray", Pose3d.struct)
+      .publish();
+
 	@Override
-	public void simulationInit() {}
+	public void simulationInit() {
+		SimulatedArena.getInstance().addGamePiece(new RebuiltFuelOnField(new Translation2d(2,2)));
+	}
 
 	@Override
 	public void simulationPeriodic() {
 		// Update camera simulation
 		vision.simulationPeriodic(drivetrain.getSimPose());
+
+		// Get the positions of the fuel (both on the field and in the air)
+		fuelPoses.accept(SimulatedArena.getInstance()
+					.getGamePiecesByType("Fuel")
+					.stream()
+					.map(x -> x.getPose3d())
+					.toArray(size -> new Pose3d[size]));
 
 		SimulatedArena.getInstance().simulationPeriodic();	
 	}
