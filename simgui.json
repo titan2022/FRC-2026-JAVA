@@ -9,6 +9,7 @@
       "/SmartDashboard/IntakePinion": "Mechanism2d",
       "/SmartDashboard/PathPlanner": "Alerts",
       "/SmartDashboard/PhotonAlerts": "Alerts",
+      "/SmartDashboard/Pinion": "Mechanism2d",
       "/SmartDashboard/PositionPIDFBase": "Mechanism2d",
       "/SmartDashboard/ShooterPitch": "Mechanism2d",
       "/SmartDashboard/ShooterYaw": "Mechanism2d",
