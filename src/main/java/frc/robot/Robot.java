@@ -52,13 +52,13 @@ public class Robot extends TimedRobot {
 
 	public final CTRESwerveDrivetrain drivetrain = new CTRESwerveDrivetrain();
 
-	public final Vision vision = new Vision(drivetrain::addVisionMeasurement);
+	// public final Vision vision = new Vision(drivetrain::addVisionMeasurement);
 
-	public final ShooterPitch shooterPitch = new ShooterPitch();
-	public final ShooterYaw shooterYaw = new ShooterYaw();
-	public final ShooterFlywheel shooterFlywheel = new ShooterFlywheel();
+	// public final ShooterPitch shooterPitch = new ShooterPitch();
+	// public final ShooterYaw shooterYaw = new ShooterYaw();
+	// public final ShooterFlywheel shooterFlywheel = new ShooterFlywheel();
 
-	public final IntakePinion intakePinion = new IntakePinion();
+	// public final IntakePinion intakePinion = new IntakePinion();
 
 	private final DrivingCommand drivingCommand = new DrivingCommand(drivetrain, driveController);
 
@@ -100,7 +100,7 @@ public class Robot extends TimedRobot {
 		// }
 
 		// Update vision
-		vision.periodic();
+		// vision.periodic();
 	}
 
 	@Override
@@ -150,7 +150,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void simulationPeriodic() {
 		// Update camera simulation
-		vision.simulationPeriodic(drivetrain.getSimPose());
+		// vision.simulationPeriodic(drivetrain.getSimPose());
 
 		SimulatedArena.getInstance().simulationPeriodic();	
 	}
@@ -161,6 +161,6 @@ public class Robot extends TimedRobot {
 
 	public void resetPose(Pose2d startPose) {
 		drivetrain.resetPose(startPose);
-		vision.resetSimPose(startPose);
+		// vision.resetSimPose(startPose);
 	}
 }
