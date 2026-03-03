@@ -12,9 +12,9 @@ import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 import edu.wpi.first.math.system.plant.DCMotor;
 import frc.robot.subsystems.base.Elevator;
 
-public class ClimbMechanism extends Elevator {
+public class Climb extends Elevator {
   {
-    SUBSYSTEM_NAME = "IntakePinion";
+    SUBSYSTEM_NAME = "Climb";
 
     // Hardware devices
     motor = new TalonFX(21); //We will need to change the CAN ID once more of the robot is built
@@ -65,7 +65,7 @@ public class ClimbMechanism extends Elevator {
     motorConfig.CurrentLimits.SupplyCurrentLowerTime = 1;
   }
 
-  public ClimbMechanism() {
+  public Climb() {
     initialize();
   }
 

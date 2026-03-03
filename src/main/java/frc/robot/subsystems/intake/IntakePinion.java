@@ -46,9 +46,9 @@ public class IntakePinion extends Elevator {
     motorConfig.Slot0.GravityType = GravityTypeValue.Elevator_Static;
     motorConfig.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
     motorConfig.Slot0.kG = 0.0; 
-    motorConfig.Slot0.kA = 0.0; 
     motorConfig.Slot0.kS = 0.0; 
     motorConfig.Slot0.kV = 0.0; 
+    motorConfig.Slot0.kA = 0.0; 
 
     // PID
     motorConfig.Slot0.kP = 0.0; 

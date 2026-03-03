@@ -76,9 +76,9 @@ public class Elevator extends PositionPIDFBase {
 
     // Convert meters to motor rotations
     double motorPosition =
-      sim.getPositionMeters() * METERS_PER_ROTATION;
+      sim.getPositionMeters() / METERS_PER_ROTATION;
     double motorVelocity =
-      sim.getVelocityMetersPerSecond() * METERS_PER_ROTATION;
+      sim.getVelocityMetersPerSecond() / METERS_PER_ROTATION;
 
     motor.getSimState().setRawRotorPosition(motorPosition);
     motor.getSimState().setRotorVelocity(motorVelocity);

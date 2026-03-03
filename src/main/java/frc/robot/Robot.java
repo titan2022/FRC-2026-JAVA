@@ -25,6 +25,7 @@ import frc.robot.drive.DriveUtility;
 import frc.robot.drive.sim.SimSwerveConstants;
 import frc.robot.drive.sim.SimSwerveDrivetrain;
 import frc.robot.localization.Vision;
+import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.intake.IntakePinion;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
 import frc.robot.subsystems.shooter.ShooterPitch;
@@ -44,6 +45,8 @@ public class Robot extends TimedRobot {
 	public final ShooterFlywheel shooterFlywheel = new ShooterFlywheel();
 
 	public final IntakePinion intakePinion = new IntakePinion();
+
+	public final Climb climb = new Climb();
 
 	public SendableChooser<Command> autoChooser;
 
