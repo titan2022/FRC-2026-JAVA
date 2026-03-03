@@ -309,7 +309,7 @@ public class CTRESwerveDrivetrain extends TunerSwerveDrivetrain implements Swerv
 			DogLog.log("Drive/SimulationPose", mapleSimSwerveDrivetrain.mapleSimDrive.getSimulatedDriveTrainPose());
 	}
 
-	private MapleSimSwerveDrivetrain mapleSimSwerveDrivetrain = null;
+	public MapleSimSwerveDrivetrain mapleSimSwerveDrivetrain = null;
 
 	private void startSimThread() {
 		mapleSimSwerveDrivetrain = new MapleSimSwerveDrivetrain(

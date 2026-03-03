@@ -4,6 +4,8 @@ package frc.robot.subsystems.intake;
 
 import static frc.robot.ToSI.*;
 
+import org.ironmaple.simulation.IntakeSimulation;
+
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
@@ -12,9 +14,13 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.base.Elevator;
 
 public class Pinion extends Elevator {
+  private Intake intake;
+
   {
     SUBSYSTEM_NAME = "Pinion";
 
@@ -67,8 +73,19 @@ public class Pinion extends Elevator {
     motorConfig.CurrentLimits.SupplyCurrentLowerTime = 1;
   }
 
-  public Pinion() {
+  public Pinion(Intake intake) {
+    this.intake = intake;
     initialize();
+  }
+
+  public Command extendIntakeCommand() {
+    return setLinearPositionCommand(MIN_LINEAR_POSITION)
+      .alongWith(new InstantCommand(() -> intake.setIsOut(true)));
+  }
+
+  public Command retractIntakeCommand() {
+    return setLinearPositionCommand(MAX_LINEAR_POSITION)
+      .alongWith(new InstantCommand(() -> intake.setIsOut(false)));
   }
 
   @Override

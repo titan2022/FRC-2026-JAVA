@@ -40,17 +40,14 @@ import frc.robot.drive.ctre.CTRESwerveTelemetry;
 import frc.robot.drive.ctre.TunerConstants;
 import frc.robot.drive.ctre.commands.DrivingCommand;
 import frc.robot.localization.Vision;
+import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Pinion;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
 import frc.robot.subsystems.shooter.ShooterPitch;
 import frc.robot.subsystems.shooter.ShooterYaw;
 
-public class Robot extends TimedRobot {
-	private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-	private double MaxAngularRate =
-					RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
-	
+public class Robot extends TimedRobot {	
 	private final CTRESwerveTelemetry logger = new CTRESwerveTelemetry(DriverConstants.MAX_SPEED);
 
 	private Command m_autonomousCommand;
@@ -65,8 +62,8 @@ public class Robot extends TimedRobot {
 	public final ShooterYaw shooterYaw = new ShooterYaw();
 	public final ShooterFlywheel shooterFlywheel = new ShooterFlywheel();
 
-	public final Intake intake = new Intake();
-	public final Pinion pinion = new Pinion();
+	public final Intake intake = new Intake(drivetrain);
+	public final Pinion pinion = new Pinion(intake);
 
 	public final Climb climb = new Climb();
 
@@ -95,10 +92,8 @@ public class Robot extends TimedRobot {
 	public void configureBindings() {
 		drivetrain.setDefaultCommand(drivingCommand);
 
-		driveController.a().whileTrue(pinion.setLinearPositionCommand(0*m));
-		driveController.b().whileTrue(pinion.setLinearPositionCommand(0.3*m));
-		driveController.x().whileTrue(pinion.setLinearPositionCommand(0.7*m));
-		driveController.y().whileTrue(pinion.setLinearPositionCommand(1*m));
+		driveController.a().whileTrue(pinion.extendIntakeCommand());
+		driveController.b().whileTrue(pinion.retractIntakeCommand());
 	}
 
 	@Override
@@ -123,6 +118,8 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void autonomousInit() {
+		drivingCommand.resetAlliance();
+
 		m_autonomousCommand = autoChooser.getSelected();
 
 		// schedule the autonomous command (example)
@@ -136,6 +133,8 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
+		drivingCommand.resetAlliance();
+
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.cancel();
 		}

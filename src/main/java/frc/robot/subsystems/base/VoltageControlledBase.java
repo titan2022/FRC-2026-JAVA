@@ -6,6 +6,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import dev.doglog.DogLog;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
@@ -78,12 +79,12 @@ public class VoltageControlledBase extends SubsystemBase {
     );
 
     // Log values
-    SmartDashboard.putNumber(SUBSYSTEM_NAME + "/Angular Position", getAngularPosition());
-    SmartDashboard.putNumber(SUBSYSTEM_NAME + "/Angular Velocity", getAngularVelocity());
-    SmartDashboard.putNumber(SUBSYSTEM_NAME + "/Voltage", getVoltage());
-    SmartDashboard.putNumber(SUBSYSTEM_NAME + "/Stator Current", getCurrent());
-    SmartDashboard.putNumber(SUBSYSTEM_NAME + "/Temperature", getTemperature());
-    SmartDashboard.putNumber(SUBSYSTEM_NAME + "/Voltage Setpoint", getVoltageSetpoint());
+    DogLog.log(SUBSYSTEM_NAME + "/Angular Position", getAngularPosition());
+    DogLog.log(SUBSYSTEM_NAME + "/Angular Velocity", getAngularVelocity());
+    DogLog.log(SUBSYSTEM_NAME + "/Voltage", getVoltage());
+    DogLog.log(SUBSYSTEM_NAME + "/Stator Current", getCurrent());
+    DogLog.log(SUBSYSTEM_NAME + "/Temperature", getTemperature());
+    DogLog.log(SUBSYSTEM_NAME + "/Voltage Setpoint", getVoltageSetpoint());
   }
 
   /**
