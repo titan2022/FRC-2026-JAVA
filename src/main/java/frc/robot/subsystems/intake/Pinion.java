@@ -1,3 +1,5 @@
+
+
 package frc.robot.subsystems.intake;
 
 import static frc.robot.ToSI.*;
@@ -12,9 +14,9 @@ import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 import edu.wpi.first.math.system.plant.DCMotor;
 import frc.robot.subsystems.base.Elevator;
 
-public class IntakePinion extends Elevator {
+public class Pinion extends Elevator {
   {
-    SUBSYSTEM_NAME = "IntakePinion";
+    SUBSYSTEM_NAME = "Pinion";
 
     // Hardware devices
     motor = new TalonFX(21); 
@@ -65,7 +67,7 @@ public class IntakePinion extends Elevator {
     motorConfig.CurrentLimits.SupplyCurrentLowerTime = 1;
   }
 
-  public IntakePinion() {
+  public Pinion() {
     initialize();
   }
 
@@ -74,3 +76,5 @@ public class IntakePinion extends Elevator {
     super.periodic();
   }
 }
+
+
