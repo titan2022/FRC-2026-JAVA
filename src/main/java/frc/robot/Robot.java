@@ -150,12 +150,12 @@ public class Robot extends TimedRobot {
 	public void testPeriodic() {}
 
 	private final StructArrayPublisher<Pose3d> fuelPoses = NetworkTableInstance.getDefault()
-      .getStructArrayTopic("MyPoseArray", Pose3d.struct)
+      .getStructArrayTopic("Robot/Field/Fuel", Pose3d.struct)
       .publish();
 
 	@Override
 	public void simulationInit() {
-		SimulatedArena.getInstance().addGamePiece(new RebuiltFuelOnField(new Translation2d(2,2)));
+		SimulatedArena.getInstance().resetFieldForAuto();
 	}
 
 	@Override
