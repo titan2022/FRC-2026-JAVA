@@ -115,7 +115,6 @@
           "width": 1.0
         },
         "height": 8.069275856018066,
-        "image": "/home/ethan/Projects/IMSA/FRC/FRC-2026-JAVA/2026-field.png",
         "left": 245,
         "right": 3942,
         "top": 118,
@@ -145,6 +144,21 @@
         "open": true
       },
       "SmartDashboard": {
+        "IntakePinion": {
+          "ElevatorRoot": {
+            "Base": {
+              "open": true
+            },
+            "Elevator": {
+              "open": true
+            },
+            "open": true
+          },
+          "Simulation": {
+            "open": true
+          },
+          "open": true
+        },
         "VisionSystemSim-main": {
           "open": true
         },
@@ -170,7 +184,7 @@
             0.0,
             0.8500000238418579
           ],
-          "height": 0,
+          "height": -40,
           "series": [
             {
               "color": [

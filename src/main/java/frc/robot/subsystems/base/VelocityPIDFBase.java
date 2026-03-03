@@ -187,6 +187,13 @@ public class VelocityPIDFBase extends SubsystemBase {
   }
 
   /**
+   * Stop the motor.
+   */
+  public void stop() {
+    motor.stopMotor();
+  }
+
+  /**
    * Set motor voltage directly.
    * @param voltage The voltage to apply
    */
@@ -211,7 +218,7 @@ public class VelocityPIDFBase extends SubsystemBase {
    * @return A command that sets the PIDF setpoint to the specified velocity
    */
   public Command setAngularPositionCommand(double velocity) {
-    return runOnce(() -> setAngularVelocity(velocity));
+    return runOnce(() -> setAngularVelocity(velocity)).finallyDo(this::stop);
   }
 
   /**
@@ -219,6 +226,6 @@ public class VelocityPIDFBase extends SubsystemBase {
    * @return A command that stops the mechanism
    */
   public Command stopCommand() {
-    return runOnce(() -> motor.stopMotor());
+    return runOnce(this::stop);
   }
 }

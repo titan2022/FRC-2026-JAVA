@@ -22,6 +22,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
@@ -39,7 +40,8 @@ import frc.robot.drive.ctre.CTRESwerveTelemetry;
 import frc.robot.drive.ctre.TunerConstants;
 import frc.robot.drive.ctre.commands.DrivingCommand;
 import frc.robot.localization.Vision;
-import frc.robot.subsystems.intake.IntakePinion;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.Pinion;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
 import frc.robot.subsystems.shooter.ShooterPitch;
 import frc.robot.subsystems.shooter.ShooterYaw;
@@ -63,7 +65,10 @@ public class Robot extends TimedRobot {
 	public final ShooterYaw shooterYaw = new ShooterYaw();
 	public final ShooterFlywheel shooterFlywheel = new ShooterFlywheel();
 
-	public final IntakePinion intakePinion = new IntakePinion();
+	public final Intake intake = new Intake();
+	public final Pinion pinion = new Pinion();
+
+	public final Climb climb = new Climb();
 
 	private final DrivingCommand drivingCommand = new DrivingCommand(drivetrain, driveController);
 
@@ -90,10 +95,10 @@ public class Robot extends TimedRobot {
 	public void configureBindings() {
 		drivetrain.setDefaultCommand(drivingCommand);
 
-		// driveController.a().whileTrue(intakePinion.setLinearPositionCommand(0*m));
-		// driveController.b().whileTrue(intakePinion.setLinearPositionCommand(0.3*m));
-		// driveController.x().whileTrue(intakePinion.setLinearPositionCommand(0.7*m));
-		// driveController.y().whileTrue(intakePinion.setLinearPositionCommand(1*m));
+		driveController.a().whileTrue(pinion.setLinearPositionCommand(0*m));
+		driveController.b().whileTrue(pinion.setLinearPositionCommand(0.3*m));
+		driveController.x().whileTrue(pinion.setLinearPositionCommand(0.7*m));
+		driveController.y().whileTrue(pinion.setLinearPositionCommand(1*m));
 	}
 
 	@Override
