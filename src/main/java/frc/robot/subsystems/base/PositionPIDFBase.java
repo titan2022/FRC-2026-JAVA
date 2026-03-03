@@ -205,6 +205,13 @@ public class PositionPIDFBase extends SubsystemBase {
   }
 
   /**
+   * Stop the motor.
+   */
+  public void stop() {
+    motor.stopMotor();
+  }
+
+  /**
    * Sets the PIDF setpoint to a specific angle.
    * Motion Magic is used to make a trapezoidal profile and apply a PIDF controller.
    * @param position The target angle in rotations
@@ -221,7 +228,7 @@ public class PositionPIDFBase extends SubsystemBase {
    * @return A command that sets the PIDF setpoint to the specified angle
    */
   public Command setAngularPositionCommand(double position) {
-    return runOnce(() -> setAngularPosition(position));
+    return runOnce(() -> setAngularPosition(position)).finallyDo(this::stop);
   }
 
   /**
@@ -229,6 +236,6 @@ public class PositionPIDFBase extends SubsystemBase {
    * @return A command that stops the mechanism
    */
   public Command stopCommand() {
-    return runOnce(() -> motor.stopMotor());
+    return runOnce(this::stop);
   }
 }

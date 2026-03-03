@@ -146,7 +146,7 @@ public class VoltageControlledBase extends SubsystemBase {
   /**
    * Run at default voltage.
    */
-  public void run() {
+  public void forward() {
     setVoltage(DEFAULT_VOLTAGE);
   }
 
@@ -166,14 +166,6 @@ public class VoltageControlledBase extends SubsystemBase {
   }
 
   /**
-   * Creates a command to run at default voltage.
-   * @return A command that runs the mechanism
-   */
-  public Command runCommand() {
-    return runOnce(this::run);
-  }
-
-  /**
    * Creates a command to run at a specific voltage.
    * @param voltage The voltage to apply
    * @return A command that runs the mechanism at the specified voltage
@@ -183,11 +175,19 @@ public class VoltageControlledBase extends SubsystemBase {
   }
 
   /**
+   * Creates a command to run at default voltage.
+   * @return A command that runs the mechanism
+   */
+  public Command forwardCommand() {
+    return runOnce(this::forward).finallyDo(this::stop);
+  }
+
+  /**
    * Creates a command to run in reverse.
    * @return A command that reverses the mechanism
    */
   public Command reverseCommand() {
-    return runOnce(this::reverse);
+    return runOnce(this::reverse).finallyDo(this::stop);
   }
 
   /**
