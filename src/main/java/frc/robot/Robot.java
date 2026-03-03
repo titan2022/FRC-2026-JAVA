@@ -48,6 +48,8 @@ public class Robot extends TimedRobot {
 	public final Intake intake = new Intake();
 	public final Pinion pinion = new Pinion();
 
+	public final Climb climb = new Climb();
+
 	public SendableChooser<Command> autoChooser;
 
 	public Robot() {

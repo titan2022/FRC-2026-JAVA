@@ -1,6 +1,4 @@
-
-
-package frc.robot.subsystems.intake;
+package frc.robot.subsystems.climb;
 
 import static frc.robot.ToSI.*;
 
@@ -14,24 +12,24 @@ import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 import edu.wpi.first.math.system.plant.DCMotor;
 import frc.robot.subsystems.base.Elevator;
 
-public class Pinion extends Elevator {
+public class Climb extends Elevator {
   {
-    SUBSYSTEM_NAME = "Pinion";
+    SUBSYSTEM_NAME = "Climb";
 
     // Hardware devices
-    motor = new TalonFX(21); 
+    motor = new TalonFX(21); //We will need to change the CAN ID once more of the robot is built
   
     // Mechanism constants
     gearbox = DCMotor.getFalcon500(1);
-    GEAR_RATIO = 15; 
+    GEAR_RATIO = 15; //Wait until DI figures out the gear ratio to change this
 
-    DRUM_RADIUS = 0.0254*m; 
-    CARRIAGE_MASS = 5*kg; 
+    DRUM_RADIUS = 0.0254*m; //We may need to change this, check with DI
+    CARRIAGE_MASS = 5*kg; //We may need to change this, check with DI
 
     // Configuration
-    MAX_LINEAR_POSITION = 1*m; 
-    MIN_LINEAR_POSITION = 0*m; 
-    STARTING_LINEAR_POSITION = 0.5*m; 
+    MAX_LINEAR_POSITION = 1*m; //We will do PIDF tuning later, so this will be something to focus on later
+    MIN_LINEAR_POSITION = 0*m; //We will do PIDF tuning later, so this will be something to focus on later
+    STARTING_LINEAR_POSITION = 0.5*m; //We will do PIDF tuning later, so this will be something to focus on later
     // The conversion to angular is done in Elevator.initialize()
 
     // Basic motor configuration
@@ -47,10 +45,10 @@ public class Pinion extends Elevator {
     // Feedforward
     motorConfig.Slot0.GravityType = GravityTypeValue.Elevator_Static;
     motorConfig.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
-    motorConfig.Slot0.kG = 0.0; 
+    motorConfig.Slot0.kG = 0.0; //We will do PIDF tuning later, so this, along with kA, kS, kV, and kP will be something to focus on later
+    motorConfig.Slot0.kA = 0.0; 
     motorConfig.Slot0.kS = 0.0; 
     motorConfig.Slot0.kV = 0.0; 
-    motorConfig.Slot0.kA = 0.0; 
 
     // PID
     motorConfig.Slot0.kP = 0.0; 
@@ -67,7 +65,7 @@ public class Pinion extends Elevator {
     motorConfig.CurrentLimits.SupplyCurrentLowerTime = 1;
   }
 
-  public Pinion() {
+  public Climb() {
     initialize();
   }
 
@@ -76,5 +74,3 @@ public class Pinion extends Elevator {
     super.periodic();
   }
 }
-
-
