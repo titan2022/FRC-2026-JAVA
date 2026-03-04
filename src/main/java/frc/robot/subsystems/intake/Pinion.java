@@ -59,7 +59,7 @@ public class Pinion extends Elevator {
     motorConfig.Slot0.kA = 0.0; 
 
     // PID
-    motorConfig.Slot0.kP = 0.0; 
+    motorConfig.Slot0.kP = 0.1; 
     motorConfig.Slot0.kI = 0.0;
     motorConfig.Slot0.kD = 0.0;
 
