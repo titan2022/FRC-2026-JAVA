@@ -70,7 +70,13 @@ public class Robot extends TimedRobot {
 	public final Climb climb = new Climb();
 
 	private final DrivingCommand drivingCommand = new DrivingCommand(drivetrain, driveController);
-	private final ManualShooterControl manualShooterControl = new ManualShooterControl(shooterFlywheel, shooterPitch, shooterYaw, operatorController);
+	private final ManualShooterControl manualShooterControl = new ManualShooterControl(
+		shooterFlywheel, shooterPitch, shooterYaw, 
+		operatorController,
+		drivetrain,
+		intake,
+		200 // every 200 ms
+	);
 
 	public SendableChooser<Command> autoChooser;
 
