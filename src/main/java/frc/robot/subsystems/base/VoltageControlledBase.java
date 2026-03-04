@@ -180,7 +180,7 @@ public class VoltageControlledBase extends SubsystemBase {
    * @return A command that runs the mechanism
    */
   public Command forwardCommand() {
-    return runOnce(this::forward).finallyDo(this::stop);
+    return runOnce(this::forward);
   }
 
   /**
@@ -188,7 +188,7 @@ public class VoltageControlledBase extends SubsystemBase {
    * @return A command that reverses the mechanism
    */
   public Command reverseCommand() {
-    return runOnce(this::reverse).finallyDo(this::stop);
+    return runOnce(this::reverse);
   }
 
   /**

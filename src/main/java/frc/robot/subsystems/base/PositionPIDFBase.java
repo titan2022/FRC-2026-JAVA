@@ -228,7 +228,7 @@ public class PositionPIDFBase extends SubsystemBase {
    * @return A command that sets the PIDF setpoint to the specified angle
    */
   public Command setAngularPositionCommand(double position) {
-    return runOnce(() -> setAngularPosition(position)).finallyDo(this::stop);
+    return runOnce(() -> setAngularPosition(position));
   }
 
   /**
