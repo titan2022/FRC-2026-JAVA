@@ -2,7 +2,9 @@ package frc.robot.subsystems.base;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
+import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class Elevator extends PositionPIDFBase {
@@ -36,10 +38,10 @@ public class Elevator extends PositionPIDFBase {
     MAX_ANGULAR_POSITION = MAX_LINEAR_POSITION / METERS_PER_ROTATION;
     STARTING_ANGULAR_POSITION = STARTING_LINEAR_POSITION / METERS_PER_ROTATION;
 
-    motorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-    motorConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = MAX_ANGULAR_POSITION;
-    motorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-    motorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = MIN_ANGULAR_POSITION;
+    // motorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+    // motorConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = MAX_ANGULAR_POSITION;
+    // motorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+    // motorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = MIN_ANGULAR_POSITION;
 
     super.initialize();
 
@@ -62,25 +64,21 @@ public class Elevator extends PositionPIDFBase {
    * Update simulation.
    */
   @Override
-  public void simulationPeriodic() {
-    // Set input voltage from motor controller to simulation
-    // Note: This may need to be talonfx.getSimState().getMotorVoltage() as the input
-    //sim.setInput(dcMotor.getVoltage(dcMotor.getTorque(sim.getCurrentDrawAmps()), sim.getVelocityMetersPerSecond() * positionToRotations * 2 * Math.PI));
-    // sim.setInput(getVoltage());
+public void simulationPeriodic() {
+    motor.getSimState().setSupplyVoltage(12.0);
 
-    // Use motor voltage for TalonFX simulation input
     sim.setInput(motor.getSimState().getMotorVoltage());
-
-    // Update simulation by 20ms
     sim.update(0.020);
 
-    // Convert meters to motor rotations
-    double motorPosition = sim.getPositionMeters() / METERS_PER_ROTATION * GEAR_RATIO; // rotor rotations
-    double motorVelocity = sim.getVelocityMetersPerSecond() / METERS_PER_ROTATION * GEAR_RATIO; // rotor rot/s
+    RoboRioSim.setVInVoltage(
+        BatterySim.calculateDefaultBatteryLoadedVoltage(sim.getCurrentDrawAmps())
+    );
 
+    double motorPosition = sim.getPositionMeters() / METERS_PER_ROTATION * GEAR_RATIO;
+    double motorVelocity = sim.getVelocityMetersPerSecond() / METERS_PER_ROTATION * GEAR_RATIO;
     motor.getSimState().setRawRotorPosition(motorPosition);
     motor.getSimState().setRotorVelocity(motorVelocity);
-  }
+}
 
   @Override
   public void periodic() {

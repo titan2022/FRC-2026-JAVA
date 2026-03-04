@@ -72,6 +72,7 @@ public class Climb extends Elevator {
 
   public Climb() {
     initialize();
+    // setLinearPosition(STARTING_LINEAR_POSITION);
   }
 
   @Override

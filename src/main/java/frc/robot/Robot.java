@@ -97,27 +97,30 @@ public class Robot extends TimedRobot {
     // //   current state: https://docs.google.com/drawings/d/1_Lk5ZLvhy3-GtpytwQDFhX6L3Q5EoNN4N0K72jPGByc/edit
     // //            plan: https://docs.google.com/drawings/d/18_HOTw2HHTe6EamlZadLaGDxj3c08HJma-SCfwRxWIQ/edit
 
-		// drivetrain.setDefaultCommand(drivingCommand);
+		drivetrain.setDefaultCommand(drivingCommand);
 
-		// // operatorController.a().onTrue(pinion.retractIntakeCommand());
-		// // operatorController.b().onTrue(pinion.extendIntakeCommand());
+		operatorController.a().onTrue(pinion.retractIntakeCommand());
+		operatorController.b().onTrue(pinion.extendIntakeCommand());
 
-		// // operatorController.x().onTrue(climb.climbDownCommand());
-		// // operatorController.y().onTrue(climb.climbUpCommand());
+		operatorController.x().onTrue(climb.climbDownCommand());
+		operatorController.y().onTrue(climb.climbUpCommand());
 
-		// operatorController.a().onTrue(shooterYaw.setAngularPositionCommand(0.5));
-		// operatorController.b().onTrue(shooterYaw.setAngularPositionCommand(1.0));
+		operatorController.a().onTrue(shooterYaw.setAngularPositionCommand(0.5));
+		operatorController.b().onTrue(shooterYaw.setAngularPositionCommand(1.0));
 
-		// operatorController.leftBumper().onTrue(manualShooterControl);
-		// operatorController.rightBumper().onTrue(
-		// 	shooterFlywheel.stopCommand()
-		// 		.alongWith(shooterPitch.stopCommand())
-		// 		.alongWith(shooterYaw.stopCommand())
-		// );
-		operatorController.a().whileTrue(shooterYaw.setAngularPositionCommand(0));
-		operatorController.b().whileTrue(shooterYaw.setAngularPositionCommand(0.3));
-		operatorController.x().whileTrue(shooterYaw.setAngularPositionCommand(0.7));
-		operatorController.y().whileTrue(shooterYaw.setAngularPositionCommand(1));
+		operatorController.leftBumper().onTrue(manualShooterControl);
+		operatorController.rightBumper().onTrue(
+			shooterFlywheel.stopCommand()
+				.alongWith(shooterPitch.stopCommand())
+				.alongWith(shooterYaw.stopCommand())
+		);
+
+		// Following are used for testing individual subsystems.
+
+		// operatorController.a().whileTrue(shooterYaw.setAngularPositionCommand(0));
+		// operatorController.b().whileTrue(shooterYaw.setAngularPositionCommand(0.3));
+		// operatorController.x().whileTrue(shooterYaw.setAngularPositionCommand(0.7));
+		// operatorController.y().whileTrue(shooterYaw.setAngularPositionCommand(1));
 	}
 
 	@Override
