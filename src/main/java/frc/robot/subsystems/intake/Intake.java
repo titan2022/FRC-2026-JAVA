@@ -29,7 +29,7 @@ public class Intake extends VoltageControlledBase {
     SUBSYSTEM_NAME = "Intake";
 
     // Hardware
-    motor = new TalonFX(70);
+    motor = new TalonFX(42);
 
     // Base defaults
     DEFAULT_VOLTAGE = INTAKE_VOLTAGE;

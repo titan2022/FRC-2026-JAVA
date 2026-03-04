@@ -46,6 +46,7 @@ import frc.robot.subsystems.intake.Pinion;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
 import frc.robot.subsystems.shooter.ShooterPitch;
 import frc.robot.subsystems.shooter.ShooterYaw;
+import frc.robot.subsystems.shooter.commands.ManualShooterControl;
 
 public class Robot extends TimedRobot {	
 	private final CTRESwerveTelemetry logger = new CTRESwerveTelemetry(DriverConstants.MAX_SPEED);
@@ -53,6 +54,7 @@ public class Robot extends TimedRobot {
 	private Command m_autonomousCommand;
 
 	public final CommandXboxController driveController = new CommandXboxController(0);
+	public final CommandXboxController operatorController = new CommandXboxController(1);
 
 	public final CTRESwerveDrivetrain drivetrain = new CTRESwerveDrivetrain();
 
@@ -68,6 +70,7 @@ public class Robot extends TimedRobot {
 	public final Climb climb = new Climb();
 
 	private final DrivingCommand drivingCommand = new DrivingCommand(drivetrain, driveController);
+	private final ManualShooterControl manualShooterControl = new ManualShooterControl(shooterFlywheel, shooterPitch, shooterYaw, operatorController);
 
 	public SendableChooser<Command> autoChooser;
 
@@ -90,10 +93,31 @@ public class Robot extends TimedRobot {
 	}
 
 	public void configureBindings() {
-		drivetrain.setDefaultCommand(drivingCommand);
+		// // If you modify these controls please update the diagram at.:
+    // //   current state: https://docs.google.com/drawings/d/1_Lk5ZLvhy3-GtpytwQDFhX6L3Q5EoNN4N0K72jPGByc/edit
+    // //            plan: https://docs.google.com/drawings/d/18_HOTw2HHTe6EamlZadLaGDxj3c08HJma-SCfwRxWIQ/edit
 
-		driveController.a().whileTrue(pinion.extendIntakeCommand());
-		driveController.b().whileTrue(pinion.retractIntakeCommand());
+		// drivetrain.setDefaultCommand(drivingCommand);
+
+		// // operatorController.a().onTrue(pinion.retractIntakeCommand());
+		// // operatorController.b().onTrue(pinion.extendIntakeCommand());
+
+		// // operatorController.x().onTrue(climb.climbDownCommand());
+		// // operatorController.y().onTrue(climb.climbUpCommand());
+
+		// operatorController.a().onTrue(shooterYaw.setAngularPositionCommand(0.5));
+		// operatorController.b().onTrue(shooterYaw.setAngularPositionCommand(1.0));
+
+		// operatorController.leftBumper().onTrue(manualShooterControl);
+		// operatorController.rightBumper().onTrue(
+		// 	shooterFlywheel.stopCommand()
+		// 		.alongWith(shooterPitch.stopCommand())
+		// 		.alongWith(shooterYaw.stopCommand())
+		// );
+		operatorController.a().whileTrue(shooterYaw.setAngularPositionCommand(0));
+		operatorController.b().whileTrue(shooterYaw.setAngularPositionCommand(0.3));
+		operatorController.x().whileTrue(shooterYaw.setAngularPositionCommand(0.7));
+		operatorController.y().whileTrue(shooterYaw.setAngularPositionCommand(1));
 	}
 
 	@Override

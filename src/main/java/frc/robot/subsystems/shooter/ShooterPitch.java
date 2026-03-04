@@ -22,7 +22,7 @@ public class ShooterPitch extends ArmPivot {
     SUBSYSTEM_NAME = "ShooterPitch";
 
     // Hardware devices
-    motor = new TalonFX(41);
+    motor = new TalonFX(45);
   
     // Mechanism constants
     gearbox = DCMotor.getFalcon500(1);

@@ -17,10 +17,6 @@ import static frc.robot.ToSI.*;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
-  }
-
   public static class DriverConstants {
     /// The max speed, in meters per second
     public static final double MAX_SPEED = 6.0 * m/s;

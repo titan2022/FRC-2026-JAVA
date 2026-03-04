@@ -22,7 +22,7 @@ public class ShooterFlywheel extends Flywheel {
     SUBSYSTEM_NAME = "ShooterFlywheel";
 
     // Hardware devices
-    motor = new TalonFX(40);
+    motor = new TalonFX(44);
   
     // Mechanism constants
     gearbox = DCMotor.getFalcon500(1);

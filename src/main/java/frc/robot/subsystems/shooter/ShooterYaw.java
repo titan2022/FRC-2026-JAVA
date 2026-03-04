@@ -22,7 +22,7 @@ public class ShooterYaw extends ArmPivot {
     SUBSYSTEM_NAME = "ShooterYaw";
 
     // Hardware devices
-    motor = new TalonFX(40);
+    motor = new TalonFX(46);
   
     // Mechanism constants
     gearbox = DCMotor.getFalcon500(1);

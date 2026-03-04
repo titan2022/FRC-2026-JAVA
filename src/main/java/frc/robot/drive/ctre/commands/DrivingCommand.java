@@ -58,33 +58,13 @@ public class DrivingCommand extends Command {
   public void initialize() {
     // See https://github.com/CrossTheRoadElec/Phoenix6-Examples/blob/main/java/SwerveWithPathPlanner/src/main/java/frc/robot/RobotContainer.java#L53
 
-    // If you modify these controls please update the diagram at https://docs.google.com/drawings/d/1UsU1iyQz4MPWa87oXD0FYGqLXIfGtkn2a595sXWU3uo/edit.
+    // If you modify these controls please update the diagram at.:
+    //   current state: https://docs.google.com/drawings/d/1pWFRHQ_LvV1BaGqvC6eCPU6FR4Ib2r_eUCif9hY9p2g/edit
+    //            plan: https://docs.google.com/drawings/d/1ddFERjVCPY4uz2_CGQ1XGQmVzVXk6fk7H-DOadl-NBA/edit
 
     // driveController.a().whileTrue(drivetrain.applyRequest(() -> brake));
     // driveController.b().whileTrue(drivetrain.applyRequest(() ->
     //     point.withModuleDirection(new Rotation2d(-driveController.getLeftY(), -driveController.getLeftX()))
-    // ));
-
-    // Dpad buttons
-    // driveController.pov(0).whileTrue(drivetrain.applyRequest(() ->
-    //     (isFieldOriented 
-    //       ? fieldCentricStrafe.withVelocityX(DriverConstants.DPAD_STRAFE_SPEED * sideMultiplier).withVelocityY(0)
-    //       : robotCentricStrafe.withVelocityX(DriverConstants.DPAD_STRAFE_SPEED).withVelocityY(0))
-    // ));
-    // driveController.pov(90).whileTrue(drivetrain.applyRequest(() ->
-    //     (isFieldOriented 
-    //       ? fieldCentricStrafe.withVelocityX(0).withVelocityY(-DriverConstants.DPAD_STRAFE_SPEED * sideMultiplier)
-    //       : robotCentricStrafe.withVelocityX(0).withVelocityY(-DriverConstants.DPAD_STRAFE_SPEED))
-    // ));
-    // driveController.pov(180).whileTrue(drivetrain.applyRequest(() ->
-    //     (isFieldOriented 
-    //       ? fieldCentricStrafe.withVelocityX(-DriverConstants.DPAD_STRAFE_SPEED * sideMultiplier).withVelocityY(0)
-    //       : robotCentricStrafe.withVelocityX(-DriverConstants.DPAD_STRAFE_SPEED).withVelocityY(0))
-    // ));
-    // driveController.pov(270).whileTrue(drivetrain.applyRequest(() ->
-    //     (isFieldOriented 
-    //       ? fieldCentricStrafe.withVelocityX(0).withVelocityY(DriverConstants.DPAD_STRAFE_SPEED * sideMultiplier)
-    //       : robotCentricStrafe.withVelocityX(0).withVelocityY(DriverConstants.DPAD_STRAFE_SPEED))
     // ));
 
     driveController.pov(0).whileTrue(drivetrain.applyRequest(() ->
@@ -99,13 +79,6 @@ public class DrivingCommand extends Command {
     driveController.pov(270).whileTrue(drivetrain.applyRequest(() ->
         robotCentricStrafe.withVelocityX(0).withVelocityY(DriverConstants.DPAD_STRAFE_SPEED)
     ));
-
-    // // Run SysId routines when holding back/start and X/Y.
-    // // Note that each routine should be run exactly once in a single log.
-    // driveController.back().and(driveController.y()).whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kForward));
-    // driveController.back().and(driveController.x()).whileTrue(drivetrain.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    // driveController.start().and(driveController.y()).whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-    // driveController.start().and(driveController.x()).whileTrue(drivetrain.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
 
     // reset the field-centric heading on left bumper press
     driveController.y().onTrue(drivetrain.runOnce(() -> drivetrain.resetFieldOrientation())); 

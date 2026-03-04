@@ -75,10 +75,8 @@ public class Elevator extends PositionPIDFBase {
     sim.update(0.020);
 
     // Convert meters to motor rotations
-    double motorPosition =
-      sim.getPositionMeters() / METERS_PER_ROTATION;
-    double motorVelocity =
-      sim.getVelocityMetersPerSecond() / METERS_PER_ROTATION;
+    double motorPosition = sim.getPositionMeters() / METERS_PER_ROTATION * GEAR_RATIO; // rotor rotations
+    double motorVelocity = sim.getVelocityMetersPerSecond() / METERS_PER_ROTATION * GEAR_RATIO; // rotor rot/s
 
     motor.getSimState().setRawRotorPosition(motorPosition);
     motor.getSimState().setRotorVelocity(motorVelocity);
@@ -89,7 +87,7 @@ public class Elevator extends PositionPIDFBase {
     super.periodic();
 
     DogLog.log(SUBSYSTEM_NAME + "/Linear Position", getLinearPosition(), "m");
-    DogLog.log(SUBSYSTEM_NAME + "/Linear Position Setpoint", setpoint / METERS_PER_ROTATION, "m");
+    DogLog.log(SUBSYSTEM_NAME + "/Linear Position Setpoint", setpoint * METERS_PER_ROTATION, "m");
     DogLog.log(SUBSYSTEM_NAME + "/Linear Velocity", getLinearVelocity(), "m/s");
   }
 

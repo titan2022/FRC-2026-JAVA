@@ -10,6 +10,8 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.base.Elevator;
 
 public class Climb extends Elevator {
@@ -17,7 +19,7 @@ public class Climb extends Elevator {
     SUBSYSTEM_NAME = "Climb";
 
     // Hardware devices
-    motor = new TalonFX(21); //We will need to change the CAN ID once more of the robot is built
+    motor = new TalonFX(41); //We will need to change the CAN ID once more of the robot is built
   
     // Mechanism constants
     gearbox = DCMotor.getFalcon500(1);
@@ -55,8 +57,8 @@ public class Climb extends Elevator {
     motorConfig.Slot0.kI = 0.0;
     motorConfig.Slot0.kD = 0.0;
 
-    motorConfig.MotionMagic.MotionMagicCruiseVelocity = 1 * m/s;
-    motorConfig.MotionMagic.MotionMagicAcceleration = 1 * m/(s*s);
+    motorConfig.MotionMagic.MotionMagicCruiseVelocity = 1 * m/s / METERS_PER_ROTATION;
+    motorConfig.MotionMagic.MotionMagicAcceleration = 1 * m/(s*s) / METERS_PER_ROTATION;
 
     // TODO - Figure out what supply and stator current limits we want
     motorConfig.CurrentLimits.SupplyCurrentLimitEnable = false;
@@ -65,6 +67,9 @@ public class Climb extends Elevator {
     motorConfig.CurrentLimits.SupplyCurrentLowerTime = 1;
   }
 
+  public final double UP_POSITION = 1*m;
+  public final double DOWN_POSITION = 0*m;
+
   public Climb() {
     initialize();
   }
@@ -72,5 +77,13 @@ public class Climb extends Elevator {
   @Override
   public void periodic() {
     super.periodic();
+  }
+
+  public Command climbUpCommand() {
+    return setLinearPositionCommand(UP_POSITION);
+  }
+
+  public Command climbDownCommand() {
+    return setLinearPositionCommand(DOWN_POSITION);
   }
 }

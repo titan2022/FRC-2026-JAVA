@@ -25,7 +25,7 @@ public class Pinion extends Elevator {
     SUBSYSTEM_NAME = "Pinion";
 
     // Hardware devices
-    motor = new TalonFX(21); 
+    motor = new TalonFX(43); 
   
     // Mechanism constants
     gearbox = DCMotor.getFalcon500(1);
