@@ -18,6 +18,9 @@ public class Elevator extends PositionPIDFBase {
   public double MAX_LINEAR_POSITION;
   public double STARTING_LINEAR_POSITION;
 
+  public double MAX_VELOCITY;
+  public double MAX_ACCELERATION;
+
   // The following constants are computed in initialize().
   public double METERS_PER_ROTATION;
 
@@ -43,6 +46,9 @@ public class Elevator extends PositionPIDFBase {
     // motorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
     // motorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = MIN_ANGULAR_POSITION;
 
+    motorConfig.MotionMagic.MotionMagicCruiseVelocity = MAX_VELOCITY / METERS_PER_ROTATION;
+    motorConfig.MotionMagic.MotionMagicAcceleration = MAX_ACCELERATION / METERS_PER_ROTATION;
+
     super.initialize();
 
     if(RobotBase.isSimulation()) {
@@ -58,27 +64,39 @@ public class Elevator extends PositionPIDFBase {
       );
       simVisualization = new ElevatorSimVisualization(this);
     }
+
+    
+
   }
 
   /**
    * Update simulation.
    */
   @Override
-public void simulationPeriodic() {
+  public void simulationPeriodic() {
     motor.getSimState().setSupplyVoltage(12.0);
-
-    sim.setInput(motor.getSimState().getMotorVoltage());
+    
+    double inputVoltage = motor.getSimState().getMotorVoltage();
+    DogLog.log(SUBSYSTEM_NAME + "/Sim Input Voltage", inputVoltage, "V");
+    
+    sim.setInput(inputVoltage);
     sim.update(0.020);
+    
+    DogLog.log(SUBSYSTEM_NAME + "/Sim Position Meters", sim.getPositionMeters(), "m");
+    DogLog.log(SUBSYSTEM_NAME + "/Sim Velocity", sim.getVelocityMetersPerSecond(), "m/s");
 
+    DogLog.log(SUBSYSTEM_NAME + "/MotionMagicCruiseVelocity", motorConfig.MotionMagic.MotionMagicCruiseVelocity);
+    DogLog.log(SUBSYSTEM_NAME + "/MotionMagicAcceleration", motorConfig.MotionMagic.MotionMagicAcceleration);
+    
     RoboRioSim.setVInVoltage(
-        BatterySim.calculateDefaultBatteryLoadedVoltage(sim.getCurrentDrawAmps())
+      BatterySim.calculateDefaultBatteryLoadedVoltage(sim.getCurrentDrawAmps())
     );
 
     double motorPosition = sim.getPositionMeters() / METERS_PER_ROTATION * GEAR_RATIO;
     double motorVelocity = sim.getVelocityMetersPerSecond() / METERS_PER_ROTATION * GEAR_RATIO;
     motor.getSimState().setRawRotorPosition(motorPosition);
     motor.getSimState().setRotorVelocity(motorVelocity);
-}
+  }
 
   @Override
   public void periodic() {

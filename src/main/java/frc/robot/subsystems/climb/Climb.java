@@ -46,7 +46,7 @@ public class Climb extends Elevator {
 
     // Feedforward
     motorConfig.Slot0.GravityType = GravityTypeValue.Elevator_Static;
-    motorConfig.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
+    motorConfig.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseVelocitySign;
     motorConfig.Slot0.kG = 0.0; //We will do PIDF tuning later, so this, along with kA, kS, kV, and kP will be something to focus on later
     motorConfig.Slot0.kA = 0.0; 
     motorConfig.Slot0.kS = 0.0; 
@@ -57,8 +57,8 @@ public class Climb extends Elevator {
     motorConfig.Slot0.kI = 0.0;
     motorConfig.Slot0.kD = 0.0;
 
-    motorConfig.MotionMagic.MotionMagicCruiseVelocity = 1 * m/s / METERS_PER_ROTATION;
-    motorConfig.MotionMagic.MotionMagicAcceleration = 1 * m/(s*s) / METERS_PER_ROTATION;
+    MAX_VELOCITY = 1 * m/s;
+    MAX_ACCELERATION = 1 * m/(s*s);
 
     // TODO - Figure out what supply and stator current limits we want
     motorConfig.CurrentLimits.SupplyCurrentLimitEnable = false;
@@ -72,7 +72,6 @@ public class Climb extends Elevator {
 
   public Climb() {
     initialize();
-    // setLinearPosition(STARTING_LINEAR_POSITION);
   }
 
   @Override
