@@ -117,10 +117,10 @@ public class Robot extends TimedRobot {
 
 		// Following are used for testing individual subsystems.
 
-		// operatorController.a().whileTrue(shooterYaw.setAngularPositionCommand(0));
-		// operatorController.b().whileTrue(shooterYaw.setAngularPositionCommand(0.3));
-		// operatorController.x().whileTrue(shooterYaw.setAngularPositionCommand(0.7));
-		// operatorController.y().whileTrue(shooterYaw.setAngularPositionCommand(1));
+		// operatorController.a().whileTrue(climb.setLinearPositionCommand(0));
+		// operatorController.b().whileTrue(climb.setLinearPositionCommand(0.3));
+		// operatorController.x().whileTrue(climb.setLinearPositionCommand(0.7));
+		// operatorController.y().whileTrue(climb.setLinearPositionCommand(1));
 	}
 
 	@Override

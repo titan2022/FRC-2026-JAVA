@@ -59,7 +59,7 @@ public class Elevator extends PositionPIDFBase {
         DRUM_RADIUS,
         MIN_LINEAR_POSITION,
         MAX_LINEAR_POSITION,
-        true,
+        false,
         STARTING_LINEAR_POSITION
       );
       simVisualization = new ElevatorSimVisualization(this);

@@ -23,7 +23,7 @@ public class Climb extends Elevator {
   
     // Mechanism constants
     gearbox = DCMotor.getFalcon500(1);
-    GEAR_RATIO = 15; //Wait until DI figures out the gear ratio to change this
+    GEAR_RATIO = 1; //Wait until DI figures out the gear ratio to change this
 
     DRUM_RADIUS = 0.0254*m; //We may need to change this, check with DI
     CARRIAGE_MASS = 5*kg; //We may need to change this, check with DI
@@ -46,11 +46,11 @@ public class Climb extends Elevator {
 
     // Feedforward
     motorConfig.Slot0.GravityType = GravityTypeValue.Elevator_Static;
-    motorConfig.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseVelocitySign;
-    motorConfig.Slot0.kG = 0.0; //We will do PIDF tuning later, so this, along with kA, kS, kV, and kP will be something to focus on later
-    motorConfig.Slot0.kA = 0.0; 
+    motorConfig.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
+    motorConfig.Slot0.kG = 0.0; //We will do PIDF tuning later, so this, along with kA, kS, kV, and kP will be something to focus on later 
     motorConfig.Slot0.kS = 0.0; 
     motorConfig.Slot0.kV = 0.0; 
+    motorConfig.Slot0.kA = 0.0;
 
     // PID
     motorConfig.Slot0.kP = 0.0; 
