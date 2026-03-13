@@ -54,29 +54,29 @@ public class Robot extends TimedRobot {
 	private Command m_autonomousCommand;
 
 	public final CommandXboxController driveController = new CommandXboxController(0);
-	public final CommandXboxController operatorController = new CommandXboxController(1);
+	// public final CommandXboxController operatorController = new CommandXboxController(1);
 
 	public final CTRESwerveDrivetrain drivetrain = new CTRESwerveDrivetrain();
 
-	public final Vision vision = new Vision(drivetrain::addVisionMeasurement);
+	// public final Vision vision = new Vision(drivetrain::addVisionMeasurement);
 
-	public final ShooterPitch shooterPitch = new ShooterPitch();
-	public final ShooterYaw shooterYaw = new ShooterYaw();
-	public final ShooterFlywheel shooterFlywheel = new ShooterFlywheel();
+	// public final ShooterPitch shooterPitch = new ShooterPitch();
+	// public final ShooterYaw shooterYaw = new ShooterYaw();
+	// public final ShooterFlywheel shooterFlywheel = new ShooterFlywheel();
 
-	public final Intake intake = new Intake(drivetrain);
-	public final Pinion pinion = new Pinion(intake);
+	// public final Intake intake = new Intake(drivetrain);
+	// public final Pinion pinion = new Pinion(intake);
 
-	public final Climb climb = new Climb();
+	// public final Climb climb = new Climb();
 
 	private final DrivingCommand drivingCommand = new DrivingCommand(drivetrain, driveController);
-	private final ManualShooterControl manualShooterControl = new ManualShooterControl(
-		shooterFlywheel, shooterPitch, shooterYaw, 
-		operatorController,
-		drivetrain,
-		intake,
-		1000 // every 1s
-	);
+	// private final ManualShooterControl manualShooterControl = new ManualShooterControl(
+	// 	shooterFlywheel, shooterPitch, shooterYaw, 
+	// 	operatorController,
+	// 	drivetrain,
+	// 	intake,
+	// 	1000 // every 1s
+	// );
 
 	public SendableChooser<Command> autoChooser;
 
@@ -105,21 +105,21 @@ public class Robot extends TimedRobot {
 
 		drivetrain.setDefaultCommand(drivingCommand);
 
-		operatorController.a().onTrue(pinion.retractIntakeCommand());
-		operatorController.b().onTrue(pinion.extendIntakeCommand());
+		// operatorController.a().onTrue(pinion.retractIntakeCommand());
+		// operatorController.b().onTrue(pinion.extendIntakeCommand());
 
-		operatorController.x().onTrue(climb.climbDownCommand());
-		operatorController.y().onTrue(climb.climbUpCommand());
+		// operatorController.x().onTrue(climb.climbDownCommand());
+		// operatorController.y().onTrue(climb.climbUpCommand());
 
-		operatorController.a().onTrue(shooterYaw.setAngularPositionCommand(0.5));
-		operatorController.b().onTrue(shooterYaw.setAngularPositionCommand(1.0));
+		// operatorController.a().onTrue(shooterYaw.setAngularPositionCommand(0.5));
+		// operatorController.b().onTrue(shooterYaw.setAngularPositionCommand(1.0));
 
-		operatorController.leftBumper().onTrue(manualShooterControl);
-		operatorController.rightBumper().onTrue(
-			shooterFlywheel.stopCommand()
-				.alongWith(shooterPitch.stopCommand())
-				.alongWith(shooterYaw.stopCommand())
-		);
+		// operatorController.leftBumper().onTrue(manualShooterControl);
+		// operatorController.rightBumper().onTrue(
+		// 	shooterFlywheel.stopCommand()
+		// 		.alongWith(shooterPitch.stopCommand())
+		// 		.alongWith(shooterYaw.stopCommand())
+		// );
 
 		// Following are used for testing individual subsystems.
 
@@ -138,7 +138,7 @@ public class Robot extends TimedRobot {
 		// }
 
 		// Update vision
-		vision.periodic();
+		// vision.periodic();
 	}
 
 	@Override
@@ -198,7 +198,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void simulationPeriodic() {
 		// Update camera simulation
-		vision.simulationPeriodic(drivetrain.getSimPose());
+		// vision.simulationPeriodic(drivetrain.getSimPose());
 
 		// Get the positions of the fuel (both on the field and in the air)
 		fuelPoses.accept(SimulatedArena.getInstance()
@@ -216,6 +216,6 @@ public class Robot extends TimedRobot {
 
 	public void resetPose(Pose2d startPose) {
 		drivetrain.resetPose(startPose);
-		vision.resetSimPose(startPose);
+		// vision.resetSimPose(startPose);
 	}
 }
