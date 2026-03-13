@@ -75,7 +75,7 @@ public class Robot extends TimedRobot {
 		operatorController,
 		drivetrain,
 		intake,
-		200 // every 200 ms
+		1000 // every 1s
 	);
 
 	public SendableChooser<Command> autoChooser;

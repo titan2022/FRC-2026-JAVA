@@ -114,15 +114,15 @@ public class ManualShooterControl extends Command {
     prevPovLeft  = povLeft;
 
     // --- Yaw control ---
-    double yawMagnitude = Math.hypot(operatorController.getLeftX(), operatorController.getLeftY());
-    double yawAngle = (Math.toDegrees(Math.atan2(operatorController.getLeftY(), operatorController.getLeftX())) % 360 + 360) % 360;
+    double yawMagnitude = Math.hypot(operatorController.getRightX(), operatorController.getRightY());
+    double yawAngle = (Math.toDegrees(Math.atan2(operatorController.getRightY(), operatorController.getRightX())) % 360 + 360) % 360;
     if (yawMagnitude >= DEADBAND) {
         shooterYaw.setAngularPosition(yawAngle);
     }
 
     // --- Pitch control ---
-    double pitchMagnitude = Math.hypot(operatorController.getRightX(), operatorController.getRightY());
-    double pitchAngle = (Math.toDegrees(Math.atan2(operatorController.getRightY(), operatorController.getRightX())) % 360 + 360) % 360;
+    double pitchMagnitude = Math.hypot(operatorController.getLeftX(), operatorController.getLeftY());
+    double pitchAngle = (Math.toDegrees(Math.atan2(operatorController.getLeftY(), operatorController.getLeftX())) % 360 + 360) % 360;
     if (pitchMagnitude >= DEADBAND) {
         shooterPitch.setAngularPosition(pitchAngle);
     }
