@@ -1,5 +1,7 @@
 package frc.robot.localization;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
@@ -23,19 +25,19 @@ public class VisionConstants {
 		}
 	}
 
-	public static final CameraInfo camera1info = new CameraInfo(
-		"1",
-		new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, 0))
+	public static final CameraInfo camera10info = new CameraInfo(
+		"10",
+		new Transform3d(new Translation3d(-0.1375, 0.33, 0.05), new Rotation3d(Degrees.of(0), Degrees.of(65), Degrees.of(175.5)))
 	);
 
-	public static final CameraInfo camera2info = new CameraInfo(
-		"2",
-		new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, Math.PI))
+	public static final CameraInfo camera11info = new CameraInfo(
+		"11",
+		new Transform3d(new Translation3d(-0.1375, -0.33, 0.05), new Rotation3d(Degrees.of(0), Degrees.of(65), Degrees.of(184.5)))
 	);
 
 	public static final CameraInfo[] cameraInfos = {
-		camera1info,
-		camera2info
+		camera10info,
+		camera11info
 	};
 
 	// The standard deviations of our vision estimated poses, which affect correction rate
@@ -43,13 +45,13 @@ public class VisionConstants {
 	public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
 	public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
 
-	public static AprilTagFieldLayout kTagLayout = null;
+	public static AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
 
 	public static void setupConstants() {
-		try {
-			kTagLayout = new AprilTagFieldLayout(Filesystem.getDeployDirectory().toPath().resolve("2026-rebuilt-welded.json"));
-		} catch(Throwable t) {
-			DriverStation.reportError("Failed to load 2026-rebuilt-welded.json", false);
-		}
+		// try {
+		// 	kTagLayout = new AprilTagFieldLayout(Filesystem.getDeployDirectory().toPath().resolve("2026-rebuilt-welded.json"));
+		// } catch(Throwable t) {
+		// 	DriverStation.reportError("Failed to load 2026-rebuilt-welded.json", false);
+		// }
 	}
 }
