@@ -19,7 +19,7 @@ import static frc.robot.ToSI.*;
 public final class Constants {
   public static class DriverConstants {
     /// The max speed, in meters per second
-    public static final double MAX_SPEED = 6.0 * m/s;
+    public static final double MAX_SPEED = 2.0 * m/s;
     // alternately TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
 
     /// The max angular speed, in radians per second
