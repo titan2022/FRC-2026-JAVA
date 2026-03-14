@@ -47,6 +47,8 @@ import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import dev.doglog.DogLog;
+
 public class Vision {
 	private static class CameraWrapper {
 		public VisionConstants.CameraInfo cameraInfo = null;
@@ -115,24 +117,18 @@ public class Vision {
 				visionEst = cameraWrapper.photonEstimator.update(change);
 				updateEstimationStdDevs(visionEst, change.getTargets(), cameraWrapper);
 
-				if (RobotBase.isSimulation()) {
-					visionEst.ifPresentOrElse(
-							est ->
-									getSimDebugField()
-											.getObject("VisionEstimation")
-											.setPose(est.estimatedPose.toPose2d()),
-							() -> {
-								getSimDebugField().getObject("VisionEstimation").setPoses();
-							});
-				}
+				visionEst.ifPresent(
+					est -> {
+						DogLog.log("Drive/VisionPose", est.estimatedPose);
+					});
 
 				visionEst.ifPresent(
-						est -> {
-							// Change our trust in the measurement based on the tags we can see
-							var estStdDevs = getEstimationStdDevs();
+					est -> {
+						// Change our trust in the measurement based on the tags we can see
+						var estStdDevs = getEstimationStdDevs();
 
-							estConsumer.accept(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
-						});
+						estConsumer.accept(est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+					});
 			}
 		}
 	}
