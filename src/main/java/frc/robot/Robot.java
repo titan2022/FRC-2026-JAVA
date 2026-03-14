@@ -58,7 +58,7 @@ public class Robot extends TimedRobot {
 
 	public final CTRESwerveDrivetrain drivetrain = new CTRESwerveDrivetrain();
 
-	// public final Vision vision = new Vision(drivetrain::addVisionMeasurement);
+	public final Vision vision = new Vision(drivetrain::addVisionMeasurement);
 
 	// public final ShooterPitch shooterPitch = new ShooterPitch();
 	// public final ShooterYaw shooterYaw = new ShooterYaw();
@@ -89,7 +89,7 @@ public class Robot extends TimedRobot {
 						.withCaptureDs(true)
 						.withNtPublish(true)
 						.withCaptureNt(true));
-		DogLog.setPdh(new PowerDistribution());
+		// DogLog.setPdh(new PowerDistribution());
 
 		drivetrain.registerTelemetry(logger::telemeterize);
 
@@ -138,7 +138,7 @@ public class Robot extends TimedRobot {
 		// }
 
 		// Update vision
-		// vision.periodic();
+		vision.periodic();
 	}
 
 	@Override
@@ -198,7 +198,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void simulationPeriodic() {
 		// Update camera simulation
-		// vision.simulationPeriodic(drivetrain.getSimPose());
+		vision.simulationPeriodic(drivetrain.getSimPose());
 
 		// Get the positions of the fuel (both on the field and in the air)
 		fuelPoses.accept(SimulatedArena.getInstance()
@@ -216,6 +216,6 @@ public class Robot extends TimedRobot {
 
 	public void resetPose(Pose2d startPose) {
 		drivetrain.resetPose(startPose);
-		// vision.resetSimPose(startPose);
+		vision.resetSimPose(startPose);
 	}
 }
