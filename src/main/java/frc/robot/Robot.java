@@ -4,13 +4,7 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.*;
-
 import org.ironmaple.simulation.SimulatedArena;
-import org.ironmaple.simulation.seasonspecific.rebuilt2026.RebuiltFuelOnField;
-
-import static frc.robot.ToSI.*;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import dev.doglog.DogLog;
@@ -18,38 +12,21 @@ import dev.doglog.DogLogOptions;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.PneumaticHub;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.simulation.BatterySim;
-import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.DriverConstants;
-import frc.robot.drive.SwerveDrivetrain;
 import frc.robot.drive.ctre.CTRESwerveDrivetrain;
 import frc.robot.drive.ctre.CTRESwerveTelemetry;
-import frc.robot.drive.ctre.TunerConstants;
 import frc.robot.drive.ctre.commands.DrivingCommand;
-import frc.robot.localization.Vision;
-import frc.robot.subsystems.climb.Climb;
-import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.Pinion;
-import frc.robot.subsystems.shooter.ShooterFlywheel;
-import frc.robot.subsystems.shooter.ShooterPitch;
-import frc.robot.subsystems.shooter.ShooterYaw;
-import frc.robot.subsystems.shooter.commands.ManualShooterControl;
 
 public class Robot extends TimedRobot {	
-	private final CTRESwerveTelemetry logger = new CTRESwerveTelemetry(DriverConstants.MAX_SPEED);
+	// private final CTRESwerveTelemetry logger = new CTRESwerveTelemetry(DriverConstants.MAX_SPEED);
 
 	private Command m_autonomousCommand;
 
@@ -58,7 +35,7 @@ public class Robot extends TimedRobot {
 
 	public final CTRESwerveDrivetrain drivetrain = new CTRESwerveDrivetrain();
 
-	public final Vision vision = new Vision(drivetrain::addVisionMeasurement);
+	// public final Vision vision = new Vision(drivetrain::addVisionMeasurement);
 
 	// public final ShooterPitch shooterPitch = new ShooterPitch();
 	// public final ShooterYaw shooterYaw = new ShooterYaw();
@@ -85,13 +62,13 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 
 		DogLog.setOptions(new DogLogOptions()
-						.withLogExtras(true)
+						.withLogExtras(false)
 						.withCaptureDs(true)
 						.withNtPublish(true)
 						.withCaptureNt(true));
 		// DogLog.setPdh(new PowerDistribution());
 
-		drivetrain.registerTelemetry(logger::telemeterize);
+		// drivetrain.registerTelemetry(logger::telemeterize);
 
 		resetPose();
 
@@ -138,7 +115,7 @@ public class Robot extends TimedRobot {
 		// }
 
 		// Update vision
-		vision.periodic();
+		// vision.periodic();
 	}
 
 	@Override
@@ -198,7 +175,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void simulationPeriodic() {
 		// Update camera simulation
-		vision.simulationPeriodic(drivetrain.getSimPose());
+		// vision.simulationPeriodic(drivetrain.getSimPose());
 
 		// Get the positions of the fuel (both on the field and in the air)
 		fuelPoses.accept(SimulatedArena.getInstance()
@@ -216,6 +193,6 @@ public class Robot extends TimedRobot {
 
 	public void resetPose(Pose2d startPose) {
 		drivetrain.resetPose(startPose);
-		vision.resetSimPose(startPose);
+		// vision.resetSimPose(startPose);
 	}
 }

@@ -45,6 +45,7 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
+import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import dev.doglog.DogLog;
@@ -113,7 +114,11 @@ public class Vision {
 	public void periodic() {
 		Optional<EstimatedRobotPose> visionEst = Optional.empty();
 		for(CameraWrapper cameraWrapper : cameras) {
-			for(var change : cameraWrapper.camera.getAllUnreadResults()) {
+			List<PhotonPipelineResult> results = cameraWrapper.camera.getAllUnreadResults();
+			if(!results.isEmpty()) {
+				System.out.println(results.size() + " results");
+			}
+			for(var change : results) {
 				visionEst = cameraWrapper.photonEstimator.update(change);
 				updateEstimationStdDevs(visionEst, change.getTargets(), cameraWrapper);
 
