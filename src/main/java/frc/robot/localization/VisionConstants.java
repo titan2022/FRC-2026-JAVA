@@ -25,11 +25,13 @@ public class VisionConstants {
 		}
 	}
 
+	// back left side
 	public static final CameraInfo camera10info = new CameraInfo(
 		"10",
 		new Transform3d(new Translation3d(-0.1375, 0.33, 0.05), new Rotation3d(Degrees.of(0), Degrees.of(65), Degrees.of(175.5)))
 	);
 
+	// back right side
 	public static final CameraInfo camera11info = new CameraInfo(
 		"11",
 		new Transform3d(new Translation3d(-0.1375, -0.33, 0.05), new Rotation3d(Degrees.of(0), Degrees.of(65), Degrees.of(184.5)))
