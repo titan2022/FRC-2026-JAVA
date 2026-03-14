@@ -16,6 +16,7 @@ import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Constants.HardwareConstants;
 import frc.robot.subsystems.base.Elevator;
 
 public class Pinion extends Elevator {
@@ -25,7 +26,7 @@ public class Pinion extends Elevator {
     SUBSYSTEM_NAME = "Pinion";
 
     // Hardware devices
-    motor = new TalonFX(43); 
+    motor = new TalonFX(43, HardwareConstants.rioCanbus); 
   
     // Mechanism constants
     gearbox = DCMotor.getFalcon500(1);

@@ -11,6 +11,7 @@ import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.math.system.plant.DCMotor;
+import frc.robot.Constants.HardwareConstants;
 import frc.robot.subsystems.base.ArmPivot;
 
 public class ShooterYaw extends ArmPivot {
@@ -22,7 +23,7 @@ public class ShooterYaw extends ArmPivot {
     SUBSYSTEM_NAME = "ShooterYaw";
 
     // Hardware devices
-    motor = new TalonFX(46);
+    motor = new TalonFX(46, HardwareConstants.rioCanbus);
   
     // Mechanism constants
     gearbox = DCMotor.getFalcon500(1);

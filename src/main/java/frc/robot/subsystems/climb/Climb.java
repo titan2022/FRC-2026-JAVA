@@ -12,6 +12,7 @@ import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Constants.HardwareConstants;
 import frc.robot.subsystems.base.Elevator;
 
 public class Climb extends Elevator {
@@ -19,7 +20,7 @@ public class Climb extends Elevator {
     SUBSYSTEM_NAME = "Climb";
 
     // Hardware devices
-    motor = new TalonFX(41); //We will need to change the CAN ID once more of the robot is built
+    motor = new TalonFX(41, HardwareConstants.rioCanbus); //We will need to change the CAN ID once more of the robot is built
   
     // Mechanism constants
     gearbox = DCMotor.getFalcon500(1);

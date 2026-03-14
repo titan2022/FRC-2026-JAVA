@@ -8,6 +8,8 @@ import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static frc.robot.ToSI.*;
 
+import com.ctre.phoenix6.CANBus;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -28,5 +30,10 @@ public final class Constants {
     public static final double DEADBAND = 0.15;
     /// The speed of dpad strafing, in meters per second
     public static final double DPAD_STRAFE_SPEED = 0.5 * m/s;
+  }
+
+  public static class HardwareConstants {
+    public static final CANBus rioCanbus = new CANBus();
+    public static final CANBus canivoreCanbus = new CANBus("FRC2022-2");
   }
 }
