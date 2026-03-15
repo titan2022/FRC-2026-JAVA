@@ -50,22 +50,22 @@ public class Intake extends VoltageControlledBase {
 
   public Intake(CTRESwerveDrivetrain drivetrain) {
     if(RobotBase.isSimulation()) {
-      AbstractDriveTrainSimulation driveTrainSimulation = (drivetrain.mapleSimSwerveDrivetrain != null) 
-        ? drivetrain.mapleSimSwerveDrivetrain.mapleSimDrive
-        : null;
-      this.intakeSimulation = IntakeSimulation.OverTheBumperIntake(
-        // Specify the type of game pieces that the intake can collect
-        "Fuel",
-        // Specify the drivetrain to which this intake is attached
-        driveTrainSimulation,
-        // Width of the intake
-        Inches.of(25.375),
-        // The extension length of the intake beyond the robot's frame (when activated)
-        Inches.of(8.360),
-        // The intake is mounted on the front side of the chassis
-        IntakeSimulation.IntakeSide.FRONT,
-        // The intake can hold up to 100 notes
-        100);
+      // AbstractDriveTrainSimulation driveTrainSimulation = (drivetrain.mapleSimSwerveDrivetrain != null) 
+      //   ? drivetrain.mapleSimSwerveDrivetrain.mapleSimDrive
+      //   : null;
+      // this.intakeSimulation = IntakeSimulation.OverTheBumperIntake(
+      //   // Specify the type of game pieces that the intake can collect
+      //   "Fuel",
+      //   // Specify the drivetrain to which this intake is attached
+      //   driveTrainSimulation,
+      //   // Width of the intake
+      //   Inches.of(25.375),
+      //   // The extension length of the intake beyond the robot's frame (when activated)
+      //   Inches.of(8.360),
+      //   // The intake is mounted on the front side of the chassis
+      //   IntakeSimulation.IntakeSide.FRONT,
+      //   // The intake can hold up to 100 notes
+      //   100);
     }
     initialize();
   }
