@@ -15,6 +15,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 // import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -40,6 +41,7 @@ import frc.robot.subsystems.shooter.ShooterPitch;
 import frc.robot.subsystems.shooter.ShooterYaw;
 import frc.robot.subsystems.shooter.commands.ManualShooterControl;
 import frc.robot.subsystems.shooter.util.StaticFireControl;
+import frc.robot.localization.Vision;
 
 public class Robot extends TimedRobot {	
 	// private final CTRESwerveTelemetry logger = new CTRESwerveTelemetry(DriverConstants.MAX_SPEED);
@@ -51,7 +53,7 @@ public class Robot extends TimedRobot {
 
 	public final CTRESwerveDrivetrain drivetrain = new CTRESwerveDrivetrain();
 
-	// public final Vision vision = new Vision(drivetrain::addVisionMeasurement);
+	public final Vision vision = new Vision(drivetrain::addVisionMeasurement);
 
 	public final ShooterPitch shooterPitch = new ShooterPitch();
 	// public final ShooterYaw shooterYaw = new ShooterYaw();
@@ -173,7 +175,7 @@ public class Robot extends TimedRobot {
 		// }
 
 		// Update vision
-		// vision.periodic();
+		vision.periodic();
 	}
 
 	@Override
@@ -210,7 +212,9 @@ public class Robot extends TimedRobot {
 		}
 		drivetrain.cancelActiveDrive();
 
-		resetPose();
+		if(RobotBase.isSimulation()) {
+			resetPose();
+		}
 	}
 
 	@Override
@@ -254,6 +258,6 @@ public class Robot extends TimedRobot {
 
 	public void resetPose(Pose2d startPose) {
 		drivetrain.resetPose(startPose);
-		// vision.resetSimPose(startPose);
+		vision.resetSimPose(startPose);
 	}
 }

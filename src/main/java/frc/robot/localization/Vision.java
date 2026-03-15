@@ -115,16 +115,16 @@ public class Vision {
 		Optional<EstimatedRobotPose> visionEst = Optional.empty();
 		for(CameraWrapper cameraWrapper : cameras) {
 			List<PhotonPipelineResult> results = cameraWrapper.camera.getAllUnreadResults();
-			if(!results.isEmpty()) {
-				System.out.println(results.size() + " results");
-			}
+			// if(!results.isEmpty()) {
+			// 	System.out.println(results.size() + " results");
+			// }
 			for(var change : results) {
 				visionEst = cameraWrapper.photonEstimator.update(change);
 				updateEstimationStdDevs(visionEst, change.getTargets(), cameraWrapper);
 
 				visionEst.ifPresent(
 					est -> {
-						// DogLog.log("Drive/VisionPose", est.estimatedPose);
+						DogLog.log("Drive/VisionPose", est.estimatedPose);
 					});
 
 				visionEst.ifPresent(
