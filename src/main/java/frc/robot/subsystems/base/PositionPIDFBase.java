@@ -149,12 +149,12 @@ public class PositionPIDFBase extends SubsystemBase {
     // motor.setControl(motionRequest.withPosition(setpoint));
 
     // Log values
-    DogLog.log(SUBSYSTEM_NAME + "/Angular Position", getAngularPosition(), "rotation");
-    DogLog.log(SUBSYSTEM_NAME + "/Angular Velocity", getAngularVelocity(), "rotation/s");
-    DogLog.log(SUBSYSTEM_NAME + "/Voltage", getVoltage(), "V");
-    DogLog.log(SUBSYSTEM_NAME + "/Stator Current", getCurrent(), "A");
-    DogLog.log(SUBSYSTEM_NAME + "/Temperature", getTemperature(), "°C");
-    DogLog.log(SUBSYSTEM_NAME + "/Profiled setpoint", getProfiledSetpoint(), "rotation");
+    // DogLog.log(SUBSYSTEM_NAME + "/Angular Position", getAngularPosition(), "rotation");
+    // DogLog.log(SUBSYSTEM_NAME + "/Angular Velocity", getAngularVelocity(), "rotation/s");
+    // DogLog.log(SUBSYSTEM_NAME + "/Voltage", getVoltage(), "V");
+    // DogLog.log(SUBSYSTEM_NAME + "/Stator Current", getCurrent(), "A");
+    // DogLog.log(SUBSYSTEM_NAME + "/Temperature", getTemperature(), "°C");
+    // DogLog.log(SUBSYSTEM_NAME + "/Profiled setpoint", getProfiledSetpoint(), "rotation");
     // DogLog.log(SUBSYSTEM_NAME + "/Position setpoint", getAngularPositionSetpoint(), "rotation");
   }
 

@@ -124,7 +124,7 @@ public class Vision {
 
 				visionEst.ifPresent(
 					est -> {
-						DogLog.log("Drive/VisionPose", est.estimatedPose);
+						// DogLog.log("Drive/VisionPose", est.estimatedPose);
 					});
 
 				visionEst.ifPresent(

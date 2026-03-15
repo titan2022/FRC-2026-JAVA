@@ -4,7 +4,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -86,7 +86,7 @@ public class ElevatorSimVisualization extends SubsystemBase {
     );
 
     // Initialize visualization
-    SmartDashboard.putData(elevator.SUBSYSTEM_NAME, mech);
+    // SmartDashboard.putData(elevator.SUBSYSTEM_NAME, mech);
   }
 
   @Override
@@ -98,14 +98,14 @@ public class ElevatorSimVisualization extends SubsystemBase {
     elevatorMech.setLength(displayHeight);
 
     // Add telemetry data
-    SmartDashboard.putNumber(elevator.SUBSYSTEM_NAME + "/Simulation/Height (m)", currentHeight);
-    SmartDashboard.putNumber(
-      elevator.SUBSYSTEM_NAME + "/Simulation/Velocity (m/s)",
-      elevator.getSimulation().getVelocityMetersPerSecond()
-    );
-    SmartDashboard.putNumber(
-      elevator.SUBSYSTEM_NAME + "/Simulation/Current (A)",
-      elevator.getSimulation().getCurrentDrawAmps()
-    );
+    // SmartDashboard.putNumber(elevator.SUBSYSTEM_NAME + "/Simulation/Height (m)", currentHeight);
+    // SmartDashboard.putNumber(
+    //   elevator.SUBSYSTEM_NAME + "/Simulation/Velocity (m/s)",
+    //   elevator.getSimulation().getVelocityMetersPerSecond()
+    // );
+    // SmartDashboard.putNumber(
+    //   elevator.SUBSYSTEM_NAME + "/Simulation/Current (A)",
+    //   elevator.getSimulation().getCurrentDrawAmps()
+    // );
   }
 }

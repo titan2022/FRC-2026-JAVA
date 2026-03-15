@@ -119,7 +119,7 @@ public class Intake extends VoltageControlledBase {
   public void periodic() {
     super.periodic();
 
-    DogLog.log(SUBSYSTEM_NAME + "/Number of balls in hopper", simGetNumberOfBallsInHopper());
+    // DogLog.log(SUBSYSTEM_NAME + "/Number of balls in hopper", simGetNumberOfBallsInHopper());
   }
 
   private class SimPeriodicallyRetrieveBallFromHopperCommand extends Command {
