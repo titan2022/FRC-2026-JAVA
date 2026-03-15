@@ -87,13 +87,13 @@ public class Robot extends TimedRobot {
 
 	public Robot() {
 		autoChooser = AutoBuilder.buildAutoChooser();
-		SmartDashboard.putData("Auto Chooser", autoChooser);
+		// SmartDashboard.putData("Auto Chooser", autoChooser);
 
 		DogLog.setOptions(new DogLogOptions()
 						.withLogExtras(false)
-						.withCaptureDs(true)
+						.withCaptureDs(false)
 						.withNtPublish(true)
-						.withCaptureNt(true));
+						.withCaptureNt(false));
 		// DogLog.setPdh(new PowerDistribution());
 
 		// drivetrain.registerTelemetry(logger::telemeterize);
