@@ -43,9 +43,12 @@ public class VisionConstants {
 	};
 
 	// The standard deviations of our vision estimated poses, which affect correction rate
-	// (Fake values. Experiment and determine estimation noise on an actual robot.)
-	public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
-	public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
+	// x, y, theta (metres, metres, radians)
+
+	// recommended values by wither (FRC#4272 mentor)
+	// https://discord.com/channels/176186766946992128/368993897495527424/1482932987115864106
+	public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(1, 1, Double.POSITIVE_INFINITY);
+	public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.4, 0.4, Double.POSITIVE_INFINITY);
 
 	public static AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
 
