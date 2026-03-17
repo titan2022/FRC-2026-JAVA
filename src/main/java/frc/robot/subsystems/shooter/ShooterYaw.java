@@ -86,6 +86,6 @@ public class ShooterYaw extends ArmPivot {
     super.periodic();
 
     DogLog.log(SUBSYSTEM_NAME + "/Position (degrees)", getAngularPosition() / degree, "°");
-    DogLog.log(SUBSYSTEM_NAME + "/Position setpoint (degrees)", getSetpoint() / degree, "°");
+    DogLog.log(SUBSYSTEM_NAME + "/Position setpoint (degrees)", getAngularPositionSetpoint() / degree, "°");
   }
 }

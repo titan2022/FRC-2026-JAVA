@@ -7,6 +7,7 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import dev.doglog.DogLog;
+import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
@@ -46,6 +47,10 @@ public class VoltageControlledBase extends SubsystemBase {
   // Current setpoint
   protected double voltageSetpoint = 0;
 
+  // Tunables
+  // These fields are initialized in initialize()
+  protected DoubleSubscriber setpoint_subscriber;
+
   /**
    * Creates a new Voltage Controlled Subsystem.
    */
@@ -63,6 +68,10 @@ public class VoltageControlledBase extends SubsystemBase {
 
     // Apply configuration
     motor.getConfigurator().apply(motorConfig);
+
+    // Tunables
+    setpoint_subscriber = DogLog.tunable(
+      SUBSYSTEM_NAME + "/voltage setpoint", voltageSetpoint, this::setVoltage);
   }
 
   /**
@@ -84,7 +93,7 @@ public class VoltageControlledBase extends SubsystemBase {
     DogLog.log(SUBSYSTEM_NAME + "/Voltage", getVoltage());
     DogLog.log(SUBSYSTEM_NAME + "/Stator Current", getCurrent());
     DogLog.log(SUBSYSTEM_NAME + "/Temperature", getTemperature());
-    DogLog.log(SUBSYSTEM_NAME + "/Voltage Setpoint", getVoltageSetpoint());
+    // DogLog.log(SUBSYSTEM_NAME + "/Voltage Setpoint", getVoltageSetpoint());
   }
 
   /**

@@ -46,6 +46,7 @@ public class VelocityPIDFBase extends SubsystemBase {
   protected DoubleSubscriber kD_subscriber;
   protected DoubleSubscriber maxJerk_subscriber;
   protected DoubleSubscriber maxAcceleration_subscriber;
+  protected DoubleSubscriber setpoint_subscriber;
 
   // Motor controller requests
   protected PositionVoltage positionRequest = new PositionVoltage(0).withSlot(0);
@@ -101,6 +102,8 @@ public class VelocityPIDFBase extends SubsystemBase {
       SUBSYSTEM_NAME + "/max acceleration", motorConfig.MotionMagic.MotionMagicAcceleration, this::configureFromTunable);
     maxJerk_subscriber = DogLog.tunable(
       SUBSYSTEM_NAME + "/max jerk", motorConfig.MotionMagic.MotionMagicJerk, this::configureFromTunable);
+    setpoint_subscriber = DogLog.tunable(
+      SUBSYSTEM_NAME + "/angular velocity setpoint", setpoint, this::setAngularVelocity);
   }
 
   public void configureFromTunable(double unused) {
@@ -138,7 +141,7 @@ public class VelocityPIDFBase extends SubsystemBase {
     DogLog.log(SUBSYSTEM_NAME + "/Voltage", getVoltage(), "V");
     DogLog.log(SUBSYSTEM_NAME + "/Stator Current", getCurrent(), "A");
     DogLog.log(SUBSYSTEM_NAME + "/Temperature", getTemperature(), "°C");
-    DogLog.log(SUBSYSTEM_NAME + "/Velocity setpoint", getSetpoint(), "rotation/s");
+    // DogLog.log(SUBSYSTEM_NAME + "/Velocity setpoint", getSetpoint(), "rotation/s");
   }
 
   /**
