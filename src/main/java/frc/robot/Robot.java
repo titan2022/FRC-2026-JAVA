@@ -118,13 +118,13 @@ public class Robot extends TimedRobot {
 
 		drivetrain.setDefaultCommand(drivingCommand);
 
-	driveController.x().onTrue(
-    	new DriveToPose(
-        	drivetrain,
-        	new Pose2d(4.0, 2.0, Rotation2d.fromDegrees(180.0)),
-        	kPathfindConstraints
-    	)
-	);	
+		driveController.x().onTrue(
+				new DriveToPose(
+						drivetrain,
+						new Pose2d(4.0, 2.0, Rotation2d.fromDegrees(180.0)),
+						kPathfindConstraints
+				)
+		);	
 		new Trigger(() ->
 			Math.abs(driveController.getLeftX()) > kCancelStickThreshold ||
 			Math.abs(driveController.getLeftY()) > kCancelStickThreshold ||
