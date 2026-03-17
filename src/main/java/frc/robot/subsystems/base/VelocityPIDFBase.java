@@ -59,6 +59,7 @@ public class VelocityPIDFBase extends SubsystemBase {
   protected StatusSignal<Voltage> voltageSignal;
   protected StatusSignal<Current> statorCurrentSignal;
   protected StatusSignal<Temperature> temperatureSignal;
+  protected StatusSignal<Double> profiledSetpointSignal;
 
   // Setpoint
   protected double setpoint;
@@ -77,6 +78,7 @@ public class VelocityPIDFBase extends SubsystemBase {
     voltageSignal = motor.getMotorVoltage();
     statorCurrentSignal = motor.getStatorCurrent();
     temperatureSignal = motor.getDeviceTemp();
+    profiledSetpointSignal = motor.getClosedLoopReference();
 
     // Apply configuration
     motor.getConfigurator().apply(motorConfig);
@@ -132,7 +134,8 @@ public class VelocityPIDFBase extends SubsystemBase {
       velocitySignal,
       voltageSignal,
       statorCurrentSignal,
-      temperatureSignal
+      temperatureSignal,
+      profiledSetpointSignal
     );
 
     // Log values
@@ -141,7 +144,17 @@ public class VelocityPIDFBase extends SubsystemBase {
     DogLog.log(SUBSYSTEM_NAME + "/Voltage", getVoltage(), "V");
     DogLog.log(SUBSYSTEM_NAME + "/Stator Current", getCurrent(), "A");
     DogLog.log(SUBSYSTEM_NAME + "/Temperature", getTemperature(), "°C");
+    DogLog.log(SUBSYSTEM_NAME + "/Profiled setpoint", getProfiledSetpoint(), "rotation");
     // DogLog.log(SUBSYSTEM_NAME + "/Velocity setpoint", getSetpoint(), "rotation/s");
+  }
+
+  /**
+   * Get the setpoint outputted by the motion profile in rotations.
+   * @return Position in rotations
+   */
+  public double getProfiledSetpoint() {
+    // Rotations
+    return profiledSetpointSignal.getValueAsDouble();
   }
 
   /**
