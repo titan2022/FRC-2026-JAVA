@@ -96,13 +96,16 @@ public class Robot extends TimedRobot {
 
 		// drivetrain.registerTelemetry(logger::telemeterize);
 
-		shooterPitch.setDefaultCommand(shooterPitch.stopCommand());
-		shooterFlywheel.setDefaultCommand(shooterFlywheel.stopCommand());
-		spindexer.setDefaultCommand(spindexer.stopCommand());
-		verticalIndexer.setDefaultCommand(verticalIndexer.stopCommand());
+		// Right now we don't want it to be default command as stop, since
+		// the normal commands do not continue indefinitely.
 
-		intake.setDefaultCommand(intake.stopCommand());
-		pinion.setDefaultCommand(pinion.stopCommand());
+		// shooterPitch.setDefaultCommand(shooterPitch.stopCommand());
+		// shooterFlywheel.setDefaultCommand(shooterFlywheel.stopCommand());
+		// spindexer.setDefaultCommand(spindexer.stopCommand());
+		// verticalIndexer.setDefaultCommand(verticalIndexer.stopCommand());
+
+		// intake.setDefaultCommand(intake.stopCommand());
+		// pinion.setDefaultCommand(pinion.stopCommand());
 
 		resetPose();
 
@@ -138,12 +141,12 @@ public class Robot extends TimedRobot {
 		// operatorController.a().onTrue(shooterYaw.setAngularPositionCommand(0.5));
 		// operatorController.b().onTrue(shooterYaw.setAngularPositionCommand(1.0));
 
-		// operatorController.leftBumper().onTrue(manualShooterControl);
-		// operatorController.rightBumper().onTrue(
-		// 	shooterFlywheel.stopCommand()
-		// 		.alongWith(shooterPitch.stopCommand())
-		// 		.alongWith(shooterYaw.stopCommand())
-		// );
+		operatorController.leftBumper().onTrue(manualShooterControl);
+		operatorController.rightBumper().onTrue(
+			shooterFlywheel.stopCommand()
+				.alongWith(shooterPitch.stopCommand())
+				// .alongWith(shooterYaw.stopCommand())
+		);
 
 		// Following are used for testing individual subsystems.
 
