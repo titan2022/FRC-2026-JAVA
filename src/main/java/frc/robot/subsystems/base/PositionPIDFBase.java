@@ -18,6 +18,7 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.units.measure.*;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -90,8 +91,12 @@ public class PositionPIDFBase extends SubsystemBase {
     // Apply configuration
     motor.getConfigurator().apply(motorConfig);
 
-    // Reset encoder position
-    motor.setPosition(STARTING_ANGULAR_POSITION);
+    // Reset encoder position - only on real robot
+    if (!RobotBase.isSimulation()) {
+      motor.setPosition(STARTING_ANGULAR_POSITION);
+    }
+
+    setpoint = STARTING_ANGULAR_POSITION;
 
     kG_subscriber = DogLog.tunable(
       SUBSYSTEM_NAME + "/kG", motorConfig.Slot0.kG, this::configureFromTunable);
@@ -141,6 +146,9 @@ public class PositionPIDFBase extends SubsystemBase {
       statorCurrentSignal,
       temperatureSignal
     );
+
+    // Continuously re-send the control request every tick
+    // motor.setControl(motionRequest.withPosition(setpoint));
 
     // Log values
     DogLog.log(SUBSYSTEM_NAME + "/Angular Position", getAngularPosition(), "rotation");
@@ -205,6 +213,13 @@ public class PositionPIDFBase extends SubsystemBase {
   }
 
   /**
+   * Stop the motor.
+   */
+  public void stop() {
+    motor.stopMotor();
+  }
+
+  /**
    * Sets the PIDF setpoint to a specific angle.
    * Motion Magic is used to make a trapezoidal profile and apply a PIDF controller.
    * @param position The target angle in rotations
@@ -229,6 +244,6 @@ public class PositionPIDFBase extends SubsystemBase {
    * @return A command that stops the mechanism
    */
   public Command stopCommand() {
-    return runOnce(() -> motor.stopMotor());
+    return runOnce(this::stop);
   }
 }

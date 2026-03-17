@@ -1,5 +1,7 @@
 package frc.robot.localization;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
@@ -13,23 +15,48 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 
 public class VisionConstants {
-	public static final String kCameraName = "YOUR CAMERA NAME";
-	// Cam mounted facing forward, half a meter forward of center, half a meter up from center.
-	public static final Transform3d kRobotToCam =
-					new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0, 0, 0));
+	public static class CameraInfo {
+		public String cameraName;
+		public Transform3d robotToCam;
+
+		public CameraInfo(String cameraName, Transform3d robotToCam) {
+			this.cameraName = cameraName;
+			this.robotToCam = robotToCam;
+		}
+	}
+
+	// back left side
+	public static final CameraInfo camera10info = new CameraInfo(
+		"10",
+		new Transform3d(new Translation3d(-0.1375, 0.33, 0.05), new Rotation3d(Degrees.of(0), Degrees.of(65), Degrees.of(175.5)))
+	);
+
+	// back right side
+	public static final CameraInfo camera11info = new CameraInfo(
+		"11",
+		new Transform3d(new Translation3d(-0.1375, -0.33, 0.05), new Rotation3d(Degrees.of(0), Degrees.of(65), Degrees.of(184.5)))
+	);
+
+	public static final CameraInfo[] cameraInfos = {
+		camera10info,
+		camera11info
+	};
 
 	// The standard deviations of our vision estimated poses, which affect correction rate
-	// (Fake values. Experiment and determine estimation noise on an actual robot.)
-	public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
-	public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
+	// x, y, theta (metres, metres, radians)
 
-	public static AprilTagFieldLayout kTagLayout = null;
+	// recommended values by wither (FRC#4272 mentor)
+	// https://discord.com/channels/176186766946992128/368993897495527424/1482932987115864106
+	public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(1, 1, Double.POSITIVE_INFINITY);
+	public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.4, 0.4, Double.POSITIVE_INFINITY);
+
+	public static AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
 
 	public static void setupConstants() {
-		try {
-			kTagLayout = new AprilTagFieldLayout(Filesystem.getDeployDirectory().toPath().resolve("2026-rebuilt-welded.json"));
-		} catch(Throwable t) {
-			DriverStation.reportError("Failed to load 2026-rebuilt-welded.json", false);
-		}
+		// try {
+		// 	kTagLayout = new AprilTagFieldLayout(Filesystem.getDeployDirectory().toPath().resolve("2026-rebuilt-welded.json"));
+		// } catch(Throwable t) {
+		// 	DriverStation.reportError("Failed to load 2026-rebuilt-welded.json", false);
+		// }
 	}
 }

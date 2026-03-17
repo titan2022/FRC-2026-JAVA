@@ -2,13 +2,20 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/Pose": "Field2d",
       "/SmartDashboard/Alerts": "Alerts",
       "/SmartDashboard/ArmPivot": "Mechanism2d",
       "/SmartDashboard/Auto Chooser": "String Chooser",
+      "/SmartDashboard/Climb": "Mechanism2d",
       "/SmartDashboard/Elevator Sim": "Mechanism2d",
       "/SmartDashboard/IntakePinion": "Mechanism2d",
+      "/SmartDashboard/Module 0": "Mechanism2d",
+      "/SmartDashboard/Module 1": "Mechanism2d",
+      "/SmartDashboard/Module 2": "Mechanism2d",
+      "/SmartDashboard/Module 3": "Mechanism2d",
       "/SmartDashboard/PathPlanner": "Alerts",
       "/SmartDashboard/PhotonAlerts": "Alerts",
+      "/SmartDashboard/Pinion": "Mechanism2d",
       "/SmartDashboard/PositionPIDFBase": "Mechanism2d",
       "/SmartDashboard/ShooterPitch": "Mechanism2d",
       "/SmartDashboard/ShooterYaw": "Mechanism2d",
@@ -110,7 +117,6 @@
           "width": 1.0
         },
         "height": 8.069275856018066,
-        "image": "/home/ethan/Projects/IMSA/FRC/FRC-2026-JAVA/2026-field.png",
         "left": 245,
         "right": 3942,
         "top": 118,
@@ -140,6 +146,21 @@
         "open": true
       },
       "SmartDashboard": {
+        "IntakePinion": {
+          "ElevatorRoot": {
+            "Base": {
+              "open": true
+            },
+            "Elevator": {
+              "open": true
+            },
+            "open": true
+          },
+          "Simulation": {
+            "open": true
+          },
+          "open": true
+        },
         "VisionSystemSim-main": {
           "open": true
         },

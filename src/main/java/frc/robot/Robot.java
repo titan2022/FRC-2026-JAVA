@@ -4,55 +4,56 @@
 
 package frc.robot;
 
-import static frc.robot.ToSI.*;
-
+import org.ironmaple.simulation.SimulatedArena;
 import com.pathplanner.lib.auto.AutoBuilder;
 
+import dev.doglog.DogLog;
+import dev.doglog.DogLogOptions;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.simulation.BatterySim;
-import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.drive.CommandSwerveDrivetrain;
-import frc.robot.drive.DriveUtility;
-import frc.robot.drive.sim.SimSwerveConstants;
-import frc.robot.drive.sim.SimSwerveDrivetrain;
-import frc.robot.localization.Vision;
-// Uncomment these imports when enabling indexer bindings:
-// import frc.robot.commands.indexer.SpinSpindexer;
-// import frc.robot.commands.indexer.SpinVerticalIndexer;
-import frc.robot.subsystems.indexer.IndexerSpindexer;
-import frc.robot.subsystems.indexer.IndexerVerticalIndexer;
-import frc.robot.subsystems.intake.IntakePinion;
-import frc.robot.subsystems.shooter.ShooterFlywheel;
-import frc.robot.subsystems.shooter.ShooterPitch;
-import frc.robot.subsystems.shooter.ShooterYaw;
+import frc.robot.Constants.DriverConstants;
+import frc.robot.drive.ctre.CTRESwerveDrivetrain;
+import frc.robot.drive.ctre.CTRESwerveTelemetry;
+import frc.robot.drive.ctre.commands.DrivingCommand;
 
-public class Robot extends TimedRobot {
+public class Robot extends TimedRobot {	
+	// private final CTRESwerveTelemetry logger = new CTRESwerveTelemetry(DriverConstants.MAX_SPEED);
+
 	private Command m_autonomousCommand;
 
-	public final CommandXboxController controller = new CommandXboxController(0);
+	public final CommandXboxController driveController = new CommandXboxController(0);
+	// public final CommandXboxController operatorController = new CommandXboxController(1);
 
-	public final CommandSwerveDrivetrain drivetrain = DriveUtility.makeDrivetrain(this::resetPose);
+	public final CTRESwerveDrivetrain drivetrain = new CTRESwerveDrivetrain();
 
-	public final Vision vision = new Vision(drivetrain::addVisionMeasurement);
+	// public final Vision vision = new Vision(drivetrain::addVisionMeasurement);
 
-	public final ShooterPitch shooterPitch = new ShooterPitch();
-	public final ShooterYaw shooterYaw = new ShooterYaw();
-	public final ShooterFlywheel shooterFlywheel = new ShooterFlywheel();
+	// public final ShooterPitch shooterPitch = new ShooterPitch();
+	// public final ShooterYaw shooterYaw = new ShooterYaw();
+	// public final ShooterFlywheel shooterFlywheel = new ShooterFlywheel();
 
-	public final IntakePinion intakePinion = new IntakePinion();
+	// public final Intake intake = new Intake(drivetrain);
+	// public final Pinion pinion = new Pinion(intake);
 
-	// Indexer subsystems
-	public final IndexerSpindexer indexerSpindexer = new IndexerSpindexer();
-	public final IndexerVerticalIndexer indexerVerticalIndexer = new IndexerVerticalIndexer();
+	// public final Climb climb = new Climb();
+
+	private final DrivingCommand drivingCommand = new DrivingCommand(drivetrain, driveController);
+	// private final ManualShooterControl manualShooterControl = new ManualShooterControl(
+	// 	shooterFlywheel, shooterPitch, shooterYaw, 
+	// 	operatorController,
+	// 	drivetrain,
+	// 	intake,
+	// 	1000 // every 1s
+	// );
 
 	public SendableChooser<Command> autoChooser;
 
@@ -60,38 +61,61 @@ public class Robot extends TimedRobot {
 		autoChooser = AutoBuilder.buildAutoChooser();
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 
+		DogLog.setOptions(new DogLogOptions()
+						.withLogExtras(false)
+						.withCaptureDs(true)
+						.withNtPublish(true)
+						.withCaptureNt(true));
+		// DogLog.setPdh(new PowerDistribution());
+
+		// drivetrain.registerTelemetry(logger::telemeterize);
+
+		resetPose();
+
 		configureBindings();
 	}
 
 	public void configureBindings() {
-		controller.a().whileTrue(intakePinion.setLinearPositionCommand(0*m));
-		controller.b().whileTrue(intakePinion.setLinearPositionCommand(0.3*m));
-		controller.x().whileTrue(intakePinion.setLinearPositionCommand(0.7*m));
-		controller.y().whileTrue(intakePinion.setLinearPositionCommand(1*m));
+		// // If you modify these controls please update the diagram at.:
+    // //   current state: https://docs.google.com/drawings/d/1_Lk5ZLvhy3-GtpytwQDFhX6L3Q5EoNN4N0K72jPGByc/edit
+    // //            plan: https://docs.google.com/drawings/d/18_HOTw2HHTe6EamlZadLaGDxj3c08HJma-SCfwRxWIQ/edit
 
-		// Example indexer bindings (use a second controller?)
-		// Spin the spindexer
-		// controller.rightBumper()
-		// 	.whileTrue(new SpinSpindexer(indexerSpindexer));
-		
-		// Spin the vertical indexer
-		// controller.leftBumper()
-		// 	.whileTrue(new SpinVerticalIndexer(indexerVerticalIndexer));
+		drivetrain.setDefaultCommand(drivingCommand);
+
+		// operatorController.a().onTrue(pinion.retractIntakeCommand());
+		// operatorController.b().onTrue(pinion.extendIntakeCommand());
+
+		// operatorController.x().onTrue(climb.climbDownCommand());
+		// operatorController.y().onTrue(climb.climbUpCommand());
+
+		// operatorController.a().onTrue(shooterYaw.setAngularPositionCommand(0.5));
+		// operatorController.b().onTrue(shooterYaw.setAngularPositionCommand(1.0));
+
+		// operatorController.leftBumper().onTrue(manualShooterControl);
+		// operatorController.rightBumper().onTrue(
+		// 	shooterFlywheel.stopCommand()
+		// 		.alongWith(shooterPitch.stopCommand())
+		// 		.alongWith(shooterYaw.stopCommand())
+		// );
+
+		// Following are used for testing individual subsystems.
+
+		// operatorController.a().whileTrue(climb.setLinearPositionCommand(0));
+		// operatorController.b().whileTrue(climb.setLinearPositionCommand(0.3));
+		// operatorController.x().whileTrue(climb.setLinearPositionCommand(0.7));
+		// operatorController.y().whileTrue(climb.setLinearPositionCommand(1));
 	}
 
 	@Override
 	public void robotPeriodic() {
 		CommandScheduler.getInstance().run();
 
-		if(RobotBase.isSimulation()) {
-			((SimSwerveDrivetrain)drivetrain).periodic();
-		}
+		// if(RobotBase.isSimulation()) {
+		// 	((SimSwerveDrivetrain)drivetrain).periodic();
+		// }
 
 		// Update vision
-		vision.periodic();
-
-		// Log values to the dashboard
-		drivetrain.log();
+		// vision.periodic();
 	}
 
 	@Override
@@ -104,6 +128,8 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void autonomousInit() {
+		drivingCommand.resetAlliance();
+
 		m_autonomousCommand = autoChooser.getSelected();
 
 		// schedule the autonomous command (example)
@@ -117,6 +143,8 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
+		drivingCommand.resetAlliance();
+
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.cancel();
 		}
@@ -125,19 +153,7 @@ public class Robot extends TimedRobot {
 	}
 
 	@Override
-	public void teleopPeriodic() {
-		// Calculate drivetrain commands from Joystick values
-		double forward = -controller.getLeftY() * SimSwerveConstants.Swerve.kMaxLinearSpeed;
-		double strafe = -controller.getLeftX() * SimSwerveConstants.Swerve.kMaxLinearSpeed;
-		double turn = -controller.getRightX() * SimSwerveConstants.Swerve.kMaxAngularSpeed;
-
-		// Command drivetrain motors based on target speeds
-		drivetrain.driveRobotCentric(forward, strafe, turn);
-
-		// Calculate whether the gamepiece launcher runs based on our global pose estimate.
-		var curPose = drivetrain.getPose();
-		var shouldRun = (curPose.getY() > 2.0 && curPose.getX() < 4.0); // Close enough to blue speaker
-	}
+	public void teleopPeriodic() {}
 
 	@Override
 	public void testInit() {
@@ -147,27 +163,28 @@ public class Robot extends TimedRobot {
 	@Override
 	public void testPeriodic() {}
 
+	private final StructArrayPublisher<Pose3d> fuelPoses = NetworkTableInstance.getDefault()
+      .getStructArrayTopic("Robot/Field/Fuel", Pose3d.struct)
+      .publish();
+
 	@Override
-	public void simulationInit() {}
+	public void simulationInit() {
+		SimulatedArena.getInstance().resetFieldForAuto();
+	}
 
 	@Override
 	public void simulationPeriodic() {
-		SimSwerveDrivetrain simDrivetrain = (SimSwerveDrivetrain)drivetrain;
-		simDrivetrain.simulationPeriodic();
 		// Update camera simulation
-		vision.simulationPeriodic(simDrivetrain.getSimPose());
+		// vision.simulationPeriodic(drivetrain.getSimPose());
 
-		var debugField = vision.getSimDebugField();
-		debugField.getObject("EstimatedRobot").setPose(simDrivetrain.getPose());
-		debugField.getObject("EstimatedRobotModules").setPoses(simDrivetrain.getModulePoses());
+		// Get the positions of the fuel (both on the field and in the air)
+		fuelPoses.accept(SimulatedArena.getInstance()
+					.getGamePiecesByType("Fuel")
+					.stream()
+					.map(x -> x.getPose3d())
+					.toArray(size -> new Pose3d[size]));
 
-		// Calculate battery voltage sag due to current draw
-		var batteryVoltage =
-			BatterySim.calculateDefaultBatteryLoadedVoltage(simDrivetrain.getCurrentDraw());
-
-		// Using max(0.1, voltage) here isn't a physically correct solution,
-		// but it avoids problems with battery voltage measuring 0.
-		RoboRioSim.setVInVoltage(Math.max(0.1, batteryVoltage));
+		SimulatedArena.getInstance().simulationPeriodic();	
 	}
 
 	public void resetPose() {
@@ -175,9 +192,7 @@ public class Robot extends TimedRobot {
 	}
 
 	public void resetPose(Pose2d startPose) {
-		if(RobotBase.isSimulation()) {
-			((SimSwerveDrivetrain)drivetrain).resetPose(startPose, true);
-		}
-		vision.resetSimPose(startPose);
+		drivetrain.resetPose(startPose);
+		// vision.resetSimPose(startPose);
 	}
 }

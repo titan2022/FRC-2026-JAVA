@@ -2,7 +2,9 @@ package frc.robot.subsystems.base;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
+import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class Elevator extends PositionPIDFBase {
@@ -15,6 +17,9 @@ public class Elevator extends PositionPIDFBase {
   public double MIN_LINEAR_POSITION;
   public double MAX_LINEAR_POSITION;
   public double STARTING_LINEAR_POSITION;
+
+  public double MAX_VELOCITY;
+  public double MAX_ACCELERATION;
 
   // The following constants are computed in initialize().
   public double METERS_PER_ROTATION;
@@ -36,10 +41,13 @@ public class Elevator extends PositionPIDFBase {
     MAX_ANGULAR_POSITION = MAX_LINEAR_POSITION / METERS_PER_ROTATION;
     STARTING_ANGULAR_POSITION = STARTING_LINEAR_POSITION / METERS_PER_ROTATION;
 
-    motorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
-    motorConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = MAX_ANGULAR_POSITION;
-    motorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
-    motorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = MIN_ANGULAR_POSITION;
+    // motorConfig.SoftwareLimitSwitch.ForwardSoftLimitEnable = true;
+    // motorConfig.SoftwareLimitSwitch.ForwardSoftLimitThreshold = MAX_ANGULAR_POSITION;
+    // motorConfig.SoftwareLimitSwitch.ReverseSoftLimitEnable = true;
+    // motorConfig.SoftwareLimitSwitch.ReverseSoftLimitThreshold = MIN_ANGULAR_POSITION;
+
+    motorConfig.MotionMagic.MotionMagicCruiseVelocity = MAX_VELOCITY / METERS_PER_ROTATION;
+    motorConfig.MotionMagic.MotionMagicAcceleration = MAX_ACCELERATION / METERS_PER_ROTATION;
 
     super.initialize();
 
@@ -51,11 +59,14 @@ public class Elevator extends PositionPIDFBase {
         DRUM_RADIUS,
         MIN_LINEAR_POSITION,
         MAX_LINEAR_POSITION,
-        true,
+        false,
         STARTING_LINEAR_POSITION
       );
       simVisualization = new ElevatorSimVisualization(this);
     }
+
+    
+
   }
 
   /**
@@ -63,23 +74,26 @@ public class Elevator extends PositionPIDFBase {
    */
   @Override
   public void simulationPeriodic() {
-    // Set input voltage from motor controller to simulation
-    // Note: This may need to be talonfx.getSimState().getMotorVoltage() as the input
-    //sim.setInput(dcMotor.getVoltage(dcMotor.getTorque(sim.getCurrentDrawAmps()), sim.getVelocityMetersPerSecond() * positionToRotations * 2 * Math.PI));
-    // sim.setInput(getVoltage());
-
-    // Use motor voltage for TalonFX simulation input
-    sim.setInput(motor.getSimState().getMotorVoltage());
-
-    // Update simulation by 20ms
+    motor.getSimState().setSupplyVoltage(12.0);
+    
+    double inputVoltage = motor.getSimState().getMotorVoltage();
+    DogLog.log(SUBSYSTEM_NAME + "/Sim Input Voltage", inputVoltage, "V");
+    
+    sim.setInput(inputVoltage);
     sim.update(0.020);
+    
+    DogLog.log(SUBSYSTEM_NAME + "/Sim Position Meters", sim.getPositionMeters(), "m");
+    DogLog.log(SUBSYSTEM_NAME + "/Sim Velocity", sim.getVelocityMetersPerSecond(), "m/s");
 
-    // Convert meters to motor rotations
-    double motorPosition =
-      sim.getPositionMeters() * METERS_PER_ROTATION;
-    double motorVelocity =
-      sim.getVelocityMetersPerSecond() * METERS_PER_ROTATION;
+    DogLog.log(SUBSYSTEM_NAME + "/MotionMagicCruiseVelocity", motorConfig.MotionMagic.MotionMagicCruiseVelocity);
+    DogLog.log(SUBSYSTEM_NAME + "/MotionMagicAcceleration", motorConfig.MotionMagic.MotionMagicAcceleration);
+    
+    RoboRioSim.setVInVoltage(
+      BatterySim.calculateDefaultBatteryLoadedVoltage(sim.getCurrentDrawAmps())
+    );
 
+    double motorPosition = sim.getPositionMeters() / METERS_PER_ROTATION * GEAR_RATIO;
+    double motorVelocity = sim.getVelocityMetersPerSecond() / METERS_PER_ROTATION * GEAR_RATIO;
     motor.getSimState().setRawRotorPosition(motorPosition);
     motor.getSimState().setRotorVelocity(motorVelocity);
   }
@@ -89,7 +103,7 @@ public class Elevator extends PositionPIDFBase {
     super.periodic();
 
     DogLog.log(SUBSYSTEM_NAME + "/Linear Position", getLinearPosition(), "m");
-    DogLog.log(SUBSYSTEM_NAME + "/Linear Position Setpoint", setpoint / METERS_PER_ROTATION, "m");
+    DogLog.log(SUBSYSTEM_NAME + "/Linear Position Setpoint", setpoint * METERS_PER_ROTATION, "m");
     DogLog.log(SUBSYSTEM_NAME + "/Linear Velocity", getLinearVelocity(), "m/s");
   }
 

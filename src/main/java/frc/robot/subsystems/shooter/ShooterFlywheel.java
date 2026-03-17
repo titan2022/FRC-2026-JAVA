@@ -11,6 +11,7 @@ import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.math.system.plant.DCMotor;
+import frc.robot.Constants.HardwareConstants;
 import frc.robot.subsystems.base.Flywheel;
 
 public class ShooterFlywheel extends Flywheel {
@@ -22,7 +23,7 @@ public class ShooterFlywheel extends Flywheel {
     SUBSYSTEM_NAME = "ShooterFlywheel";
 
     // Hardware devices
-    motor = new TalonFX(40);
+    motor = new TalonFX(44, HardwareConstants.rioCanbus);
   
     // Mechanism constants
     gearbox = DCMotor.getFalcon500(1);
@@ -50,7 +51,7 @@ public class ShooterFlywheel extends Flywheel {
     motorConfig.Slot0.kA = 0.0;
 
     // PID
-    motorConfig.Slot0.kP = 0.0;
+    motorConfig.Slot0.kP = 0.1;
     motorConfig.Slot0.kI = 0.0;
     motorConfig.Slot0.kD = 0.0;
 
