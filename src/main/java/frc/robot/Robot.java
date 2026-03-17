@@ -12,6 +12,7 @@ import org.ironmaple.simulation.seasonspecific.rebuilt2026.RebuiltFuelOnField;
 import static frc.robot.ToSI.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathConstraints;
 
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
@@ -32,6 +33,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.drive.SwerveDrivetrain;
@@ -39,6 +42,7 @@ import frc.robot.drive.ctre.CTRESwerveDrivetrain;
 import frc.robot.drive.ctre.CTRESwerveTelemetry;
 import frc.robot.drive.ctre.TunerConstants;
 import frc.robot.drive.ctre.commands.DrivingCommand;
+import frc.robot.drive.ctre.commands.DriveToPose;
 import frc.robot.localization.Vision;
 import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.intake.Intake;
@@ -78,6 +82,15 @@ public class Robot extends TimedRobot {
 		1000 // every 1s
 	);
 
+	private static final double kCancelStickThreshold = 0.18;
+
+	private static final PathConstraints kPathfindConstraints = new PathConstraints(
+		3.0,
+		3.0,
+		Math.toRadians(540),
+		Math.toRadians(720)
+	);
+
 	public SendableChooser<Command> autoChooser;
 
 	public Robot() {
@@ -104,6 +117,20 @@ public class Robot extends TimedRobot {
     // //            plan: https://docs.google.com/drawings/d/18_HOTw2HHTe6EamlZadLaGDxj3c08HJma-SCfwRxWIQ/edit
 
 		drivetrain.setDefaultCommand(drivingCommand);
+
+		driveController.x().onTrue(
+				new DriveToPose(
+						drivetrain,
+						new Pose2d(4.0, 2.0, Rotation2d.fromDegrees(180.0)),
+						kPathfindConstraints
+				)
+		);	
+		new Trigger(() ->
+			Math.abs(driveController.getLeftX()) > kCancelStickThreshold ||
+			Math.abs(driveController.getLeftY()) > kCancelStickThreshold ||
+			Math.abs(driveController.getRightX()) > kCancelStickThreshold
+		).onTrue(Commands.runOnce(drivetrain::cancelActiveDrive));
+		
 
 		operatorController.a().onTrue(pinion.retractIntakeCommand());
 		operatorController.b().onTrue(pinion.extendIntakeCommand());
@@ -147,6 +174,8 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledPeriodic() {
 		drivetrain.brake();
+		drivetrain.cancelActiveDrive();
+
 	}
 
 	@Override
@@ -171,6 +200,7 @@ public class Robot extends TimedRobot {
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.cancel();
 		}
+		drivetrain.cancelActiveDrive();
 
 		resetPose();
 	}
