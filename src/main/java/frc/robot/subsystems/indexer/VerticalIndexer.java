@@ -11,7 +11,7 @@ import frc.robot.subsystems.base.VoltageControlledBase;
  * Vertical Indexer - kicker + vertical tunnel rollers.
  * Uses a Falcon 500 with constant voltage control.
  */
-public class IndexerVerticalIndexer extends VoltageControlledBase {
+public class VerticalIndexer extends VoltageControlledBase {
 
   {
     SUBSYSTEM_NAME = "IndexerVerticalIndexer";
@@ -35,7 +35,7 @@ public class IndexerVerticalIndexer extends VoltageControlledBase {
     motorConfig.CurrentLimits.SupplyCurrentLowerTime = 1;
   }
 
-  public IndexerVerticalIndexer() {
+  public VerticalIndexer() {
     initialize();
   }
 }

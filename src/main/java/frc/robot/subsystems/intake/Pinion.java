@@ -20,8 +20,6 @@ import frc.robot.Constants.HardwareConstants;
 import frc.robot.subsystems.base.Elevator;
 
 public class Pinion extends Elevator {
-  private Intake intake;
-
   {
     SUBSYSTEM_NAME = "Pinion";
 
@@ -74,19 +72,16 @@ public class Pinion extends Elevator {
     motorConfig.CurrentLimits.SupplyCurrentLowerTime = 1;
   }
 
-  public Pinion(Intake intake) {
-    this.intake = intake;
+  public Pinion() {
     initialize();
   }
 
   public Command extendIntakeCommand() {
-    return setLinearPositionCommand(MIN_LINEAR_POSITION)
-      .alongWith(new InstantCommand(() -> intake.setIsOut(true)));
+    return setLinearPositionCommand(MIN_LINEAR_POSITION);
   }
 
   public Command retractIntakeCommand() {
-    return setLinearPositionCommand(MAX_LINEAR_POSITION)
-      .alongWith(new InstantCommand(() -> intake.setIsOut(false)));
+    return setLinearPositionCommand(MAX_LINEAR_POSITION);
   }
 
   @Override

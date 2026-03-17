@@ -30,6 +30,8 @@ import frc.robot.drive.ctre.commands.DrivingCommand;
 import frc.robot.drive.ctre.commands.DriveToPose;
 import frc.robot.localization.Vision;
 import frc.robot.subsystems.climb.Climb;
+import frc.robot.subsystems.indexer.Spindexer;
+import frc.robot.subsystems.indexer.VerticalIndexer;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Pinion;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
@@ -43,29 +45,32 @@ public class Robot extends TimedRobot {
 	private Command m_autonomousCommand;
 
 	public final CommandXboxController driveController = new CommandXboxController(0);
-	// public final CommandXboxController operatorController = new CommandXboxController(1);
+	public final CommandXboxController operatorController = new CommandXboxController(1);
 
 	public final CTRESwerveDrivetrain drivetrain = new CTRESwerveDrivetrain();
 
-	// public final Vision vision = new Vision(drivetrain::addVisionMeasurement);
+	public final Vision vision = new Vision(drivetrain::addVisionMeasurement);
 
-	// public final ShooterPitch shooterPitch = new ShooterPitch();
+	public final ShooterPitch shooterPitch = new ShooterPitch();
 	// public final ShooterYaw shooterYaw = new ShooterYaw();
-	// public final ShooterFlywheel shooterFlywheel = new ShooterFlywheel();
+	public final ShooterFlywheel shooterFlywheel = new ShooterFlywheel();
 
-	// public final Intake intake = new Intake(drivetrain);
-	// public final Pinion pinion = new Pinion(intake);
+	public final Spindexer spindexer = new Spindexer();
+	public final VerticalIndexer verticalIndexer = new VerticalIndexer();
+
+	public final Intake intake = new Intake(drivetrain);
+	public final Pinion pinion = new Pinion();
 
 	// public final Climb climb = new Climb();
 
 	private final DrivingCommand drivingCommand = new DrivingCommand(drivetrain, driveController);
-	// private final ManualShooterControl manualShooterControl = new ManualShooterControl(
-	// 	shooterFlywheel, shooterPitch, shooterYaw, 
-	// 	operatorController,
-	// 	drivetrain,
-	// 	intake,
-	// 	1000 // every 1s
-	// );
+	private final ManualShooterControl manualShooterControl = new ManualShooterControl(
+		shooterFlywheel, shooterPitch, // shooterYaw, 
+		operatorController,
+		drivetrain,
+		intake //,
+		// 1000 // every 1s
+	);
 
 	private static final double kCancelStickThreshold = 0.18;
 
@@ -91,6 +96,14 @@ public class Robot extends TimedRobot {
 
 		// drivetrain.registerTelemetry(logger::telemeterize);
 
+		shooterPitch.setDefaultCommand(shooterPitch.stopCommand());
+		shooterFlywheel.setDefaultCommand(shooterFlywheel.stopCommand());
+		spindexer.setDefaultCommand(spindexer.stopCommand());
+		verticalIndexer.setDefaultCommand(verticalIndexer.stopCommand());
+
+		intake.setDefaultCommand(intake.stopCommand());
+		pinion.setDefaultCommand(pinion.stopCommand());
+
 		resetPose();
 
 		configureBindings();
@@ -104,11 +117,11 @@ public class Robot extends TimedRobot {
 		drivetrain.setDefaultCommand(drivingCommand);
 
 		driveController.x().onTrue(
-				new DriveToPose(
-						drivetrain,
-						new Pose2d(4.0, 2.0, Rotation2d.fromDegrees(180.0)),
-						kPathfindConstraints
-				)
+			new DriveToPose(
+				drivetrain,
+				new Pose2d(4.0, 2.0, Rotation2d.fromDegrees(180.0)),
+				kPathfindConstraints
+			)
 		);	
 		new Trigger(() ->
 			Math.abs(driveController.getLeftX()) > kCancelStickThreshold ||
@@ -116,23 +129,8 @@ public class Robot extends TimedRobot {
 			Math.abs(driveController.getRightX()) > kCancelStickThreshold
 		).onTrue(Commands.runOnce(drivetrain::cancelActiveDrive));
 		
-
-		driveController.x().onTrue(
-				new DriveToPose(
-						drivetrain,
-						new Pose2d(4.0, 2.0, Rotation2d.fromDegrees(180.0)),
-						kPathfindConstraints
-				)
-		);	
-		new Trigger(() ->
-			Math.abs(driveController.getLeftX()) > kCancelStickThreshold ||
-			Math.abs(driveController.getLeftY()) > kCancelStickThreshold ||
-			Math.abs(driveController.getRightX()) > kCancelStickThreshold
-		).onTrue(Commands.runOnce(drivetrain::cancelActiveDrive));
-		
-
-		// operatorController.a().onTrue(pinion.retractIntakeCommand());
-		// operatorController.b().onTrue(pinion.extendIntakeCommand());
+		operatorController.a().onTrue(pinion.retractIntakeCommand().alongWith(intake.intakeCommand()));
+		operatorController.b().onTrue(pinion.extendIntakeCommand().alongWith(intake.stopCommand()));
 
 		// operatorController.x().onTrue(climb.climbDownCommand());
 		// operatorController.y().onTrue(climb.climbUpCommand());

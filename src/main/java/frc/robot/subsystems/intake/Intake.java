@@ -69,6 +69,17 @@ public class Intake extends VoltageControlledBase {
     initialize();
   }
 
+  public Command intakeCommand() {
+    return setVoltageCommand(DEFAULT_VOLTAGE)
+      .alongWith(new InstantCommand(() -> setIsOut(true)));
+  }
+
+  @Override
+  public void stop() {
+    super.stop();
+    setIsOut(false);
+  }
+
   /// Sets whether or not the intake is out, for the purpose of simulation
   public void setIsOut(boolean isOut) {
     if(RobotBase.isSimulation()) {

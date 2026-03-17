@@ -11,7 +11,7 @@ import frc.robot.subsystems.base.VoltageControlledBase;
  * Spindexer - spins balls into the vertical tunnel.
  * Uses a Falcon 500 with constant voltage control.
  */
-public class IndexerSpindexer extends VoltageControlledBase {
+public class Spindexer extends VoltageControlledBase {
 
   {
     SUBSYSTEM_NAME = "IndexerSpindexer";
@@ -35,7 +35,7 @@ public class IndexerSpindexer extends VoltageControlledBase {
     motorConfig.CurrentLimits.SupplyCurrentLowerTime = 1;
   }
 
-  public IndexerSpindexer() {
+  public Spindexer() {
     initialize();
   }
 }
