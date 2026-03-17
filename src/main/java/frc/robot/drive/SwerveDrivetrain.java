@@ -89,4 +89,13 @@ public interface SwerveDrivetrain extends Subsystem {
 		var targetChassisSpeeds = new ChassisSpeeds(vxMeters, vyMeters, omegaRadians);
 		driveFieldCentric(targetChassisSpeeds);
 	}
+
+  	default public void cancelActiveDrive() {
+    	var currentCommand = getCurrentCommand();
+    	var defaultCommand = getDefaultCommand();
+
+    	if (currentCommand != null && currentCommand != defaultCommand) {
+      		currentCommand.cancel();
+    	}
+  }
 }
