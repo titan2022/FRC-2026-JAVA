@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.commands.ShooterCommands;
 import frc.robot.drive.CommandSwerveDrivetrain;
 import frc.robot.drive.DriveUtility;
 import frc.robot.drive.sim.SimSwerveConstants;
@@ -58,18 +59,33 @@ public class Robot extends TimedRobot {
 	}
 
 	public void configureBindings() {
-		controller.a().whileTrue(pinion.setLinearPositionCommand(0*m));
-		controller.b().whileTrue(pinion.setLinearPositionCommand(0.3*m));
-		controller.x().whileTrue(pinion.setLinearPositionCommand(0.7*m));
-		controller.y().whileTrue(pinion.setLinearPositionCommand(1*m));
+		controller.a().whileTrue(pinion.setLinearPositionCommand(0 * m));
+		controller.b().whileTrue(pinion.setLinearPositionCommand(0.3 * m));
+		controller.x().whileTrue(pinion.setLinearPositionCommand(0.7 * m));
+		controller.y().whileTrue(pinion.setLinearPositionCommand(1 * m));
+		// spin yp only
+		controller.leftTrigger().whileTrue(
+				ShooterCommands.staticAim(
+						drivetrain,
+						shooterPitch,
+						shooterFlywheel));
+		controller.rightTrigger().whileTrue(
+				ShooterCommands.staticShoot(
+						drivetrain,
+						shooterPitch,
+						shooterFlywheel,
+						() -> controller.rightBumper().getAsBoolean(),
+
+						intake::runCommand,
+						intake::stopCommand));
 	}
 
 	@Override
 	public void robotPeriodic() {
 		CommandScheduler.getInstance().run();
 
-		if(RobotBase.isSimulation()) {
-			((SimSwerveDrivetrain)drivetrain).periodic();
+		if (RobotBase.isSimulation()) {
+			((SimSwerveDrivetrain) drivetrain).periodic();
 		}
 
 		// Update vision
@@ -79,9 +95,10 @@ public class Robot extends TimedRobot {
 		// Apply an offset to pose estimator to test vision correction
 		// You probably don't want this on a real robot, just delete it.
 		// if (controller.getBButtonPressed()) {
-		// 	var disturbance =
-		// 		new Transform2d(new Translation2d(1.0, 1.0), new Rotation2d(0.17 * 2 * Math.PI));
-		// 	drivetrain.resetPose(drivetrain.getPose().plus(disturbance), false);
+		// var disturbance =
+		// new Transform2d(new Translation2d(1.0, 1.0), new Rotation2d(0.17 * 2 *
+		// Math.PI));
+		// drivetrain.resetPose(drivetrain.getPose().plus(disturbance), false);
 		// }
 
 		// Log values to the dashboard
@@ -89,7 +106,8 @@ public class Robot extends TimedRobot {
 	}
 
 	@Override
-	public void disabledInit() {}
+	public void disabledInit() {
+	}
 
 	@Override
 	public void disabledPeriodic() {
@@ -107,7 +125,8 @@ public class Robot extends TimedRobot {
 	}
 
 	@Override
-	public void autonomousPeriodic() {}
+	public void autonomousPeriodic() {
+	}
 
 	@Override
 	public void teleopInit() {
@@ -128,7 +147,8 @@ public class Robot extends TimedRobot {
 		// Command drivetrain motors based on target speeds
 		drivetrain.driveRobotCentric(forward, strafe, turn);
 
-		// Calculate whether the gamepiece launcher runs based on our global pose estimate.
+		// Calculate whether the gamepiece launcher runs based on our global pose
+		// estimate.
 		var curPose = drivetrain.getPose();
 		var shouldRun = (curPose.getY() > 2.0 && curPose.getX() < 4.0); // Close enough to blue speaker
 	}
@@ -139,14 +159,16 @@ public class Robot extends TimedRobot {
 	}
 
 	@Override
-	public void testPeriodic() {}
+	public void testPeriodic() {
+	}
 
 	@Override
-	public void simulationInit() {}
+	public void simulationInit() {
+	}
 
 	@Override
 	public void simulationPeriodic() {
-		SimSwerveDrivetrain simDrivetrain = (SimSwerveDrivetrain)drivetrain;
+		SimSwerveDrivetrain simDrivetrain = (SimSwerveDrivetrain) drivetrain;
 		simDrivetrain.simulationPeriodic();
 		// Update camera simulation
 		vision.simulationPeriodic(simDrivetrain.getSimPose());
@@ -156,8 +178,7 @@ public class Robot extends TimedRobot {
 		debugField.getObject("EstimatedRobotModules").setPoses(simDrivetrain.getModulePoses());
 
 		// Calculate battery voltage sag due to current draw
-		var batteryVoltage =
-			BatterySim.calculateDefaultBatteryLoadedVoltage(simDrivetrain.getCurrentDraw());
+		var batteryVoltage = BatterySim.calculateDefaultBatteryLoadedVoltage(simDrivetrain.getCurrentDraw());
 
 		// Using max(0.1, voltage) here isn't a *physically correct* solution,
 		// but it avoids problems with battery voltage measuring 0.
@@ -169,8 +190,8 @@ public class Robot extends TimedRobot {
 	}
 
 	public void resetPose(Pose2d startPose) {
-		if(RobotBase.isSimulation()) {
-			((SimSwerveDrivetrain)drivetrain).resetPose(startPose, true);
+		if (RobotBase.isSimulation()) {
+			((SimSwerveDrivetrain) drivetrain).resetPose(startPose, true);
 		}
 		vision.resetSimPose(startPose);
 	}

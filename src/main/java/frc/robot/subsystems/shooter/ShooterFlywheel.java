@@ -35,8 +35,9 @@ public class ShooterFlywheel extends Flywheel {
 
     // Basic motor configuration
     motorConfig = new TalonFXConfiguration();
-    
-    motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    // I think we would want flywheel on coast not brake?
+    motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+    //motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     motorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     
     motorConfig.Feedback.SensorToMechanismRatio = GEAR_RATIO;
@@ -68,10 +69,32 @@ public class ShooterFlywheel extends Flywheel {
     initialize();
   }
 
+  public void setTargetRps(double rps) {
+    setAngularVelocity(rps);
+  }
+
+  public double getSpeedRps() {
+    return motor.getVelocity().getValueAsDouble();
+  }
+
+  public double getTargetRps() {
+    return getSetpoint();
+  }
+
+  public boolean atTargetRps(double toleranceRps) {
+    return Math.abs(getSpeedRps() - getTargetRps()) <= toleranceRps;
+  }
+
+  public void stopShooter() {
+    setTargetRps(0.0);
+  }
+
+
   @Override
   public void periodic() {
     super.periodic();
-
+    DogLog.log(SUBSYSTEM_NAME + "/Speed (rps)", getSpeedRps(), "rps");
+    DogLog.log(SUBSYSTEM_NAME + "/Speed setpoint (rps)", getTargetRps(), "rps");
     DogLog.log(SUBSYSTEM_NAME + "/Position (degrees)", getAngularPosition() / degree, "°");
     DogLog.log(SUBSYSTEM_NAME + "/Position setpoint (degrees)", getSetpoint() / degree, "°");
   }

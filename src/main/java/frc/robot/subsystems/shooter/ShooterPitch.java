@@ -87,4 +87,19 @@ public class ShooterPitch extends ArmPivot {
     DogLog.log(SUBSYSTEM_NAME + "/Position (degrees)", getAngularPosition() / degree, "°");
     DogLog.log(SUBSYSTEM_NAME + "/Position setpoint (degrees)", getSetpoint() / degree, "°");
   }
+  public void setTargetDegrees(double degrees) {
+    setAngularPosition(degrees * degree);
+  }
+
+  public double getAngleDegrees() {
+    return getAngularPosition() / degree;
+  }
+
+  public double getTargetDegrees() {
+    return getSetpoint() / degree;
+  }
+
+  public boolean atTargetDegrees(double toleranceDegrees) {
+    return Math.abs(getAngleDegrees() - getTargetDegrees()) <= toleranceDegrees;
+  }
 }
