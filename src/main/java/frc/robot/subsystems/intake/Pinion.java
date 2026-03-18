@@ -52,24 +52,29 @@ public class Pinion extends Elevator {
     // Feedforward
     motorConfig.Slot0.GravityType = GravityTypeValue.Elevator_Static;
     motorConfig.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
-    motorConfig.Slot0.kG = 0.0; 
-    motorConfig.Slot0.kS = 0.0; 
-    motorConfig.Slot0.kV = 0.0; 
-    motorConfig.Slot0.kA = 0.0; 
+    motorConfig.Slot0.kG = 0.08; // ReCalc 0.08 V
+    motorConfig.Slot0.kS = 0.0; // TODO 
+    motorConfig.Slot0.kV = 5.31; // ReCalc 5.31 V*s/m
+    motorConfig.Slot0.kA = 0.04; // ReCalc 0.04 V*s^2/m
 
     // PID
-    motorConfig.Slot0.kP = 0.1; 
+    motorConfig.Slot0.kP = 149.25; // ReCalc 149.25 V/m
     motorConfig.Slot0.kI = 0.0;
-    motorConfig.Slot0.kD = 0.0;
+    motorConfig.Slot0.kD = 6.81; // ReCalc 6.81 V*s/m
 
     MAX_VELOCITY = 1 * m/s;
     MAX_ACCELERATION = 1 * m/(s*s);
 
     // TODO - Figure out what supply and stator current limits we want
-    motorConfig.CurrentLimits.SupplyCurrentLimitEnable = false;
-    motorConfig.CurrentLimits.SupplyCurrentLowerLimit = 30;
-    motorConfig.CurrentLimits.SupplyCurrentLimit = 60;
-    motorConfig.CurrentLimits.SupplyCurrentLowerTime = 1;
+    // motorConfig.CurrentLimits.SupplyCurrentLimitEnable = false;
+    // motorConfig.CurrentLimits.SupplyCurrentLowerLimit = 30;
+    // motorConfig.CurrentLimits.SupplyCurrentLimit = 60;
+    // motorConfig.CurrentLimits.SupplyCurrentLowerTime = 1;
+
+    motorConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+    motorConfig.CurrentLimits.SupplyCurrentLimit = 20;
+
+    // https://www.reca.lc/linear?angle=%7B%22s%22%3A11.311%2C%22u%22%3A%22deg%22%7D&currentLimit=%7B%22s%22%3A20%2C%22u%22%3A%22A%22%7D&efficiency=100&limitAcceleration=0&limitDeceleration=0&limitVelocity=0&limitedAcceleration=%7B%22s%22%3A400%2C%22u%22%3A%22in%2Fs2%22%7D&limitedDeceleration=%7B%22s%22%3A50%2C%22u%22%3A%22in%2Fs2%22%7D&limitedVelocity=%7B%22s%22%3A10%2C%22u%22%3A%22in%2Fs%22%7D&load=%7B%22s%22%3A10%2C%22u%22%3A%22lbs%22%7D&motor=%7B%22quantity%22%3A1%2C%22name%22%3A%22Falcon%20500%22%7D&ratio=%7B%22magnitude%22%3A9.760802469%2C%22ratioType%22%3A%22Reduction%22%7D&spoolDiameter=%7B%22s%22%3A2.6%2C%22u%22%3A%22in%22%7D&travelDistance=%7B%22s%22%3A12.594%2C%22u%22%3A%22in%22%7D
   }
 
   public Pinion() {

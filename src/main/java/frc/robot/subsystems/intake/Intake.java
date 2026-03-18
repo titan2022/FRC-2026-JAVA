@@ -41,10 +41,11 @@ public class Intake extends VoltageControlledBase {
     motorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     // TODO - Figure out what supply and stator current limits we want
-    motorConfig.CurrentLimits.SupplyCurrentLimitEnable = false;
-    motorConfig.CurrentLimits.SupplyCurrentLowerLimit = 30;
-    motorConfig.CurrentLimits.SupplyCurrentLimit = 60;
-    motorConfig.CurrentLimits.SupplyCurrentLowerTime = 1;
+    // motorConfig.CurrentLimits.SupplyCurrentLimitEnable = false;
+    // motorConfig.CurrentLimits.SupplyCurrentLowerLimit = 30;
+    // motorConfig.CurrentLimits.SupplyCurrentLimit = 60;
+    // motorConfig.CurrentLimits.SupplyCurrentLowerTime = 1;
+
   }
 
   public Intake(CTRESwerveDrivetrain drivetrain) {
