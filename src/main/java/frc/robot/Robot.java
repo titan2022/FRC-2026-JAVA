@@ -51,12 +51,12 @@ public class Robot extends TimedRobot {
 
 	public final Vision vision = new Vision(drivetrain::addVisionMeasurement);
 
-	public final ShooterPitch shooterPitch = new ShooterPitch();
+	// public final ShooterPitch shooterPitch = new ShooterPitch();
 	// public final ShooterYaw shooterYaw = new ShooterYaw();
-	public final ShooterFlywheel shooterFlywheel = new ShooterFlywheel();
+	// public final ShooterFlywheel shooterFlywheel = new ShooterFlywheel();
 
-	public final Spindexer spindexer = new Spindexer();
-	public final VerticalIndexer verticalIndexer = new VerticalIndexer();
+	// public final Spindexer spindexer = new Spindexer();
+	// public final VerticalIndexer verticalIndexer = new VerticalIndexer();
 
 	public final Intake intake = new Intake(drivetrain);
 	public final Pinion pinion = new Pinion();
@@ -64,13 +64,13 @@ public class Robot extends TimedRobot {
 	// public final Climb climb = new Climb();
 
 	private final DrivingCommand drivingCommand = new DrivingCommand(drivetrain, driveController);
-	private final ManualShooterControl manualShooterControl = new ManualShooterControl(
-		shooterFlywheel, shooterPitch, // shooterYaw, 
-		operatorController,
-		drivetrain,
-		intake //,
-		// 1000 // every 1s
-	);
+	// private final ManualShooterControl manualShooterControl = new ManualShooterControl(
+	// 	shooterFlywheel, shooterPitch, // shooterYaw, 
+	// 	operatorController,
+	// 	drivetrain,
+	// 	intake //,
+	// 	// 1000 // every 1s
+	// );
 
 	private static final double kCancelStickThreshold = 0.18;
 
@@ -117,20 +117,20 @@ public class Robot extends TimedRobot {
     // //   current state: https://docs.google.com/drawings/d/1_Lk5ZLvhy3-GtpytwQDFhX6L3Q5EoNN4N0K72jPGByc/edit
     // //            plan: https://docs.google.com/drawings/d/18_HOTw2HHTe6EamlZadLaGDxj3c08HJma-SCfwRxWIQ/edit
 
-		drivetrain.setDefaultCommand(drivingCommand);
+		// drivetrain.setDefaultCommand(drivingCommand);
 
-		driveController.x().onTrue(
-			new DriveToPose(
-				drivetrain,
-				new Pose2d(4.0, 2.0, Rotation2d.fromDegrees(180.0)),
-				kPathfindConstraints
-			)
-		);	
-		new Trigger(() ->
-			Math.abs(driveController.getLeftX()) > kCancelStickThreshold ||
-			Math.abs(driveController.getLeftY()) > kCancelStickThreshold ||
-			Math.abs(driveController.getRightX()) > kCancelStickThreshold
-		).onTrue(Commands.runOnce(drivetrain::cancelActiveDrive));
+		// driveController.x().onTrue(
+		// 	new DriveToPose(
+		// 		drivetrain,
+		// 		new Pose2d(4.0, 2.0, Rotation2d.fromDegrees(180.0)),
+		// 		kPathfindConstraints
+		// 	)
+		// );	
+		// new Trigger(() ->
+		// 	Math.abs(driveController.getLeftX()) > kCancelStickThreshold ||
+		// 	Math.abs(driveController.getLeftY()) > kCancelStickThreshold ||
+		// 	Math.abs(driveController.getRightX()) > kCancelStickThreshold
+		// ).onTrue(Commands.runOnce(drivetrain::cancelActiveDrive));
 		
 		operatorController.a().onTrue(pinion.retractIntakeCommand().alongWith(intake.intakeCommand()));
 		operatorController.b().onTrue(pinion.extendIntakeCommand().alongWith(intake.stopCommand()));
@@ -141,12 +141,12 @@ public class Robot extends TimedRobot {
 		// operatorController.a().onTrue(shooterYaw.setAngularPositionCommand(0.5));
 		// operatorController.b().onTrue(shooterYaw.setAngularPositionCommand(1.0));
 
-		operatorController.leftBumper().onTrue(manualShooterControl);
-		operatorController.rightBumper().onTrue(
-			shooterFlywheel.stopCommand()
-				.alongWith(shooterPitch.stopCommand())
-				// .alongWith(shooterYaw.stopCommand())
-		);
+		// operatorController.leftBumper().onTrue(manualShooterControl);
+		// operatorController.rightBumper().onTrue(
+		// 	shooterFlywheel.stopCommand()
+		// 		.alongWith(shooterPitch.stopCommand())
+		// 		// .alongWith(shooterYaw.stopCommand())
+		// );
 
 		// Following are used for testing individual subsystems.
 
