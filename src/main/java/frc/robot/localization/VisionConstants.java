@@ -6,8 +6,10 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -50,11 +52,30 @@ public class VisionConstants {
 	public static final Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(1, 1, Double.POSITIVE_INFINITY);
 	public static final Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.4, 0.4, Double.POSITIVE_INFINITY);
 
-	public static AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
+	public static final AprilTagFieldLayout kTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
+
+	// Get the two tag poses for whichever alliance you're on
+	private static final Pose3d tag10 = kTagLayout.getTagPose(10).get();
+	private static final Pose3d tag4  = kTagLayout.getTagPose(4).get();
+
+	// Midpoint translation = average of the two translations
+	public static final Translation2d RED_HUB = new Translation2d(
+			(tag10.getX() + tag4.getX()) / 2.0,
+			(tag10.getY() + tag4.getY()) / 2.0
+	);
+
+	// Similarly for blue:
+	private static final Pose3d tag20 = kTagLayout.getTagPose(20).get();
+	private static final Pose3d tag26 = kTagLayout.getTagPose(26).get();
+
+	public static final Translation2d BLUE_HUB = new Translation2d(
+			(tag20.getX() + tag26.getX()) / 2.0,
+			(tag20.getY() + tag26.getY()) / 2.0
+	);
 
 	public static void setupConstants() {
 		// try {
-		// 	kTagLayout = new AprilTagFieldLayout(Filesystem.getDeployDirectory().toPath().resolve("2026-rebuilt-welded.json"));
+		// 	kTagLayout = new AprilTagkTagLayout(Filesystem.getDeployDirectory().toPath().resolve("2026-rebuilt-welded.json"));
 		// } catch(Throwable t) {
 		// 	DriverStation.reportError("Failed to load 2026-rebuilt-welded.json", false);
 		// }

@@ -5,10 +5,13 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static frc.robot.ToSI.*;
 
 import com.ctre.phoenix6.CANBus;
+
+import edu.wpi.first.units.measure.Angle;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -40,5 +43,7 @@ public final class Constants {
   public static class ShootingConstants {
     public static final double shootToAllianceArea_firingPitch = 10.0;
     public static final double shootToAllianceArea_shooterYaw = 10.0;
+
+    public static final Angle yaw = Rotations.of(-0.25);
   }
 }
