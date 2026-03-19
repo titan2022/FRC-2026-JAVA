@@ -105,6 +105,5 @@ public class ShooterFlywheel extends Flywheel {
     super.periodic();
 
     DogLog.log(SUBSYSTEM_NAME + "/Position (degrees)", getAngularPosition() / degree, "°");
-    DogLog.log(SUBSYSTEM_NAME + "/Position setpoint (degrees)", getSetpoint() / degree, "°");
   }
 }
