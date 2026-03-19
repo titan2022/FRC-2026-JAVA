@@ -81,7 +81,7 @@ public class VelocityPIDFBase extends SubsystemBase {
     profiledSetpointSignal = motor.getClosedLoopReference();
 
     // Apply configuration
-    motor.getConfigurator().apply(motorConfig);
+    applyMotorConfig();
 
     // Reset encoder position
     motor.setPosition(STARTING_ANGULAR_POSITION);
@@ -121,6 +121,10 @@ public class VelocityPIDFBase extends SubsystemBase {
     motorConfig.MotionMagic.MotionMagicJerk = maxJerk_subscriber.get();
 
     // Apply configuration
+    applyMotorConfig();
+  }
+
+  public void applyMotorConfig() {
     motor.getConfigurator().apply(motorConfig);
   }
 

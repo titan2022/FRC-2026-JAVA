@@ -3,9 +3,11 @@ package frc.robot.subsystems.shooter;
 import static frc.robot.ToSI.*;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
@@ -19,11 +21,23 @@ public class ShooterFlywheel extends Flywheel {
   public static final double rotation = 1;
   public static final double degree = rotation/360;
 
+  // There are three motors in total.
+  public TalonFX follower1;
+  public TalonFX follower2;
+
+  // The only thing that should change between them is inversion state.
+  private MotorAlignmentValue follower1_alignment;
+  private MotorAlignmentValue follower2_alignment;
+
   {
     SUBSYSTEM_NAME = "ShooterFlywheel";
 
     // Hardware devices
     motor = new TalonFX(44, HardwareConstants.rioCanbus);
+    follower1 = new TalonFX(60, HardwareConstants.rioCanbus);
+    follower2 = new TalonFX(61, HardwareConstants.rioCanbus);
+
+
   
     // Mechanism constants
     gearbox = DCMotor.getFalcon500(1);
@@ -38,7 +52,9 @@ public class ShooterFlywheel extends Flywheel {
     motorConfig = new TalonFXConfiguration();
     
     motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    motorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    // motorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    follower1_alignment = MotorAlignmentValue.Aligned;
+    follower2_alignment = MotorAlignmentValue.Aligned;
     
     motorConfig.Feedback.SensorToMechanismRatio = GEAR_RATIO;
 
@@ -67,6 +83,21 @@ public class ShooterFlywheel extends Flywheel {
 
   public ShooterFlywheel() {
     initialize();
+  }
+
+  @Override
+  protected void initialize() {
+    super.initialize();
+
+    follower1.setControl(new Follower(motor.getDeviceID(), follower1_alignment));
+    follower2.setControl(new Follower(motor.getDeviceID(), follower2_alignment));
+  }
+
+  @Override
+  public void applyMotorConfig() {
+    motor.getConfigurator().apply(motorConfig);
+    follower1.getConfigurator().apply(motorConfig);
+    follower2.getConfigurator().apply(motorConfig);
   }
 
   @Override
