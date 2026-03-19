@@ -28,15 +28,15 @@ public class Pinion extends Elevator {
   
     // Mechanism constants
     gearbox = DCMotor.getFalcon500(1);
-    GEAR_RATIO = 1; 
+    GEAR_RATIO = 9.760802469; 
 
-    DRUM_RADIUS = 0.0254*m; 
-    CARRIAGE_MASS = 5*kg; 
+    DRUM_RADIUS = 1.3*in; 
+    CARRIAGE_MASS = 10*lb; 
 
     // Configuration
-    MAX_LINEAR_POSITION = 1*m; 
-    MIN_LINEAR_POSITION = 0*m; 
-    STARTING_LINEAR_POSITION = 0.5*m; 
+    MAX_LINEAR_POSITION = 12.594*in; 
+    MIN_LINEAR_POSITION = 0*in; 
+    STARTING_LINEAR_POSITION = 12.594*in; 
     // The conversion to angular is done in Elevator.initialize()
 
     // Basic motor configuration
@@ -62,8 +62,8 @@ public class Pinion extends Elevator {
     motorConfig.Slot0.kI = 0.0;
     motorConfig.Slot0.kD = 6.81; // ReCalc 6.81 V*s/m
 
-    MAX_VELOCITY = 1 * m/s;
-    MAX_ACCELERATION = 1 * m/(s*s);
+    MAX_VELOCITY = 2.25 * m/s; // ReCalc 2.25 m/s
+    MAX_ACCELERATION = 21.51 * m/(s*s); // ReCalc 21.51 m/s^2
 
     // TODO - Figure out what supply and stator current limits we want
     // motorConfig.CurrentLimits.SupplyCurrentLimitEnable = false;
