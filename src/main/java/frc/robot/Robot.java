@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.DriverConstants;
+import frc.robot.Constants.ShootingConstants;
 import frc.robot.drive.ctre.CTRESwerveDrivetrain;
 import frc.robot.drive.ctre.CTRESwerveTelemetry;
 import frc.robot.drive.ctre.commands.DrivingCommand;
@@ -51,9 +52,9 @@ public class Robot extends TimedRobot {
 
 	// public final Vision vision = new Vision(drivetrain::addVisionMeasurement);
 
-	// public final ShooterPitch shooterPitch = new ShooterPitch();
+	public final ShooterPitch shooterPitch = new ShooterPitch();
 	// public final ShooterYaw shooterYaw = new ShooterYaw();
-	// public final ShooterFlywheel shooterFlywheel = new ShooterFlywheel();
+	public final ShooterFlywheel shooterFlywheel = new ShooterFlywheel();
 
 	// public final Spindexer spindexer = new Spindexer();
 	// public final VerticalIndexer verticalIndexer = new VerticalIndexer();
@@ -134,6 +135,9 @@ public class Robot extends TimedRobot {
 		
 		operatorController.a().onTrue(pinion.retractIntakeCommand().alongWith(intake.intakeCommand()));
 		operatorController.b().onTrue(pinion.extendIntakeCommand().alongWith(intake.stopCommand()));
+
+		operatorController.leftTrigger().onTrue(shooterPitch.setAngularPositionCommand(ShootingConstants.shootToAllianceArea_firingPitch)
+			.alongWith(shooterFlywheel.setAngularPositionCommand(ShootingConstants.shootToAllianceArea_shooterYaw)));
 
 		// operatorController.x().onTrue(climb.climbDownCommand());
 		// operatorController.y().onTrue(climb.climbUpCommand());

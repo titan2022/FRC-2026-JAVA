@@ -36,4 +36,9 @@ public final class Constants {
     public static final CANBus rioCanbus = new CANBus();
     public static final CANBus canivoreCanbus = new CANBus("FRC2022-2");
   }
+
+  public static class ShootingConstants {
+    public static final double shootToAllianceArea_firingPitch = 10.0;
+    public static final double shootToAllianceArea_shooterYaw = 10.0;
+  }
 }
