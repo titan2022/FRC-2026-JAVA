@@ -57,15 +57,26 @@ public class ShooterPitch extends ArmPivot {
     // Feedforward
     motorConfig.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
     motorConfig.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
-    motorConfig.Slot0.kG = 0.0;
-    motorConfig.Slot0.kS = 0.0;
-    motorConfig.Slot0.kV = 0.0;
-    motorConfig.Slot0.kA = 0.0;
+    // motorConfig.Slot0.kG = 0.0;
+    // motorConfig.Slot0.kS = 0.0;
+    // motorConfig.Slot0.kV = 0.0;
+    // motorConfig.Slot0.kA = 0.0;
+
+    // // PID
+    // motorConfig.Slot0.kP = 0.0;
+    // motorConfig.Slot0.kI = 0.0;
+    // motorConfig.Slot0.kD = 0.0;
+
+    // https://www.reca.lc/linear?angle=%7B"s"%3A11.311%2C"u"%3A"deg"%7D&currentLimit=%7B"s"%3A40%2C"u"%3A"A"%7D&efficiency=100&limitAcceleration=0&limitDeceleration=0&limitVelocity=0&limitedAcceleration=%7B"s"%3A400%2C"u"%3A"in%2Fs2"%7D&limitedDeceleration=%7B"s"%3A50%2C"u"%3A"in%2Fs2"%7D&limitedVelocity=%7B"s"%3A10%2C"u"%3A"in%2Fs"%7D&load=%7B"s"%3A10%2C"u"%3A"lbs"%7D&motor=%7B"quantity"%3A1%2C"name"%3A"Falcon%20500"%7D&ratio=%7B"magnitude"%3A9.760802469%2C"ratioType"%3A"Reduction"%7D&spoolDiameter=%7B"s"%3A2.6%2C"u"%3A"in"%7D&travelDistance=%7B"s"%3A12.594%2C"u"%3A"in"%7D
+    motorConfig.Slot0.kG = 0.0; // ReCalc 0.00 V
+    motorConfig.Slot0.kS = 0.0; // not calculated
+    motorConfig.Slot0.kV = 19.50; // ReCalc 19.50 V*s/rot
+    motorConfig.Slot0.kA = 0.0; // ReCalc 0.00 V*s^2/rot
 
     // PID
-    motorConfig.Slot0.kP = 0.1;
+    motorConfig.Slot0.kP = 0.0; // ReCalc 0.00 V/rot
     motorConfig.Slot0.kI = 0.0;
-    motorConfig.Slot0.kD = 0.0;
+    motorConfig.Slot0.kD = 0.0; // ReCalc 0.00 V*s/rot
 
     motorConfig.MotionMagic.MotionMagicCruiseVelocity = 5 * rotation/s;
     motorConfig.MotionMagic.MotionMagicAcceleration = 5 * rotation/(s*s);

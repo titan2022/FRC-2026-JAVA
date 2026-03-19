@@ -61,15 +61,26 @@ public class ShooterFlywheel extends Flywheel {
     // Feedforward
     motorConfig.Slot0.GravityType = GravityTypeValue.Elevator_Static;
     motorConfig.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
+    // motorConfig.Slot0.kG = 0.0; // Since this is a pivot, kG should always be 0.
+    // motorConfig.Slot0.kS = 0.0;
+    // motorConfig.Slot0.kV = 0.0;
+    // motorConfig.Slot0.kA = 0.0;
+
+    // // PID
+    // motorConfig.Slot0.kP = 0.1;
+    // motorConfig.Slot0.kI = 0.0;
+    // motorConfig.Slot0.kD = 0.0;
+
+    // https://www.reca.lc/flywheel?currentLimit=%7B%22s%22%3A60%2C%22u%22%3A%22A%22%7D&efficiency=100&flywheelMomentOfInertia=%7B%22s%22%3A0%2C%22u%22%3A%22in2*lbs%22%7D&flywheelRadius=%7B%22s%22%3A1%2C%22u%22%3A%22in%22%7D&flywheelRatio=%7B%22magnitude%22%3A1%2C%22ratioType%22%3A%22Reduction%22%7D&flywheelWeight=%7B%22s%22%3A0%2C%22u%22%3A%22lbs%22%7D&motor=%7B%22quantity%22%3A3%2C%22name%22%3A%22Falcon%20500%22%7D&motorRatio=%7B%22magnitude%22%3A1%2C%22ratioType%22%3A%22Step-up%22%7D&projectileRadius=%7B%22s%22%3A2%2C%22u%22%3A%22in%22%7D&projectileWeight=%7B%22s%22%3A0.449%2C%22u%22%3A%22lbs%22%7D&shooterMomentOfInertia=%7B%22s%22%3A0%2C%22u%22%3A%22in2*lbs%22%7D&shooterRadius=%7B%22s%22%3A0%2C%22u%22%3A%22in%22%7D&shooterTargetSpeed=%7B%22s%22%3A6000%2C%22u%22%3A%22rpm%22%7D&shooterWeight=%7B%22s%22%3A0%2C%22u%22%3A%22lbs%22%7D&useCustomFlywheelMoi=0&useCustomShooterMoi=0
     motorConfig.Slot0.kG = 0.0; // Since this is a pivot, kG should always be 0.
-    motorConfig.Slot0.kS = 0.0;
-    motorConfig.Slot0.kV = 0.0;
-    motorConfig.Slot0.kA = 0.0;
+    motorConfig.Slot0.kS = 0.0; // not calculated
+    motorConfig.Slot0.kV = 0.62; // ReCalc 0.62 V*s/m
+    motorConfig.Slot0.kA = 0.04; // ReCalc 0.04 V*s^2/m
 
     // PID
-    motorConfig.Slot0.kP = 0.1;
+    motorConfig.Slot0.kP = 0.1; // ReCalc 1.41 V*s/m
     motorConfig.Slot0.kI = 0.0;
-    motorConfig.Slot0.kD = 0.0;
+    motorConfig.Slot0.kD = 0.0; // not calculated
 
     motorConfig.MotionMagic.MotionMagicCruiseVelocity = 5 * rotation/s;
     motorConfig.MotionMagic.MotionMagicAcceleration = 5 * rotation/(s*s);
