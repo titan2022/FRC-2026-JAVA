@@ -121,7 +121,7 @@ public class Robot extends TimedRobot {
     // //   current state: https://docs.google.com/drawings/d/1_Lk5ZLvhy3-GtpytwQDFhX6L3Q5EoNN4N0K72jPGByc/edit
     // //            plan: https://docs.google.com/drawings/d/18_HOTw2HHTe6EamlZadLaGDxj3c08HJma-SCfwRxWIQ/edit
 
-		// drivetrain.setDefaultCommand(drivingCommand);
+		drivetrain.setDefaultCommand(drivingCommand);
 
 		// driveController.x().onTrue(
 		// 	new DriveToPose(
