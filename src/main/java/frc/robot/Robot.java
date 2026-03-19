@@ -53,28 +53,28 @@ public class Robot extends TimedRobot {
 
 	public final CTRESwerveDrivetrain drivetrain = new CTRESwerveDrivetrain();
 
-	public final Vision vision = new Vision(drivetrain::addVisionMeasurement);
+	// public final Vision vision = new Vision(drivetrain::addVisionMeasurement);
 
-	public final ShooterPitch shooterPitch = new ShooterPitch();
+	// public final ShooterPitch shooterPitch = new ShooterPitch();
 	// public final ShooterYaw shooterYaw = new ShooterYaw();
-	public final ShooterFlywheel shooterFlywheel = new ShooterFlywheel();
+	// public final ShooterFlywheel shooterFlywheel = new ShooterFlywheel();
 
 	// public final Spindexer spindexer = new Spindexer();
 	// public final VerticalIndexer verticalIndexer = new VerticalIndexer();
 
-	public final Intake intake = new Intake(drivetrain);
-	public final Pinion pinion = new Pinion();
+	// public final Intake intake = new Intake(drivetrain);
+	// public final Pinion pinion = new Pinion();
 
 	// public final Climb climb = new Climb();
 
 	private final DrivingCommand drivingCommand = new DrivingCommand(drivetrain, driveController);
-	private final ManualShooterControl manualShooterControl = new ManualShooterControl(
-		shooterFlywheel, shooterPitch, // shooterYaw, 
-		operatorController,
-		// drivetrain,
-		intake //,
-		// 1000 // every 1s
-	);
+	// private final ManualShooterControl manualShooterControl = new ManualShooterControl(
+	// 	shooterFlywheel, shooterPitch, // shooterYaw, 
+	// 	operatorController,
+	// 	// drivetrain,
+	// 	intake //,
+	// 	// 1000 // every 1s
+	// );
 
 	private static final double kCancelStickThreshold = 0.18;
 
@@ -136,8 +136,8 @@ public class Robot extends TimedRobot {
 		// 	Math.abs(driveController.getRightX()) > kCancelStickThreshold
 		// ).onTrue(Commands.runOnce(drivetrain::cancelActiveDrive));
 		
-		operatorController.a().onTrue(pinion.retractIntakeCommand().alongWith(intake.intakeCommand()));
-		operatorController.b().onTrue(pinion.extendIntakeCommand().alongWith(intake.stopCommand()));
+		// operatorController.a().onTrue(pinion.retractIntakeCommand().alongWith(intake.intakeCommand()));
+		// operatorController.b().onTrue(pinion.extendIntakeCommand().alongWith(intake.stopCommand()));
 
 		// operatorController.x().onTrue(climb.climbDownCommand());
 		// operatorController.y().onTrue(climb.climbUpCommand());
@@ -145,17 +145,17 @@ public class Robot extends TimedRobot {
 		// operatorController.a().onTrue(shooterYaw.setAngularPositionCommand(0.5));
 		// operatorController.b().onTrue(shooterYaw.setAngularPositionCommand(1.0));
 
-		operatorController.leftBumper().onTrue(manualShooterControl);
-		operatorController.rightBumper().onTrue(
-			shooterFlywheel.stopCommand()
-				.alongWith(shooterPitch.stopCommand())
-				// .alongWith(shooterYaw.stopCommand())
-		);
+		// operatorController.leftBumper().onTrue(manualShooterControl);
+		// operatorController.rightBumper().onTrue(
+		// 	shooterFlywheel.stopCommand()
+		// 		.alongWith(shooterPitch.stopCommand())
+		// 		// .alongWith(shooterYaw.stopCommand())
+		// );
 
 		// operatorController.leftTrigger().onTrue(shooterPitch.setAngularPositionCommand(ShootingConstants.shootToAllianceArea_firingPitch)
 		// 	.alongWith(shooterFlywheel.setAngularVelocityCommand(ShootingConstants.shootToAllianceArea_shooterYaw)));
-		operatorController.leftTrigger().onTrue(StaticFireControl.passingAutoShootCommand(drivetrain, shooterPitch, shooterFlywheel));
-		operatorController.rightTrigger().onTrue(StaticFireControl.staticAutoShootCommand(drivetrain, shooterPitch, shooterFlywheel));
+		// operatorController.leftTrigger().onTrue(StaticFireControl.passingAutoShootCommand(drivetrain, shooterPitch, shooterFlywheel));
+		// operatorController.rightTrigger().onTrue(StaticFireControl.staticAutoShootCommand(drivetrain, shooterPitch, shooterFlywheel));
 
 
 		// Following are used for testing individual subsystems.
@@ -175,7 +175,7 @@ public class Robot extends TimedRobot {
 		// }
 
 		// Update vision
-		vision.periodic();
+		// vision.periodic();
 	}
 
 	@Override
@@ -258,6 +258,6 @@ public class Robot extends TimedRobot {
 
 	public void resetPose(Pose2d startPose) {
 		drivetrain.resetPose(startPose);
-		vision.resetSimPose(startPose);
+		// vision.resetSimPose(startPose);
 	}
 }
