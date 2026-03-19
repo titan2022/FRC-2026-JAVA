@@ -19,6 +19,7 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -35,6 +36,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.drive.SwerveDrivetrain;
 import frc.robot.drive.ctre.TunerConstants.TunerSwerveDrivetrain;
+import frc.robot.localization.VisionConstants;
 
 // https://github.com/Shenzhen-Robotics-Alliance/CTRE-Swerve-MapleSim/blob/main/src/main/java/frc/robot/subsystems/CommandSwerveDrivetrain.java
 /**
@@ -307,6 +309,18 @@ public class CTRESwerveDrivetrain extends TunerSwerveDrivetrain implements Swerv
 		DogLog.log("Drive/MeasuredSpeeds", getState().Speeds);
 		if (mapleSimSwerveDrivetrain != null)
 			DogLog.log("Drive/SimulationPose", mapleSimSwerveDrivetrain.mapleSimDrive.getSimulatedDriveTrainPose());
+
+		// Calculate and display distance to the HUB
+		// Distance is calculated along the horizontal plane of the field
+		// https://claude.ai/share/47823566-dfd1-44bc-856a-dd72c7584d35
+
+		Translation2d hubPosition = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red
+			? VisionConstants.RED_HUB
+			: VisionConstants.BLUE_HUB;
+		
+		double distanceToHub = getState().Pose.getTranslation().getDistance(hubPosition);
+
+		DogLog.log("Drive/DistanceToHub", distanceToHub, Meters);
 	}
 
 	public MapleSimSwerveDrivetrain mapleSimSwerveDrivetrain = null;
