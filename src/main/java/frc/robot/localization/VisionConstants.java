@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Filesystem;
 
 public class VisionConstants {
@@ -72,6 +73,12 @@ public class VisionConstants {
 			(tag20.getX() + tag26.getX()) / 2.0,
 			(tag20.getY() + tag26.getY()) / 2.0
 	);
+
+	public static Translation2d getHubPosition() {
+		return DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red
+			? VisionConstants.RED_HUB
+			: VisionConstants.BLUE_HUB;
+	}
 
 	public static void setupConstants() {
 		// try {

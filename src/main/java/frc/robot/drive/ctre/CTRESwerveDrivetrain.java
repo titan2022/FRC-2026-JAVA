@@ -314,13 +314,9 @@ public class CTRESwerveDrivetrain extends TunerSwerveDrivetrain implements Swerv
 		// Distance is calculated along the horizontal plane of the field
 		// https://claude.ai/share/47823566-dfd1-44bc-856a-dd72c7584d35
 
-		Translation2d hubPosition = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red
-			? VisionConstants.RED_HUB
-			: VisionConstants.BLUE_HUB;
-		
-		double distanceToHub = getState().Pose.getTranslation().getDistance(hubPosition);
+		// double distanceToHub = getState().Pose.getTranslation().getDistance(VisionConstants.getHubPosition());
 
-		DogLog.log("Drive/DistanceToHub", distanceToHub, Meters);
+		// DogLog.log("Drive/DistanceToHub", distanceToHub, Meters);
 	}
 
 	public MapleSimSwerveDrivetrain mapleSimSwerveDrivetrain = null;

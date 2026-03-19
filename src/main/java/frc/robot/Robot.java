@@ -39,6 +39,7 @@ import frc.robot.subsystems.shooter.ShooterFlywheel;
 import frc.robot.subsystems.shooter.ShooterPitch;
 import frc.robot.subsystems.shooter.ShooterYaw;
 import frc.robot.subsystems.shooter.commands.ManualShooterControl;
+import frc.robot.subsystems.shooter.util.StaticFireControl;
 
 public class Robot extends TimedRobot {	
 	// private final CTRESwerveTelemetry logger = new CTRESwerveTelemetry(DriverConstants.MAX_SPEED);
@@ -65,13 +66,13 @@ public class Robot extends TimedRobot {
 	// public final Climb climb = new Climb();
 
 	private final DrivingCommand drivingCommand = new DrivingCommand(drivetrain, driveController);
-	// private final ManualShooterControl manualShooterControl = new ManualShooterControl(
-	// 	shooterFlywheel, shooterPitch, // shooterYaw, 
-	// 	operatorController,
-	// 	drivetrain,
-	// 	intake //,
-	// 	// 1000 // every 1s
-	// );
+	private final ManualShooterControl manualShooterControl = new ManualShooterControl(
+		shooterFlywheel, shooterPitch, // shooterYaw, 
+		operatorController,
+		// drivetrain,
+		intake //,
+		// 1000 // every 1s
+	);
 
 	private static final double kCancelStickThreshold = 0.18;
 
@@ -136,21 +137,24 @@ public class Robot extends TimedRobot {
 		operatorController.a().onTrue(pinion.retractIntakeCommand().alongWith(intake.intakeCommand()));
 		operatorController.b().onTrue(pinion.extendIntakeCommand().alongWith(intake.stopCommand()));
 
-		operatorController.leftTrigger().onTrue(shooterPitch.setAngularPositionCommand(ShootingConstants.shootToAllianceArea_firingPitch)
-			.alongWith(shooterFlywheel.setAngularPositionCommand(ShootingConstants.shootToAllianceArea_shooterYaw)));
-
 		// operatorController.x().onTrue(climb.climbDownCommand());
 		// operatorController.y().onTrue(climb.climbUpCommand());
 
 		// operatorController.a().onTrue(shooterYaw.setAngularPositionCommand(0.5));
 		// operatorController.b().onTrue(shooterYaw.setAngularPositionCommand(1.0));
 
-		// operatorController.leftBumper().onTrue(manualShooterControl);
-		// operatorController.rightBumper().onTrue(
-		// 	shooterFlywheel.stopCommand()
-		// 		.alongWith(shooterPitch.stopCommand())
-		// 		// .alongWith(shooterYaw.stopCommand())
-		// );
+		operatorController.leftBumper().onTrue(manualShooterControl);
+		operatorController.rightBumper().onTrue(
+			shooterFlywheel.stopCommand()
+				.alongWith(shooterPitch.stopCommand())
+				// .alongWith(shooterYaw.stopCommand())
+		);
+
+		// operatorController.leftTrigger().onTrue(shooterPitch.setAngularPositionCommand(ShootingConstants.shootToAllianceArea_firingPitch)
+		// 	.alongWith(shooterFlywheel.setAngularVelocityCommand(ShootingConstants.shootToAllianceArea_shooterYaw)));
+		operatorController.leftTrigger().onTrue(StaticFireControl.passingAutoShootCommand(drivetrain, shooterPitch, shooterFlywheel));
+		operatorController.rightTrigger().onTrue(StaticFireControl.staticAutoShootCommand(drivetrain, shooterPitch, shooterFlywheel));
+
 
 		// Following are used for testing individual subsystems.
 

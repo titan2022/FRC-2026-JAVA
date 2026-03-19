@@ -237,7 +237,7 @@ public class VelocityPIDFBase extends SubsystemBase {
    * @param velocity The target velocity in rotations per second
    * @return A command that sets the PIDF setpoint to the specified velocity
    */
-  public Command setAngularPositionCommand(double velocity) {
+  public Command setAngularVelocityCommand(double velocity) {
     return runOnce(() -> setAngularVelocity(velocity));
   }
 

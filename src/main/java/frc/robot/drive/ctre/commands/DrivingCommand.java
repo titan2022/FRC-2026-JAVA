@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.Constants.ShootingConstants;
 import frc.robot.drive.ctre.CTRESwerveDrivetrain;
+import frc.robot.localization.Vision;
 import frc.robot.localization.VisionConstants;
 
 
@@ -143,8 +144,7 @@ public class DrivingCommand extends Command {
   private double getHubRotationOutput() {
     Pose2d robotPose = drivetrain.getState().Pose;
 
-    boolean isRed = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red;
-    Translation2d hub = isRed ? VisionConstants.RED_HUB : VisionConstants.BLUE_HUB;
+    Translation2d hub = VisionConstants.getHubPosition();
 
     Translation2d toHub = hub.minus(robotPose.getTranslation());
     double targetAngleRad = Math.atan2(toHub.getY(), toHub.getX()) + ShootingConstants.yaw.in(Radians);
