@@ -6,15 +6,12 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.DriverConstants;
 import frc.robot.drive.ctre.CTRESwerveDrivetrain;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 
 public class DrivingCommand extends Command {
@@ -93,11 +90,9 @@ public class DrivingCommand extends Command {
     driveController.start().onTrue(drivetrain.runOnce(() -> isFieldOriented = false));
 
     // Quick back up motion for dealgifier
-    driveController.a().onTrue(drivetrain.applyRequest(() ->
-      robotCentricStrafe.withVelocityX(-5.0).withVelocityY(0)
-    ).withTimeout(0.1));
-
-    // drivetrain.registerTelemetry(logger::telemeterize);
+    // driveController.a().onTrue(drivetrain.applyRequest(() ->
+    //   robotCentricStrafe.withVelocityX(-5.0).withVelocityY(0)
+    // ).withTimeout(0.1));
   }
 
   public void resetAlliance() {

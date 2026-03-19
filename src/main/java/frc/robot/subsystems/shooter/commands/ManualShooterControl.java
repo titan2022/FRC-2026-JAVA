@@ -38,7 +38,7 @@ public class ManualShooterControl extends Command {
   private final ShooterPitch shooterPitch;
   // private final ShooterYaw shooterYaw;
 
-  private final CTRESwerveDrivetrain drivetrain;
+  // private final CTRESwerveDrivetrain drivetrain;
   // private final Intake intake;
 
   // private long counter;
@@ -57,7 +57,7 @@ public class ManualShooterControl extends Command {
     ShooterPitch shooterPitch, 
     // ShooterYaw shooterYaw, 
     CommandXboxController operatorController, 
-    CTRESwerveDrivetrain drivetrain, 
+    // CTRESwerveDrivetrain drivetrain, 
     Intake intake //, 
     // long period
   ) {
@@ -65,7 +65,7 @@ public class ManualShooterControl extends Command {
     this.shooterPitch = shooterPitch;
     // this.shooterYaw = shooterYaw;
 
-    this.drivetrain = drivetrain;
+    // this.drivetrain = drivetrain;
     // this.intake = intake;
 
     // this.maxCounterValue = period;
