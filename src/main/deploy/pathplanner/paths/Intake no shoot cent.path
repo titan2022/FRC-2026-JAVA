@@ -104,7 +104,30 @@
   ],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Intake/ExtendAndIntake",
+      "waypointRelativePos": 0.4522684800664447,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Intake/ExtendAndIntake"
+        }
+      }
+    },
+    {
+      "name": "Intake/Retract",
+      "waypointRelativePos": 1.9856338247508307,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Intake/Retract"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
