@@ -100,7 +100,7 @@
         "y": 7.471522222222222
       },
       "prevControl": {
-        "x": 3.670488991685541,
+        "x": 3.6704889916855414,
         "y": 7.4391874262060265
       },
       "nextControl": null,
@@ -147,15 +147,25 @@
   "eventMarkers": [
     {
       "name": "Intake On",
-      "waypointRelativePos": 1.45,
-      "endWaypointRelativePos": 1.8383167220376646,
-      "command": null
+      "waypointRelativePos": 0.7289088863892046,
+      "endWaypointRelativePos": 2.443194600674876,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Intake/ExtendAndIntake"
+        }
+      }
     },
     {
       "name": "Reverse Intake On",
-      "waypointRelativePos": 4.345514950166104,
-      "endWaypointRelativePos": 5.687707641196048,
-      "command": null
+      "waypointRelativePos": 4.373453318335218,
+      "endWaypointRelativePos": 5.790776152980948,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Intake/ExtendAndOuttake"
+        }
+      }
     }
   ],
   "globalConstraints": {
