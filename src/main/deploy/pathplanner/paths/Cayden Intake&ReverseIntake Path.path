@@ -146,9 +146,9 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Intake On",
+      "name": "Intake/ExtendAndIntake",
       "waypointRelativePos": 0.7289088863892046,
-      "endWaypointRelativePos": 2.443194600674876,
+      "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
@@ -157,9 +157,9 @@
       }
     },
     {
-      "name": "Reverse Intake On",
+      "name": "Intake/ExtendAndOuttake",
       "waypointRelativePos": 4.373453318335218,
-      "endWaypointRelativePos": 5.790776152980948,
+      "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
