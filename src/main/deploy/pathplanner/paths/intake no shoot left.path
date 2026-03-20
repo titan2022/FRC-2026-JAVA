@@ -123,8 +123,8 @@
   "eventMarkers": [
     {
       "name": "Intake/ExtendAndIntake",
-      "waypointRelativePos": 0.5586870026525197,
-      "endWaypointRelativePos": null,
+      "waypointRelativePos": 1.0199724875415281,
+      "endWaypointRelativePos": 4.002997819767456,
       "command": {
         "type": "named",
         "data": {
@@ -134,7 +134,7 @@
     },
     {
       "name": "Intake/Retract",
-      "waypointRelativePos": 3.756034572259141,
+      "waypointRelativePos": 4.101108284883726,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
