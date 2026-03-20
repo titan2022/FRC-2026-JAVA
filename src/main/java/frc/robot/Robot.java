@@ -99,7 +99,7 @@ public class Robot extends TimedRobot {
 						.withCaptureDs(true)
 						.withNtPublish(true)
 						.withCaptureNt(false));
-		DogLog.setPdh(new PowerDistribution());
+		// DogLog.setPdh(new PowerDistribution());
 
 		// drivetrain.registerTelemetry(logger::telemeterize);
 
