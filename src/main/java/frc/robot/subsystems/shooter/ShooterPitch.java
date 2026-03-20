@@ -27,19 +27,19 @@ public class ShooterPitch extends ArmPivot {
   
     // Mechanism constants
     gearbox = DCMotor.getFalcon500(1);
-    GEAR_RATIO = 15;
+    GEAR_RATIO = 172.8;
 
     // If it's a pivot, use the example values below.
     // If it's an arm, get values from the CAD.
     IS_ARM = true;
-    ARM_LENGTH = 0.1 * m;
-    ARM_MOI = 0.01 * kg*m*m;
+    ARM_LENGTH = 20*cm;
+    ARM_MOI = 0.008821156008 * kg*m*m;
     // You can estimate it using SingleJointedArmSim.estimateMOI(armLength, 5).
 
     // Configuration
-    MAX_ANGULAR_POSITION = 360 * degree;
-    MIN_ANGULAR_POSITION = 0 * degree;
-    STARTING_ANGULAR_POSITION = 90 * degree;
+    MAX_ANGULAR_POSITION = 50 * degree;
+    MIN_ANGULAR_POSITION = 23 * degree;
+    STARTING_ANGULAR_POSITION = 23 * degree;
 
     // Basic motor configuration
     motorConfig = new TalonFXConfiguration();
@@ -67,25 +67,23 @@ public class ShooterPitch extends ArmPivot {
     // motorConfig.Slot0.kI = 0.0;
     // motorConfig.Slot0.kD = 0.0;
 
-    // https://www.reca.lc/linear?angle=%7B"s"%3A11.311%2C"u"%3A"deg"%7D&currentLimit=%7B"s"%3A40%2C"u"%3A"A"%7D&efficiency=100&limitAcceleration=0&limitDeceleration=0&limitVelocity=0&limitedAcceleration=%7B"s"%3A400%2C"u"%3A"in%2Fs2"%7D&limitedDeceleration=%7B"s"%3A50%2C"u"%3A"in%2Fs2"%7D&limitedVelocity=%7B"s"%3A10%2C"u"%3A"in%2Fs"%7D&load=%7B"s"%3A10%2C"u"%3A"lbs"%7D&motor=%7B"quantity"%3A1%2C"name"%3A"Falcon%20500"%7D&ratio=%7B"magnitude"%3A9.760802469%2C"ratioType"%3A"Reduction"%7D&spoolDiameter=%7B"s"%3A2.6%2C"u"%3A"in"%7D&travelDistance=%7B"s"%3A12.594%2C"u"%3A"in"%7D
-    motorConfig.Slot0.kG = 0.0; // ReCalc 0.00 V
+    // https://www.reca.lc/arm?armMass=%7B%22s%22%3A1.3458353%2C%22u%22%3A%22lbs%22%7D&comLength=%7B%22s%22%3A17%2C%22u%22%3A%22cm%22%7D&currentLimit=%7B%22s%22%3A40%2C%22u%22%3A%22A%22%7D&efficiency=100&endAngle=%7B%22s%22%3A50%2C%22u%22%3A%22deg%22%7D&iterationLimit=10000&motor=%7B%22quantity%22%3A1%2C%22name%22%3A%22Falcon%20500%22%7D&ratio=%7B%22magnitude%22%3A172.8%2C%22ratioType%22%3A%22Reduction%22%7D&startAngle=%7B%22s%22%3A23%2C%22u%22%3A%22deg%22%7D
+    motorConfig.Slot0.kG = 0.02; // ReCalc 0.02 V
     motorConfig.Slot0.kS = 0.0; // not calculated
     motorConfig.Slot0.kV = 19.50; // ReCalc 19.50 V*s/rot
     motorConfig.Slot0.kA = 0.0; // ReCalc 0.00 V*s^2/rot
 
     // PID
-    motorConfig.Slot0.kP = 0.0; // ReCalc 0.00 V/rot
+    motorConfig.Slot0.kP = 505.87; // ReCalc 505.87 V/rot
     motorConfig.Slot0.kI = 0.0;
-    motorConfig.Slot0.kD = 0.0; // ReCalc 0.00 V*s/rot
+    motorConfig.Slot0.kD = 0.04; // ReCalc 0.04 V*s/rot
 
-    motorConfig.MotionMagic.MotionMagicCruiseVelocity = 5 * rotation/s;
-    motorConfig.MotionMagic.MotionMagicAcceleration = 5 * rotation/(s*s);
+    // motorConfig.MotionMagic.MotionMagicCruiseVelocity = 5 * rotation/s;
+    // motorConfig.MotionMagic.MotionMagicAcceleration = 5 * rotation/(s*s);
 
     // TODO - Figure out what supply and stator current limits we want
-    motorConfig.CurrentLimits.SupplyCurrentLimitEnable = false;
-    motorConfig.CurrentLimits.SupplyCurrentLowerLimit = 30;
-    motorConfig.CurrentLimits.SupplyCurrentLimit = 60;
-    motorConfig.CurrentLimits.SupplyCurrentLowerTime = 1;
+    motorConfig.CurrentLimits.StatorCurrentLimitEnable = true;
+    motorConfig.CurrentLimits.StatorCurrentLimit = 40;
   }
 
   public ShooterPitch() {

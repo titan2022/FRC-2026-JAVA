@@ -65,14 +65,8 @@ public class Pinion extends Elevator {
     MAX_VELOCITY = 2.25 * m/s; // ReCalc 2.25 m/s
     MAX_ACCELERATION = 21.51 * m/(s*s); // ReCalc 21.51 m/s^2
 
-    // TODO - Figure out what supply and stator current limits we want
-    // motorConfig.CurrentLimits.SupplyCurrentLimitEnable = false;
-    // motorConfig.CurrentLimits.SupplyCurrentLowerLimit = 30;
-    // motorConfig.CurrentLimits.SupplyCurrentLimit = 60;
-    // motorConfig.CurrentLimits.SupplyCurrentLowerTime = 1;
-
     motorConfig.CurrentLimits.StatorCurrentLimitEnable = true;
-    motorConfig.CurrentLimits.SupplyCurrentLimit = 20;
+    motorConfig.CurrentLimits.StatorCurrentLimit = 20;
 
     // https://www.reca.lc/linear?angle=%7B%22s%22%3A11.311%2C%22u%22%3A%22deg%22%7D&currentLimit=%7B%22s%22%3A20%2C%22u%22%3A%22A%22%7D&efficiency=100&limitAcceleration=0&limitDeceleration=0&limitVelocity=0&limitedAcceleration=%7B%22s%22%3A400%2C%22u%22%3A%22in%2Fs2%22%7D&limitedDeceleration=%7B%22s%22%3A50%2C%22u%22%3A%22in%2Fs2%22%7D&limitedVelocity=%7B%22s%22%3A10%2C%22u%22%3A%22in%2Fs%22%7D&load=%7B%22s%22%3A10%2C%22u%22%3A%22lbs%22%7D&motor=%7B%22quantity%22%3A1%2C%22name%22%3A%22Falcon%20500%22%7D&ratio=%7B%22magnitude%22%3A9.760802469%2C%22ratioType%22%3A%22Reduction%22%7D&spoolDiameter=%7B%22s%22%3A2.6%2C%22u%22%3A%22in%22%7D&travelDistance=%7B%22s%22%3A12.594%2C%22u%22%3A%22in%22%7D
   }
