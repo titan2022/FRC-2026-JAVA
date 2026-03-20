@@ -56,12 +56,12 @@ public class Robot extends TimedRobot {
 
 	// public final Vision vision = new Vision(drivetrain::addVisionMeasurement);
 
-	public final ShooterPitch shooterPitch = new ShooterPitch();
+	// public final ShooterPitch shooterPitch = new ShooterPitch();
 	// public final ShooterYaw shooterYaw = new ShooterYaw();
-	public final ShooterFlywheel shooterFlywheel = new ShooterFlywheel();
+	// public final ShooterFlywheel shooterFlywheel = new ShooterFlywheel();
 
-	public final Spindexer spindexer = new Spindexer();
-	public final VerticalIndexer verticalIndexer = new VerticalIndexer();
+	// public final Spindexer spindexer = new Spindexer();
+	// public final VerticalIndexer verticalIndexer = new VerticalIndexer();
 
 	public final Intake intake = new Intake(drivetrain);
 	public final Pinion pinion = new Pinion();
@@ -137,8 +137,9 @@ public class Robot extends TimedRobot {
 		// 	Math.abs(driveController.getRightX()) > kCancelStickThreshold
 		// ).onTrue(Commands.runOnce(drivetrain::cancelActiveDrive));
 		
-		// operatorController.a().onTrue(pinion.retractIntakeCommand().alongWith(intake.stopCommand()));
-		// operatorController.b().onTrue(pinion.extendIntakeCommand().alongWith(intake.intakeCommand()));
+		operatorController.a().onTrue(pinion.retractIntakeCommand().alongWith(intake.stopCommand()));
+		operatorController.b().onTrue(pinion.extendIntakeCommand().alongWith(intake.intakeCommand()));
+		operatorController.x().onTrue(pinion.extendIntakeCommand().alongWith(intake.outtakeCommand()));
 
 		// operatorController.x().onTrue(climb.climbDownCommand());
 		// operatorController.y().onTrue(climb.climbUpCommand());
@@ -169,8 +170,8 @@ public class Robot extends TimedRobot {
 		NamedCommands.registerCommand("Intake/ExtendAndIntake", pinion.extendIntakeCommand().alongWith(intake.intakeCommand()));
 		NamedCommands.registerCommand("Intake/ExtendAndOuttake", pinion.extendIntakeCommand().alongWith(intake.outtakeCommand()));
 		NamedCommands.registerCommand("Intake/Retract", pinion.retractIntakeCommand().alongWith(intake.stopCommand()));
-		NamedCommands.registerCommand("Shooter/PassingAutoShoot", StaticFireControl.passingAutoShootCommand(drivetrain, shooterPitch, shooterFlywheel));
-		NamedCommands.registerCommand("Shooter/StaticAutoShoot", StaticFireControl.staticAutoShootCommand(drivetrain, shooterPitch, shooterFlywheel));
+		// NamedCommands.registerCommand("Shooter/PassingAutoShoot", StaticFireControl.passingAutoShootCommand(drivetrain, shooterPitch, shooterFlywheel));
+		// NamedCommands.registerCommand("Shooter/StaticAutoShoot", StaticFireControl.staticAutoShootCommand(drivetrain, shooterPitch, shooterFlywheel));
 	}
 
 	@Override
