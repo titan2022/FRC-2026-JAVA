@@ -25,6 +25,7 @@ public class Intake extends VoltageControlledBase {
 
   // TODO: Set to actual voltage
   private static final double INTAKE_VOLTAGE = 1.0;
+  private static final double OUTTAKE_VOLTAGE = -INTAKE_VOLTAGE;
 
   {
     SUBSYSTEM_NAME = "Intake";
@@ -71,7 +72,12 @@ public class Intake extends VoltageControlledBase {
   }
 
   public Command intakeCommand() {
-    return setVoltageCommand(DEFAULT_VOLTAGE)
+    return setVoltageCommand(INTAKE_VOLTAGE)
+      .alongWith(new InstantCommand(() -> setIsOut(true)));
+  }
+
+  public Command outtakeCommand() {
+    return setVoltageCommand(OUTTAKE_VOLTAGE)
       .alongWith(new InstantCommand(() -> setIsOut(true)));
   }
 

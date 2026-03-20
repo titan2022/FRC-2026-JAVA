@@ -6,6 +6,7 @@ package frc.robot;
 
 import org.ironmaple.simulation.SimulatedArena;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathConstraints;
 
 import dev.doglog.DogLog;
@@ -55,15 +56,15 @@ public class Robot extends TimedRobot {
 
 	// public final Vision vision = new Vision(drivetrain::addVisionMeasurement);
 
-	// public final ShooterPitch shooterPitch = new ShooterPitch();
+	public final ShooterPitch shooterPitch = new ShooterPitch();
 	// public final ShooterYaw shooterYaw = new ShooterYaw();
-	// public final ShooterFlywheel shooterFlywheel = new ShooterFlywheel();
+	public final ShooterFlywheel shooterFlywheel = new ShooterFlywheel();
 
-	// public final Spindexer spindexer = new Spindexer();
-	// public final VerticalIndexer verticalIndexer = new VerticalIndexer();
+	public final Spindexer spindexer = new Spindexer();
+	public final VerticalIndexer verticalIndexer = new VerticalIndexer();
 
-	// public final Intake intake = new Intake(drivetrain);
-	// public final Pinion pinion = new Pinion();
+	public final Intake intake = new Intake(drivetrain);
+	public final Pinion pinion = new Pinion();
 
 	// public final Climb climb = new Climb();
 
@@ -136,8 +137,8 @@ public class Robot extends TimedRobot {
 		// 	Math.abs(driveController.getRightX()) > kCancelStickThreshold
 		// ).onTrue(Commands.runOnce(drivetrain::cancelActiveDrive));
 		
-		// operatorController.a().onTrue(pinion.retractIntakeCommand().alongWith(intake.intakeCommand()));
-		// operatorController.b().onTrue(pinion.extendIntakeCommand().alongWith(intake.stopCommand()));
+		// operatorController.a().onTrue(pinion.retractIntakeCommand().alongWith(intake.stopCommand()));
+		// operatorController.b().onTrue(pinion.extendIntakeCommand().alongWith(intake.intakeCommand()));
 
 		// operatorController.x().onTrue(climb.climbDownCommand());
 		// operatorController.y().onTrue(climb.climbUpCommand());
@@ -164,6 +165,12 @@ public class Robot extends TimedRobot {
 		// operatorController.b().whileTrue(climb.setLinearPositionCommand(0.3));
 		// operatorController.x().whileTrue(climb.setLinearPositionCommand(0.7));
 		// operatorController.y().whileTrue(climb.setLinearPositionCommand(1));
+	
+		NamedCommands.registerCommand("Intake/ExtendAndIntake", pinion.extendIntakeCommand().alongWith(intake.intakeCommand()));
+		NamedCommands.registerCommand("Intake/ExtendAndOuttake", pinion.extendIntakeCommand().alongWith(intake.outtakeCommand()));
+		NamedCommands.registerCommand("Intake/Retract", pinion.retractIntakeCommand().alongWith(intake.stopCommand()));
+		NamedCommands.registerCommand("Shooter/PassingAutoShoot", StaticFireControl.passingAutoShootCommand(drivetrain, shooterPitch, shooterFlywheel));
+		NamedCommands.registerCommand("Shooter/StaticAutoShoot", StaticFireControl.staticAutoShootCommand(drivetrain, shooterPitch, shooterFlywheel));
 	}
 
 	@Override
