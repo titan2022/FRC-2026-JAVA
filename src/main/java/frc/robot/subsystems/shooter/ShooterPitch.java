@@ -20,7 +20,7 @@ public class ShooterPitch extends ArmPivot {
   public static final double degree = rotation/360;
 
   {
-    SUBSYSTEM_NAME = "ShooterPitch";
+    SUBSYSTEM_NAME = "Shooter/Pitch";
 
     // Hardware devices
     motor = new TalonFX(45, HardwareConstants.rioCanbus);

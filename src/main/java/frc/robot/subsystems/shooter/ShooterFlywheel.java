@@ -30,7 +30,7 @@ public class ShooterFlywheel extends Flywheel {
   private MotorAlignmentValue follower2_alignment;
 
   {
-    SUBSYSTEM_NAME = "ShooterFlywheel";
+    SUBSYSTEM_NAME = "Shooter/Flywheel";
 
     // Hardware devices
     motor = new TalonFX(44, HardwareConstants.rioCanbus);

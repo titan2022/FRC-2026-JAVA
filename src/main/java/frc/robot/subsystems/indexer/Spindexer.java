@@ -14,7 +14,7 @@ import frc.robot.subsystems.base.VoltageControlledBase;
 public class Spindexer extends VoltageControlledBase {
 
   {
-    SUBSYSTEM_NAME = "IndexerSpindexer";
+    SUBSYSTEM_NAME = "Indexer/Spindexer";
 
     // Hardware devices - CAN ID (adjust as needed)
     motor = new TalonFX(10);

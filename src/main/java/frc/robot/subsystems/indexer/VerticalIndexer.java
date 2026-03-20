@@ -14,7 +14,7 @@ import frc.robot.subsystems.base.VoltageControlledBase;
 public class VerticalIndexer extends VoltageControlledBase {
 
   {
-    SUBSYSTEM_NAME = "IndexerVerticalIndexer";
+    SUBSYSTEM_NAME = "Indexer/VerticalIndexer";
 
     // Hardware devices - CAN ID (adjust to the real value)
     motor = new TalonFX(11);

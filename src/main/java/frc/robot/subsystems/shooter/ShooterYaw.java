@@ -20,7 +20,7 @@ public class ShooterYaw extends ArmPivot {
   public static final double degree = rotation/360;
 
   {
-    SUBSYSTEM_NAME = "ShooterYaw";
+    SUBSYSTEM_NAME = "Shooter/Yaw";
 
     // Hardware devices
     motor = new TalonFX(46, HardwareConstants.rioCanbus);
