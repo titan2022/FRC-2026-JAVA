@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
@@ -24,11 +25,11 @@ import edu.wpi.first.units.measure.Angle;
 public final class Constants {
   public static class DriverConstants {
     /// The max speed, in meters per second
-    public static final double MAX_SPEED = 2.0 * m/s;
+    public static final double MAX_SPEED = 6.0 * m/s;
     // alternately TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
 
     /// The max angular speed, in radians per second
-    public static final double MAX_ANGULAR_SPEED = RotationsPerSecond.of(0.75).in(RadiansPerSecond);
+    public static final double MAX_ANGULAR_SPEED = DegreesPerSecond.of(400).in(RadiansPerSecond);
     /// The deadband, as a fraction of 1
     public static final double DEADBAND = 0.15;
     /// The speed of dpad strafing, in meters per second
