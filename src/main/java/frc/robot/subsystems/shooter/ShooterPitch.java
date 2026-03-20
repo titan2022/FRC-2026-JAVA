@@ -32,8 +32,8 @@ public class ShooterPitch extends ArmPivot {
     // If it's a pivot, use the example values below.
     // If it's an arm, get values from the CAD.
     IS_ARM = true;
-    ARM_LENGTH = 20*cm;
-    ARM_MOI = 0.008821156008 * kg*m*m;
+    ARM_LENGTH = 12.177*in;
+    ARM_MOI = 76675947*kg*in*in;
     // You can estimate it using SingleJointedArmSim.estimateMOI(armLength, 5).
 
     // Configuration
@@ -67,16 +67,16 @@ public class ShooterPitch extends ArmPivot {
     // motorConfig.Slot0.kI = 0.0;
     // motorConfig.Slot0.kD = 0.0;
 
-    // https://www.reca.lc/arm?armMass=%7B%22s%22%3A1.3458353%2C%22u%22%3A%22lbs%22%7D&comLength=%7B%22s%22%3A17%2C%22u%22%3A%22cm%22%7D&currentLimit=%7B%22s%22%3A40%2C%22u%22%3A%22A%22%7D&efficiency=100&endAngle=%7B%22s%22%3A50%2C%22u%22%3A%22deg%22%7D&iterationLimit=10000&motor=%7B%22quantity%22%3A1%2C%22name%22%3A%22Falcon%20500%22%7D&ratio=%7B%22magnitude%22%3A172.8%2C%22ratioType%22%3A%22Reduction%22%7D&startAngle=%7B%22s%22%3A23%2C%22u%22%3A%22deg%22%7D
-    motorConfig.Slot0.kG = 0.02; // ReCalc 0.02 V
+    // https://www.reca.lc/arm?armMass=%7B%22s%22%3A1034.20952%2C%22u%22%3A%22g%22%7D&comLength=%7B%22s%22%3A12.177%2C%22u%22%3A%22in%22%7D&currentLimit=%7B%22s%22%3A40%2C%22u%22%3A%22A%22%7D&efficiency=100&endAngle=%7B%22s%22%3A50%2C%22u%22%3A%22deg%22%7D&iterationLimit=10000&motor=%7B%22quantity%22%3A1%2C%22name%22%3A%22Falcon%20500%22%7D&ratio=%7B%22magnitude%22%3A172.8%2C%22ratioType%22%3A%22Reduction%22%7D&startAngle=%7B%22s%22%3A23%2C%22u%22%3A%22deg%22%7D
+    motorConfig.Slot0.kG = 0.05; // ReCalc 0.05 V
     motorConfig.Slot0.kS = 0.0; // not calculated
     motorConfig.Slot0.kV = 19.50; // ReCalc 19.50 V*s/rot
-    motorConfig.Slot0.kA = 0.0; // ReCalc 0.00 V*s^2/rot
+    motorConfig.Slot0.kA = 0.01; // ReCalc 0.01 V*s^2/rot
 
     // PID
-    motorConfig.Slot0.kP = 505.87; // ReCalc 505.87 V/rot
+    motorConfig.Slot0.kP = 1445.71; // ReCalc 1445.71 V/rot
     motorConfig.Slot0.kI = 0.0;
-    motorConfig.Slot0.kD = 0.04; // ReCalc 0.04 V*s/rot
+    motorConfig.Slot0.kD = 0.62; // ReCalc 0.62 V*s/rot
 
     // motorConfig.MotionMagic.MotionMagicCruiseVelocity = 5 * rotation/s;
     // motorConfig.MotionMagic.MotionMagicAcceleration = 5 * rotation/(s*s);
