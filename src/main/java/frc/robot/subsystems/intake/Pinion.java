@@ -62,8 +62,8 @@ public class Pinion extends Elevator {
     motorConfig.Slot0.kI = 0.0;
     motorConfig.Slot0.kD = 6.81; // ReCalc 6.81 V*s/m
 
-    MAX_VELOCITY = 2.25 * m/s; // ReCalc 2.25 m/s
-    MAX_ACCELERATION = 21.51 * m/(s*s); // ReCalc 21.51 m/s^2
+    MAX_VELOCITY = 0.5 * m/s; // ReCalc 2.25 m/s
+    MAX_ACCELERATION = 1.0 * m/(s*s); // ReCalc 21.51 m/s^2
 
     motorConfig.CurrentLimits.StatorCurrentLimitEnable = true;
     motorConfig.CurrentLimits.StatorCurrentLimit = 20;
