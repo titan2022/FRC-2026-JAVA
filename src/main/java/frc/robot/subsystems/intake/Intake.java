@@ -3,8 +3,8 @@ package frc.robot.subsystems.intake;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 
-import org.ironmaple.simulation.IntakeSimulation;
-import org.ironmaple.simulation.drivesims.AbstractDriveTrainSimulation;
+// import org.ironmaple.simulation.IntakeSimulation;
+// import org.ironmaple.simulation.drivesims.AbstractDriveTrainSimulation;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -21,7 +21,7 @@ import frc.robot.drive.ctre.CTRESwerveDrivetrain;
 import frc.robot.subsystems.base.VoltageControlledBase;
 
 public class Intake extends VoltageControlledBase {
-  private IntakeSimulation intakeSimulation = null;
+  // private IntakeSimulation intakeSimulation = null;
 
   // TODO: Set to actual voltage
   private static final double INTAKE_VOLTAGE = 1.0;
@@ -89,32 +89,34 @@ public class Intake extends VoltageControlledBase {
 
   /// Sets whether or not the intake is out, for the purpose of simulation
   public void setIsOut(boolean isOut) {
-    if(RobotBase.isSimulation()) {
-      if (isOut)
-        intakeSimulation.startIntake(); // Extends the intake out from the chassis frame and starts detecting contacts with game pieces
-      else
-        intakeSimulation.stopIntake(); // Retracts the intake into the chassis frame, disabling game piece collection
-    }
+    // if(RobotBase.isSimulation()) {
+    //   if (isOut)
+    //     intakeSimulation.startIntake(); // Extends the intake out from the chassis frame and starts detecting contacts with game pieces
+    //   else
+    //     intakeSimulation.stopIntake(); // Retracts the intake into the chassis frame, disabling game piece collection
+    // }
   }
 
   /// Returns the number of balls in the hopper. When on the real bot, returns 0.
   public int simGetNumberOfBallsInHopper() {
-    if(RobotBase.isSimulation()) {
-      return intakeSimulation.getGamePiecesAmount();
-    } else {
-      return 0;
-    }
+    // if(RobotBase.isSimulation()) {
+    //   return intakeSimulation.getGamePiecesAmount();
+    // } else {
+    //   return 0;
+    // }
+    return 0;
   }
 
   /// If there are any game pieces remaining in the simulated hopper, retrieves it
   /// from the hopper. If there are no game pieces remaining, returns false.
   /// On the real bot, returns true.
   public boolean simRetrieveBallFromHopper() {
-    if(RobotBase.isSimulation()) {
-      return intakeSimulation.obtainGamePieceFromIntake();
-    } else {
-      return true;
-    }
+    // if(RobotBase.isSimulation()) {
+    //   return intakeSimulation.obtainGamePieceFromIntake();
+    // } else {
+    //   return true;
+    // }
+    return true;
   }
 
   public Command simRetrieveBallFromHopperCommand() {

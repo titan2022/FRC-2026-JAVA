@@ -4,7 +4,7 @@
 
 package frc.robot;
 
-import org.ironmaple.simulation.SimulatedArena;
+// import org.ironmaple.simulation.SimulatedArena;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathConstraints;
@@ -238,13 +238,13 @@ public class Robot extends TimedRobot {
 	@Override
 	public void testPeriodic() {}
 
-	private final StructArrayPublisher<Pose3d> fuelPoses = NetworkTableInstance.getDefault()
-      .getStructArrayTopic("Robot/Field/Fuel", Pose3d.struct)
-      .publish();
+	// private final StructArrayPublisher<Pose3d> fuelPoses = NetworkTableInstance.getDefault()
+  //     .getStructArrayTopic("Robot/Field/Fuel", Pose3d.struct)
+  //     .publish();
 
 	@Override
 	public void simulationInit() {
-		SimulatedArena.getInstance().resetFieldForAuto();
+		// SimulatedArena.getInstance().resetFieldForAuto();
 	}
 
 	@Override
@@ -253,13 +253,13 @@ public class Robot extends TimedRobot {
 		// vision.simulationPeriodic(drivetrain.getSimPose());
 
 		// Get the positions of the fuel (both on the field and in the air)
-		fuelPoses.accept(SimulatedArena.getInstance()
-					.getGamePiecesByType("Fuel")
-					.stream()
-					.map(x -> x.getPose3d())
-					.toArray(size -> new Pose3d[size]));
+		// fuelPoses.accept(SimulatedArena.getInstance()
+		// 			.getGamePiecesByType("Fuel")
+		// 			.stream()
+		// 			.map(x -> x.getPose3d())
+		// 			.toArray(size -> new Pose3d[size]));
 
-		SimulatedArena.getInstance().simulationPeriodic();	
+		// SimulatedArena.getInstance().simulationPeriodic();	
 	}
 
 	public void resetPose() {

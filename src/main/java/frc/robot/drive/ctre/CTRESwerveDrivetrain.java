@@ -329,7 +329,7 @@ public class CTRESwerveDrivetrain extends TunerSwerveDrivetrain implements Subsy
 		// // DogLog.log("Drive/DistanceToHub", distanceToHub, Meters);
 	}
 
-	public MapleSimSwerveDrivetrain mapleSimSwerveDrivetrain = null;
+	// public MapleSimSwerveDrivetrain mapleSimSwerveDrivetrain = null;
 
 	private void startSimThread() {
 		m_lastSimTime = Utils.getCurrentTimeSeconds();
