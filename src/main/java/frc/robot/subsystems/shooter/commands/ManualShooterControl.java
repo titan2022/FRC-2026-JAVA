@@ -15,7 +15,7 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
-import dev.doglog.DogLog;
+// import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -171,9 +171,9 @@ public class ManualShooterControl extends Command {
     //       // Configure callbacks to visualize the flight trajectory of the projectile
     //       .withProjectileTrajectoryDisplayCallBack(
     //         // Callback for when the fuel will eventually hit the target (if configured)
-    //         (pose3ds) -> DogLog.log("Shooter/FuelProjectileSuccessfulShot", pose3ds.toArray(Pose3d[]::new)),
+    //         (pose3ds) -> // DogLog.log("Shooter/FuelProjectileSuccessfulShot", pose3ds.toArray(Pose3d[]::new)),
     //         // Callback for when the fuel will eventually miss the target, or if no target is configured
-    //         (pose3ds) -> DogLog.log("Flywheel/FuelProjectileUnsuccessfulShot", pose3ds.toArray(Pose3d[]::new))
+    //         (pose3ds) -> // DogLog.log("Flywheel/FuelProjectileUnsuccessfulShot", pose3ds.toArray(Pose3d[]::new))
     //       );
     //     fuelOnFly
     //       // Configure the note projectile to become a NoteOnField upon touching the ground

@@ -7,7 +7,7 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-import dev.doglog.DogLog;
+// import dev.doglog.DogLog;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.units.measure.*;
@@ -40,16 +40,16 @@ public class PositionPIDFBase extends SubsystemBase {
 
   // Tunable PIDF and profile
   // These fields are initialized in initialize()
-  protected DoubleSubscriber kG_subscriber;
-  protected DoubleSubscriber kS_subscriber;
-  protected DoubleSubscriber kV_subscriber;
-  protected DoubleSubscriber kA_subscriber;
-  protected DoubleSubscriber kP_subscriber;
-  protected DoubleSubscriber kI_subscriber;
-  protected DoubleSubscriber kD_subscriber;
-  protected DoubleSubscriber maxVelocity_subscriber;
-  protected DoubleSubscriber maxAcceleration_subscriber;
-  protected DoubleSubscriber setpoint_subscriber;
+  // protected DoubleSubscriber kG_subscriber;
+  // protected DoubleSubscriber kS_subscriber;
+  // protected DoubleSubscriber kV_subscriber;
+  // protected DoubleSubscriber kA_subscriber;
+  // protected DoubleSubscriber kP_subscriber;
+  // protected DoubleSubscriber kI_subscriber;
+  // protected DoubleSubscriber kD_subscriber;
+  // protected DoubleSubscriber maxVelocity_subscriber;
+  // protected DoubleSubscriber maxAcceleration_subscriber;
+  // protected DoubleSubscriber setpoint_subscriber;
 
   // Motor controller requests
   protected PositionVoltage positionRequest = new PositionVoltage(0).withSlot(0);
@@ -93,43 +93,43 @@ public class PositionPIDFBase extends SubsystemBase {
 
     setpoint = STARTING_ANGULAR_POSITION;
 
-    kG_subscriber = DogLog.tunable(
-      SUBSYSTEM_NAME + "/kG", motorConfig.Slot0.kG, this::configureFromTunable);
-    kS_subscriber = DogLog.tunable(
-      SUBSYSTEM_NAME + "/kS", motorConfig.Slot0.kS, this::configureFromTunable);
-    kV_subscriber = DogLog.tunable(
-      SUBSYSTEM_NAME + "/kV", motorConfig.Slot0.kV, this::configureFromTunable);
-    kA_subscriber = DogLog.tunable(
-      SUBSYSTEM_NAME + "/kA", motorConfig.Slot0.kA, this::configureFromTunable);
-    kP_subscriber = DogLog.tunable(
-      SUBSYSTEM_NAME + "/kP", motorConfig.Slot0.kP, this::configureFromTunable);
-    kI_subscriber = DogLog.tunable(
-      SUBSYSTEM_NAME + "/kI", motorConfig.Slot0.kI, this::configureFromTunable);
-    kD_subscriber = DogLog.tunable(
-      SUBSYSTEM_NAME + "/kD", motorConfig.Slot0.kD, this::configureFromTunable);
-    maxVelocity_subscriber = DogLog.tunable(
-      SUBSYSTEM_NAME + "/max velocity", motorConfig.MotionMagic.MotionMagicCruiseVelocity, this::configureFromTunable);
-    maxAcceleration_subscriber = DogLog.tunable(
-      SUBSYSTEM_NAME + "/max acceleration", motorConfig.MotionMagic.MotionMagicAcceleration, this::configureFromTunable);
-    setpoint_subscriber = DogLog.tunable(
-      SUBSYSTEM_NAME + "/angular position setpoint", setpoint, this::setAngularPosition);
+    // kG_subscriber = DogLog.tunable(
+    //   SUBSYSTEM_NAME + "/kG", motorConfig.Slot0.kG, this::configureFromTunable);
+    // kS_subscriber = DogLog.tunable(
+    //   SUBSYSTEM_NAME + "/kS", motorConfig.Slot0.kS, this::configureFromTunable);
+    // kV_subscriber = DogLog.tunable(
+    //   SUBSYSTEM_NAME + "/kV", motorConfig.Slot0.kV, this::configureFromTunable);
+    // kA_subscriber = DogLog.tunable(
+    //   SUBSYSTEM_NAME + "/kA", motorConfig.Slot0.kA, this::configureFromTunable);
+    // kP_subscriber = DogLog.tunable(
+    //   SUBSYSTEM_NAME + "/kP", motorConfig.Slot0.kP, this::configureFromTunable);
+    // kI_subscriber = DogLog.tunable(
+    //   SUBSYSTEM_NAME + "/kI", motorConfig.Slot0.kI, this::configureFromTunable);
+    // kD_subscriber = DogLog.tunable(
+    //   SUBSYSTEM_NAME + "/kD", motorConfig.Slot0.kD, this::configureFromTunable);
+    // maxVelocity_subscriber = DogLog.tunable(
+    //   SUBSYSTEM_NAME + "/max velocity", motorConfig.MotionMagic.MotionMagicCruiseVelocity, this::configureFromTunable);
+    // maxAcceleration_subscriber = DogLog.tunable(
+    //   SUBSYSTEM_NAME + "/max acceleration", motorConfig.MotionMagic.MotionMagicAcceleration, this::configureFromTunable);
+    // setpoint_subscriber = DogLog.tunable(
+    //   SUBSYSTEM_NAME + "/angular position setpoint", setpoint, this::setAngularPosition);
   }
 
-  public void configureFromTunable(double unused) {
-    motorConfig.Slot0.kG = kG_subscriber.get();
-    motorConfig.Slot0.kS = kS_subscriber.get();
-    motorConfig.Slot0.kV = kV_subscriber.get();
-    motorConfig.Slot0.kA = kA_subscriber.get();
-    motorConfig.Slot0.kP = kP_subscriber.get();
-    motorConfig.Slot0.kI = kI_subscriber.get();
-    motorConfig.Slot0.kD = kD_subscriber.get();
+  // public void configureFromTunable(double unused) {
+  //   motorConfig.Slot0.kG = kG_subscriber.get();
+  //   motorConfig.Slot0.kS = kS_subscriber.get();
+  //   motorConfig.Slot0.kV = kV_subscriber.get();
+  //   motorConfig.Slot0.kA = kA_subscriber.get();
+  //   motorConfig.Slot0.kP = kP_subscriber.get();
+  //   motorConfig.Slot0.kI = kI_subscriber.get();
+  //   motorConfig.Slot0.kD = kD_subscriber.get();
 
-    motorConfig.MotionMagic.MotionMagicCruiseVelocity = maxVelocity_subscriber.get();
-    motorConfig.MotionMagic.MotionMagicAcceleration = maxAcceleration_subscriber.get();
+  //   motorConfig.MotionMagic.MotionMagicCruiseVelocity = maxVelocity_subscriber.get();
+  //   motorConfig.MotionMagic.MotionMagicAcceleration = maxAcceleration_subscriber.get();
 
-    // Apply configuration
-    motor.getConfigurator().apply(motorConfig);
-  }
+  //   // Apply configuration
+  //   motor.getConfigurator().apply(motorConfig);
+  // }
 
   /**
    * Update simulation and telemetry.
@@ -149,13 +149,13 @@ public class PositionPIDFBase extends SubsystemBase {
     // motor.setControl(motionRequest.withPosition(setpoint));
 
     // Log values
-    // DogLog.log(SUBSYSTEM_NAME + "/Angular Position", getAngularPosition(), "rotation");
-    // DogLog.log(SUBSYSTEM_NAME + "/Angular Velocity", getAngularVelocity(), "rotation/s");
-    // DogLog.log(SUBSYSTEM_NAME + "/Voltage", getVoltage(), "V");
-    // DogLog.log(SUBSYSTEM_NAME + "/Stator Current", getCurrent(), "A");
-    // DogLog.log(SUBSYSTEM_NAME + "/Temperature", getTemperature(), "°C");
-    // DogLog.log(SUBSYSTEM_NAME + "/Profiled setpoint", getProfiledSetpoint(), "rotation");
-    // DogLog.log(SUBSYSTEM_NAME + "/Position setpoint", getAngularPositionSetpoint(), "rotation");
+    // // DogLog.log(SUBSYSTEM_NAME + "/Angular Position", getAngularPosition(), "rotation");
+    // // DogLog.log(SUBSYSTEM_NAME + "/Angular Velocity", getAngularVelocity(), "rotation/s");
+    // // DogLog.log(SUBSYSTEM_NAME + "/Voltage", getVoltage(), "V");
+    // // DogLog.log(SUBSYSTEM_NAME + "/Stator Current", getCurrent(), "A");
+    // // DogLog.log(SUBSYSTEM_NAME + "/Temperature", getTemperature(), "°C");
+    // // DogLog.log(SUBSYSTEM_NAME + "/Profiled setpoint", getProfiledSetpoint(), "rotation");
+    // // DogLog.log(SUBSYSTEM_NAME + "/Position setpoint", getAngularPositionSetpoint(), "rotation");
   }
 
   /**
