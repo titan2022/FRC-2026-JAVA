@@ -48,7 +48,7 @@ import org.photonvision.simulation.VisionSystemSim;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
-import dev.doglog.DogLog;
+// import dev.doglog.DogLog;
 
 public class Vision {
 	private static class CameraWrapper {
@@ -124,7 +124,7 @@ public class Vision {
 
 				visionEst.ifPresent(
 					est -> {
-						DogLog.log("Drive/VisionPose", est.estimatedPose);
+						// DogLog.log("Drive/VisionPose", est.estimatedPose);
 					});
 
 				visionEst.ifPresent(

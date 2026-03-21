@@ -11,7 +11,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import dev.doglog.DogLog;
+// import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -121,7 +121,7 @@ public class Intake extends VoltageControlledBase {
   public void periodic() {
     super.periodic();
 
-    // DogLog.log(SUBSYSTEM_NAME + "/Number of balls in hopper", simGetNumberOfBallsInHopper());
+    // // DogLog.log(SUBSYSTEM_NAME + "/Number of balls in hopper", simGetNumberOfBallsInHopper());
   }
 
   private class SimPeriodicallyRetrieveBallFromHopperCommand extends Command {

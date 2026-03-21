@@ -7,7 +7,7 @@ import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 
-import dev.doglog.DogLog;
+// import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -116,7 +116,7 @@ public class StaticFireControl {
 		Translation2d target = AllianceFlipUtil.apply(getPassTarget(robotField));
 
 		Distance robotToTargetDistance = Meters.of(target.getDistance(robotPose.getTranslation()));
-		DogLog.log("Shooter/TrajectoryCalculator/PassingDistance", robotToTargetDistance);
+		// DogLog.log("Shooter/TrajectoryCalculator/PassingDistance", robotToTargetDistance);
 
 		boolean inRange = robotToTargetDistance.gte(MIN_PASSING_DISTANCE)
 		                && robotToTargetDistance.lte(MAX_PASSING_DISTANCE);
@@ -134,7 +134,7 @@ public class StaticFireControl {
 	public static ShooterTrajectoryParameters getStaticParameters(Pose2d robotPose) {
 		Translation2d target = VisionConstants.getHubPosition();
 		Distance robotToTargetDistance = Meters.of(target.getDistance(robotPose.getTranslation()));
-		DogLog.log("Shooter/TrajectoryCalculator/HubDistance", robotToTargetDistance);
+		// DogLog.log("Shooter/TrajectoryCalculator/HubDistance", robotToTargetDistance);
 		boolean inRange = robotToTargetDistance.gte(MIN_SHOOTING_DISTANCE) 
                    && robotToTargetDistance.lte(MAX_SHOOTING_DISTANCE);
 		return new ShooterTrajectoryParameters(inRange, robotPose.getRotation(), 0, flywheelSpeedMap.get(robotToTargetDistance), pitchMap.get(robotToTargetDistance), false);
