@@ -4,7 +4,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismRoot2d;
-// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+// // import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -85,7 +85,7 @@ public class ArmPivotSimVisualization extends SubsystemBase {
     );
 
     // Initialize visualization
-    // SmartDashboard.putData(arm.SUBSYSTEM_NAME, mech);
+    // // SmartDashboard.putData(arm.SUBSYSTEM_NAME, mech);
   }
 
   @Override
@@ -95,15 +95,15 @@ public class ArmPivotSimVisualization extends SubsystemBase {
     armMech.setAngle(Units.radiansToDegrees(currentAngleRad));
 
     // Add telemetry data
-    // SmartDashboard.putNumber(
+    // // SmartDashboard.putNumber(
     //   arm.SUBSYSTEM_NAME + "/Simulation/Angle (deg)",
     //   Units.radiansToDegrees(currentAngleRad)
     // );
-    // SmartDashboard.putNumber(
+    // // SmartDashboard.putNumber(
     //   arm.SUBSYSTEM_NAME + "/Simulation/Velocity (deg/s)",
     //   Units.radiansToDegrees(arm.getSimulation().getVelocityRadPerSec())
     // );
-    // SmartDashboard.putNumber(
+    // // SmartDashboard.putNumber(
     //   arm.SUBSYSTEM_NAME + "/Simulation/Current (A)",
     //   arm.getSimulation().getCurrentDrawAmps()
     // );
