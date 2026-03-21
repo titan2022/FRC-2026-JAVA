@@ -64,7 +64,7 @@ public class Robot extends TimedRobot {
 	// public final Spindexer spindexer = new Spindexer();
 	// public final VerticalIndexer verticalIndexer = new VerticalIndexer();
 
-	// public final Intake intake = new Intake(drivetrain);
+	public final Intake intake = new Intake(drivetrain);
 	// public final Pinion pinion = new Pinion();
 
 	// public final Climb climb = new Climb();
@@ -141,6 +141,9 @@ public class Robot extends TimedRobot {
 		// operatorController.a().onTrue(pinion.retractIntakeCommand().alongWith(intake.stopCommand()));
 		// operatorController.b().onTrue(pinion.extendIntakeCommand().alongWith(intake.intakeCommand()));
 		// operatorController.x().onTrue(pinion.extendIntakeCommand().alongWith(intake.outtakeCommand()));
+		operatorController.b().onTrue(intake.intakeCommand());
+		operatorController.x().onTrue(intake.outtakeCommand());
+		operatorController.a().onTrue(intake.stopCommand());
 
 		// operatorController.x().onTrue(climb.climbDownCommand());
 		// operatorController.y().onTrue(climb.climbUpCommand());

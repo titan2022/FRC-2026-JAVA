@@ -24,14 +24,14 @@ public class Intake extends VoltageControlledBase {
   // private IntakeSimulation intakeSimulation = null;
 
   // TODO: Set to actual voltage
-  private static final double INTAKE_VOLTAGE = 1.0;
+  private static final double INTAKE_VOLTAGE = 10.0;
   private static final double OUTTAKE_VOLTAGE = -INTAKE_VOLTAGE;
 
   {
     SUBSYSTEM_NAME = "Intake";
 
     // Hardware
-    motor = new TalonFX(42, HardwareConstants.rioCanbus);
+    motor = new TalonFX(3, HardwareConstants.rioCanbus);
 
     // Base defaults
     DEFAULT_VOLTAGE = INTAKE_VOLTAGE;
