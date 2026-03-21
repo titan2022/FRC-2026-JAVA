@@ -311,10 +311,12 @@ public class CTRESwerveDrivetrain extends TunerSwerveDrivetrain implements Subsy
 		}
 
 		DogLog.log("BatteryVoltage", RobotController.getBatteryVoltage());
-		DogLog.log("Drive/OdometryPose", getState().Pose);
-		DogLog.log("Drive/TargetStates", getState().ModuleTargets);
-		DogLog.log("Drive/MeasuredStates", getState().ModuleStates);
-		DogLog.log("Drive/MeasuredSpeeds", getState().Speeds);
+		SwerveDriveState state = getState();
+		DogLog.log("Drive/OdometryPose", state.Pose);
+		DogLog.log("Drive/TargetStates", state.ModuleTargets);
+		DogLog.log("Drive/MeasuredStates", state.ModuleStates);
+		DogLog.log("Drive/MeasuredSpeeds", state.Speeds);
+		DogLog.log("Drive/TranslationSpeed", Math.sqrt(state.Speeds.vxMetersPerSecond * state.Speeds.vxMetersPerSecond + state.Speeds.vyMetersPerSecond * state.Speeds.vyMetersPerSecond));
 		if (mapleSimSwerveDrivetrain != null)
 			DogLog.log("Drive/SimulationPose", mapleSimSwerveDrivetrain.mapleSimDrive.getSimulatedDriveTrainPose());
 
