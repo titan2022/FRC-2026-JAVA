@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.SignalLogger;
 // import org.ironmaple.simulation.SimulatedArena;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -112,6 +113,9 @@ public class Robot extends TimedRobot {
 
 		// intake.setDefaultCommand(intake.stopCommand());
 		// pinion.setDefaultCommand(pinion.stopCommand());
+
+		SignalLogger.enableAutoLogging(false);
+		SignalLogger.stop();
 
 		resetPose();
 
