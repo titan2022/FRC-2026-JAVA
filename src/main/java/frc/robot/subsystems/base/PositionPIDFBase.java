@@ -9,7 +9,7 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 // import dev.doglog.DogLog;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.networktables.DoubleSubscriber;
+// import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.units.measure.*;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;

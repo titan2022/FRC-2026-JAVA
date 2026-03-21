@@ -9,7 +9,7 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 // import dev.doglog.DogLog;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.networktables.DoubleSubscriber;
+// import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.units.measure.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -37,16 +37,16 @@ public class VelocityPIDFBase extends SubsystemBase {
 
   // Tunable PIDF and profile
   // These fields are initialized in initialize()
-  protected DoubleSubscriber kG_subscriber;
-  protected DoubleSubscriber kS_subscriber;
-  protected DoubleSubscriber kV_subscriber;
-  protected DoubleSubscriber kA_subscriber;
-  protected DoubleSubscriber kP_subscriber;
-  protected DoubleSubscriber kI_subscriber;
-  protected DoubleSubscriber kD_subscriber;
-  protected DoubleSubscriber maxJerk_subscriber;
-  protected DoubleSubscriber maxAcceleration_subscriber;
-  protected DoubleSubscriber setpoint_subscriber;
+  // protected DoubleSubscriber kG_subscriber;
+  // protected DoubleSubscriber kS_subscriber;
+  // protected DoubleSubscriber kV_subscriber;
+  // protected DoubleSubscriber kA_subscriber;
+  // protected DoubleSubscriber kP_subscriber;
+  // protected DoubleSubscriber kI_subscriber;
+  // protected DoubleSubscriber kD_subscriber;
+  // protected DoubleSubscriber maxJerk_subscriber;
+  // protected DoubleSubscriber maxAcceleration_subscriber;
+  // protected DoubleSubscriber setpoint_subscriber;
 
   // Motor controller requests
   protected PositionVoltage positionRequest = new PositionVoltage(0).withSlot(0);
