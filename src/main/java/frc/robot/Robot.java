@@ -91,9 +91,6 @@ public class Robot extends TimedRobot {
 	public SendableChooser<Command> autoChooser;
 
 	public Robot() {
-		autoChooser = AutoBuilder.buildAutoChooser();
-		SmartDashboard.putData("Auto Chooser", autoChooser);
-
 		DogLog.setOptions(new DogLogOptions()
 						.withLogExtras(true)
 						.withCaptureDs(true)
@@ -117,6 +114,9 @@ public class Robot extends TimedRobot {
 		resetPose();
 
 		configureBindings();
+
+		autoChooser = AutoBuilder.buildAutoChooser();
+		SmartDashboard.putData("Auto Chooser", autoChooser);
 	}
 
 	public void configureBindings() {
