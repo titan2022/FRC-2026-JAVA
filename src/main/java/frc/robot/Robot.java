@@ -65,7 +65,7 @@ public class Robot extends TimedRobot {
 	// public final Spindexer spindexer = new Spindexer();
 	// public final VerticalIndexer verticalIndexer = new VerticalIndexer();
 
-	// public final Intake intake = new Intake(drivetrain);
+	public final Intake intake = new Intake(drivetrain);
 	public final Pinion pinion = new Pinion();
 
 	// public final Climb climb = new Climb();
@@ -139,9 +139,9 @@ public class Robot extends TimedRobot {
 		// 	Math.abs(driveController.getRightX()) > kCancelStickThreshold
 		// ).onTrue(Commands.runOnce(drivetrain::cancelActiveDrive));
 		
-		// operatorController.a().onTrue(pinion.retractIntakeCommand().alongWith(intake.stopCommand()));
-		// operatorController.b().onTrue(pinion.extendIntakeCommand().alongWith(intake.intakeCommand()));
-		// operatorController.x().onTrue(pinion.extendIntakeCommand().alongWith(intake.outtakeCommand()));
+		operatorController.a().onTrue(pinion.retractIntakeCommand().alongWith(intake.stopCommand()));
+		operatorController.b().onTrue(pinion.extendIntakeCommand().alongWith(intake.intakeCommand()));
+		operatorController.x().onTrue(pinion.extendIntakeCommand().alongWith(intake.outtakeCommand()));
 
 		// operatorController.x().onTrue(climb.climbDownCommand());
 		// operatorController.y().onTrue(climb.climbUpCommand());
@@ -169,8 +169,8 @@ public class Robot extends TimedRobot {
 		// operatorController.x().whileTrue(climb.setLinearPositionCommand(0.7));
 		// operatorController.y().whileTrue(climb.setLinearPositionCommand(1));
 
-		operatorController.a().onTrue(pinion.retractIntakeCommand());
-		operatorController.b().onTrue(pinion.extendIntakeCommand());
+		//operatorController.a().onTrue(pinion.retractIntakeCommand());
+		//operatorController.b().onTrue(pinion.extendIntakeCommand());
 
 	
 		// NamedCommands.registerCommand("Intake/ExtendAndIntake", pinion.extendIntakeCommand().alongWith(intake.intakeCommand()));
