@@ -62,8 +62,8 @@ public class Robot extends TimedRobot {
 	// public final ShooterYaw shooterYaw = new ShooterYaw();
 	// public final ShooterFlywheel shooterFlywheel = new ShooterFlywheel();
 
-	// public final Spindexer spindexer = new Spindexer();
-	// public final VerticalIndexer verticalIndexer = new VerticalIndexer();
+	public final Spindexer spindexer = new Spindexer();
+	public final VerticalIndexer verticalIndexer = new VerticalIndexer();
 
 	public final Intake intake = new Intake(drivetrain);
 	public final Pinion pinion = new Pinion();
