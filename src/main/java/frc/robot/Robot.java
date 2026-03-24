@@ -66,7 +66,7 @@ public class Robot extends TimedRobot {
 	// public final VerticalIndexer verticalIndexer = new VerticalIndexer();
 
 	// public final Intake intake = new Intake(drivetrain);
-	// public final Pinion pinion = new Pinion();
+	public final Pinion pinion = new Pinion();
 
 	// public final Climb climb = new Climb();
 
@@ -168,6 +168,10 @@ public class Robot extends TimedRobot {
 		// operatorController.b().whileTrue(climb.setLinearPositionCommand(0.3));
 		// operatorController.x().whileTrue(climb.setLinearPositionCommand(0.7));
 		// operatorController.y().whileTrue(climb.setLinearPositionCommand(1));
+
+		operatorController.a().onTrue(pinion.retractIntakeCommand());
+		operatorController.b().onTrue(pinion.extendIntakeCommand());
+
 	
 		// NamedCommands.registerCommand("Intake/ExtendAndIntake", pinion.extendIntakeCommand().alongWith(intake.intakeCommand()));
 		// NamedCommands.registerCommand("Intake/ExtendAndOuttake", pinion.extendIntakeCommand().alongWith(intake.outtakeCommand()));
