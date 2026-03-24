@@ -66,7 +66,7 @@ public class Robot extends TimedRobot {
 	// public final VerticalIndexer verticalIndexer = new VerticalIndexer();
 
 	public final Intake intake = new Intake(drivetrain);
-	// public final Pinion pinion = new Pinion();
+	public final Pinion pinion = new Pinion();
 
 	// public final Climb climb = new Climb();
 
@@ -142,9 +142,13 @@ public class Robot extends TimedRobot {
 		// 	Math.abs(driveController.getRightX()) > kCancelStickThreshold
 		// ).onTrue(Commands.runOnce(drivetrain::cancelActiveDrive));
 		
-		// operatorController.a().onTrue(pinion.retractIntakeCommand().alongWith(intake.stopCommand()));
-		// operatorController.b().onTrue(pinion.extendIntakeCommand().alongWith(intake.intakeCommand()));
-		// operatorController.x().onTrue(pinion.extendIntakeCommand().alongWith(intake.outtakeCommand()));
+		//operatorController.a().onTrue(pinion.retractIntakeCommand().alongWith(intake.stopCommand()));
+		//operatorController.b().onTrue(pinion.extendIntakeCommand().alongWith(intake.intakeCommand()));
+		//operatorController.x().onTrue(pinion.extendIntakeCommand().alongWith(intake.outtakeCommand()));
+
+		//operatorController.a().onTrue(pinion.retractIntakeCommand());
+		//operatorController.b().onTrue(pinion.extendIntakeCommand());
+
 		operatorController.b().onTrue(intake.intakeCommand());
 		operatorController.x().onTrue(intake.outtakeCommand());
 		operatorController.a().onTrue(intake.stopCommand());

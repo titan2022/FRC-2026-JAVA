@@ -24,8 +24,8 @@ public class Intake extends VoltageControlledBase {
   // private IntakeSimulation intakeSimulation = null;
 
   // TODO: Set to actual voltage
-  private static final double INTAKE_VOLTAGE = 10.0;
-  private static final double OUTTAKE_VOLTAGE = -INTAKE_VOLTAGE;
+  private static final double INTAKE_VOLTAGE = 18.0;
+  private static final double OUTTAKE_VOLTAGE = -15.0;
 
   {
     SUBSYSTEM_NAME = "Intake";
