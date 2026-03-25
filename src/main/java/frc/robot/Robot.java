@@ -65,8 +65,8 @@ public class Robot extends TimedRobot {
 	// public final Spindexer spindexer = new Spindexer();
 	// public final VerticalIndexer verticalIndexer = new VerticalIndexer();
 
-	// public final Intake intake = new Intake(drivetrain);
-	// public final Pinion pinion = new Pinion();
+	public final Intake intake = new Intake(drivetrain);
+	public final Pinion pinion = new Pinion();
 
 	// public final Climb climb = new Climb();
 
@@ -108,8 +108,8 @@ public class Robot extends TimedRobot {
 		// spindexer.setDefaultCommand(spindexer.stopCommand());
 		// verticalIndexer.setDefaultCommand(verticalIndexer.stopCommand());
 
-		// intake.setDefaultCommand(intake.stopCommand());
-		// pinion.setDefaultCommand(pinion.stopCommand());
+		intake.setDefaultCommand(intake.stopCommand());
+		pinion.setDefaultCommand(pinion.stopCommand());
 
 		resetPose();
 
@@ -142,38 +142,16 @@ public class Robot extends TimedRobot {
 		// operatorController.a().onTrue(pinion.retractIntakeCommand().alongWith(intake.stopCommand()));
 		// operatorController.b().onTrue(pinion.extendIntakeCommand().alongWith(intake.intakeCommand()));
 		// operatorController.x().onTrue(pinion.extendIntakeCommand().alongWith(intake.outtakeCommand()));
-
-		// operatorController.x().onTrue(climb.climbDownCommand());
-		// operatorController.y().onTrue(climb.climbUpCommand());
-
-		// operatorController.a().onTrue(shooterYaw.setAngularPositionCommand(0.5));
-		// operatorController.b().onTrue(shooterYaw.setAngularPositionCommand(1.0));
-
-		// operatorController.leftBumper().onTrue(manualShooterControl);
-		// operatorController.rightBumper().onTrue(
-		// 	shooterFlywheel.stopCommand()
-		// 		.alongWith(shooterPitch.stopCommand())
-		// 		// .alongWith(shooterYaw.stopCommand())
-		// );
-
-		// operatorController.leftTrigger().onTrue(shooterPitch.setAngularPositionCommand(ShootingConstants.shootToAllianceArea_firingPitch)
-		// 	.alongWith(shooterFlywheel.setAngularVelocityCommand(ShootingConstants.shootToAllianceArea_shooterYaw)));
-		// operatorController.leftTrigger().onTrue(StaticFireControl.passingAutoShootCommand(drivetrain, shooterPitch, shooterFlywheel));
-		// operatorController.rightTrigger().onTrue(StaticFireControl.staticAutoShootCommand(drivetrain, shooterPitch, shooterFlywheel));
-
-
-		// Following are used for testing individual subsystems.
-
-		// operatorController.a().whileTrue(climb.setLinearPositionCommand(0));
-		// operatorController.b().whileTrue(climb.setLinearPositionCommand(0.3));
-		// operatorController.x().whileTrue(climb.setLinearPositionCommand(0.7));
-		// operatorController.y().whileTrue(climb.setLinearPositionCommand(1));
 	
-		// NamedCommands.registerCommand("Intake/ExtendAndIntake", pinion.extendIntakeCommand().alongWith(intake.intakeCommand()));
-		// NamedCommands.registerCommand("Intake/ExtendAndOuttake", pinion.extendIntakeCommand().alongWith(intake.outtakeCommand()));
-		// NamedCommands.registerCommand("Intake/Retract", pinion.retractIntakeCommand().alongWith(intake.stopCommand()));
-		// NamedCommands.registerCommand("Shooter/PassingAutoShoot", StaticFireControl.passingAutoShootCommand(drivetrain, shooterPitch, shooterFlywheel));
-		// NamedCommands.registerCommand("Shooter/StaticAutoShoot", StaticFireControl.staticAutoShootCommand(drivetrain, shooterPitch, shooterFlywheel));
+		operatorController.rightBumper().whileTrue(intake.intakeCommand());
+		operatorController.leftBumper().whileTrue(intake.outtakeCommand());
+
+		operatorController.pov(0).onTrue(pinion.extendIntakeCommand());
+		operatorController.pov(180).onTrue(pinion.retractIntakeCommand());
+
+		NamedCommands.registerCommand("Intake/ExtendAndIntake", pinion.extendIntakeCommand().alongWith(intake.intakeCommand()));
+		NamedCommands.registerCommand("Intake/ExtendAndOuttake", pinion.extendIntakeCommand().alongWith(intake.outtakeCommand()));
+		NamedCommands.registerCommand("Intake/Retract", pinion.retractIntakeCommand().alongWith(intake.stopCommand()));
 	}
 
 	@Override
