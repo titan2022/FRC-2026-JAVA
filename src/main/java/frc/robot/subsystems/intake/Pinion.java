@@ -17,27 +17,30 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.HardwareConstants;
-import frc.robot.subsystems.base.Elevator;
+import frc.robot.subsystems.base.PositionPIDFBase;
 
-public class Pinion extends Elevator {
+public class Pinion extends PositionPIDFBase {
   {
     SUBSYSTEM_NAME = "Pinion";
 
     // Hardware devices
-    motor = new TalonFX(43, HardwareConstants.rioCanbus); 
+    motor = new TalonFX(7, HardwareConstants.rioCanbus); 
   
     // Mechanism constants
     gearbox = DCMotor.getFalcon500(1);
     GEAR_RATIO = 9.760802469; 
 
-    DRUM_RADIUS = 1.3*in; 
-    CARRIAGE_MASS = 10*lb; 
+    // DRUM_RADIUS = 1.3*in; 
+    // CARRIAGE_MASS = 10*lb; 
 
     // Configuration
-    MAX_LINEAR_POSITION = 12.594*in; 
-    MIN_LINEAR_POSITION = 0*in; 
-    STARTING_LINEAR_POSITION = 12.594*in; 
+    // MAX_LINEAR_POSITION = 12.594*in; 
+    // MIN_LINEAR_POSITION = 0*in; 
+    // STARTING_LINEAR_POSITION = 12.594*in; 
     // The conversion to angular is done in Elevator.initialize()
+    MAX_ANGULAR_POSITION = 15.05;
+    MIN_ANGULAR_POSITION = 11.47;
+    STARTING_ANGULAR_POSITION = MIN_ANGULAR_POSITION;
 
     // Basic motor configuration
     motorConfig = new TalonFXConfiguration();
@@ -62,8 +65,10 @@ public class Pinion extends Elevator {
     motorConfig.Slot0.kI = 0.0;
     motorConfig.Slot0.kD = 6.81; // ReCalc 6.81 V*s/m
 
-    MAX_VELOCITY = 0.5 * m/s; // ReCalc 2.25 m/s
-    MAX_ACCELERATION = 1.0 * m/(s*s); // ReCalc 21.51 m/s^2
+    // MAX_VELOCITY = 0.5 * m/s; // ReCalc 2.25 m/s
+    // MAX_ACCELERATION = 1.0 * m/(s*s); // ReCalc 21.51 m/s^2
+    motorConfig.MotionMagic.MotionMagicCruiseVelocity = 0.4; // rot/s
+    motorConfig.MotionMagic.MotionMagicAcceleration = 1; // rot/s^2
 
     motorConfig.CurrentLimits.StatorCurrentLimitEnable = true;
     motorConfig.CurrentLimits.StatorCurrentLimit = 20;
@@ -76,11 +81,11 @@ public class Pinion extends Elevator {
   }
 
   public Command extendIntakeCommand() {
-    return setLinearPositionCommand(MIN_LINEAR_POSITION);
+    return setAngularPositionCommand(MAX_ANGULAR_POSITION);
   }
 
   public Command retractIntakeCommand() {
-    return setLinearPositionCommand(MAX_LINEAR_POSITION);
+    return setAngularPositionCommand(MIN_ANGULAR_POSITION);
   }
 
   @Override

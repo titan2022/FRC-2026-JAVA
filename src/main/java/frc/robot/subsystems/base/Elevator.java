@@ -102,9 +102,9 @@ public class Elevator extends PositionPIDFBase {
   public void periodic() {
     super.periodic();
 
-    // DogLog.log(SUBSYSTEM_NAME + "/Linear Position", getLinearPosition(), "m");
-    // DogLog.log(SUBSYSTEM_NAME + "/Linear Position Setpoint", setpoint * METERS_PER_ROTATION, "m");
-    // DogLog.log(SUBSYSTEM_NAME + "/Linear Velocity", getLinearVelocity(), "m/s");
+    DogLog.log(SUBSYSTEM_NAME + "/Linear Position", getLinearPosition(), "m");
+    DogLog.log(SUBSYSTEM_NAME + "/Linear Position Setpoint", setpoint * METERS_PER_ROTATION, "m");
+    DogLog.log(SUBSYSTEM_NAME + "/Linear Velocity", getLinearVelocity(), "m/s");
   }
 
   /**
