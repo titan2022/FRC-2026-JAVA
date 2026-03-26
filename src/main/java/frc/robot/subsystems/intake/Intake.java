@@ -24,7 +24,7 @@ public class Intake extends VoltageControlledBase {
   private IntakeSimulation intakeSimulation = null;
 
   // TODO: Set to actual voltage
-  private static final double INTAKE_VOLTAGE = 18.0;
+  private static final double INTAKE_VOLTAGE = 10.0;
   private static final double OUTTAKE_VOLTAGE = -INTAKE_VOLTAGE;
 
   {
@@ -41,12 +41,8 @@ public class Intake extends VoltageControlledBase {
     motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     motorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
-    // TODO - Figure out what supply and stator current limits we want
-    // motorConfig.CurrentLimits.SupplyCurrentLimitEnable = false;
-    // motorConfig.CurrentLimits.SupplyCurrentLowerLimit = 30;
-    // motorConfig.CurrentLimits.SupplyCurrentLimit = 60;
-    // motorConfig.CurrentLimits.SupplyCurrentLowerTime = 1;
-
+    motorConfig.CurrentLimits.SupplyCurrentLimitEnable = false;
+    motorConfig.CurrentLimits.SupplyCurrentLimit = 35;
   }
 
   public Intake(CTRESwerveDrivetrain drivetrain) {

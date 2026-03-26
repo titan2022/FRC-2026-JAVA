@@ -34,6 +34,9 @@ public class VoltagePinion extends SubsystemBase {
 	{
 		motorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 		motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+
+		motorConfig.CurrentLimits.SupplyCurrentLimitEnable = false;
+    motorConfig.CurrentLimits.SupplyCurrentLimit = 35;
 	}
 
 	// Motor controller signals
