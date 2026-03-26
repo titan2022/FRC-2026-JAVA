@@ -152,6 +152,10 @@ public class Robot extends TimedRobot {
 
 		NamedCommands.registerCommand("Intake/ExtendAndIntake", pinion.extendIntakeCommand().alongWith(intake.intakeCommand()));
 		NamedCommands.registerCommand("Intake/ExtendAndOuttake", pinion.extendIntakeCommand().alongWith(intake.outtakeCommand()));
+		NamedCommands.registerCommand("Intake/Extend", pinion.extendIntakeCommand());
+		NamedCommands.registerCommand("Intake/Intake", intake.intakeCommand());
+		NamedCommands.registerCommand("Intake/Outtake", intake.outtakeCommand());
+		NamedCommands.registerCommand("Intake/Stop", intake.stopCommand());
 		NamedCommands.registerCommand("Intake/Retract", pinion.retractIntakeCommand().alongWith(intake.stopCommand()));
 	}
 
