@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Cayden Intake&ReverseIntake Path"
+            "pathName": "Cayden Left"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Bad",
   "choreoAuto": false
 }

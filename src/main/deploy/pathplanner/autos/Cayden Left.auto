@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Intake no shoot cent"
+            "pathName": "Cayden Left"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Bad",
+  "folder": null,
   "choreoAuto": false
 }
