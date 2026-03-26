@@ -180,7 +180,7 @@ public class VoltageControlledBase extends SubsystemBase {
    * @return A command that runs the mechanism at the specified voltage
    */
   public Command setVoltageCommand(double voltage) {
-    return runOnce(() -> setVoltage(voltage));
+    return run(() -> setVoltage(voltage));
   }
 
   /**
@@ -188,7 +188,7 @@ public class VoltageControlledBase extends SubsystemBase {
    * @return A command that runs the mechanism
    */
   public Command forwardCommand() {
-    return runOnce(this::forward);
+    return run(this::forward);
   }
 
   /**
@@ -196,7 +196,7 @@ public class VoltageControlledBase extends SubsystemBase {
    * @return A command that reverses the mechanism
    */
   public Command reverseCommand() {
-    return runOnce(this::reverse);
+    return run(this::reverse);
   }
 
   /**
