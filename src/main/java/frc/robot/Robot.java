@@ -39,6 +39,7 @@ import frc.robot.subsystems.indexer.Spindexer;
 import frc.robot.subsystems.indexer.VerticalIndexer;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Pinion;
+import frc.robot.subsystems.intake.VoltagePinion;
 import frc.robot.subsystems.shooter.ShooterFlywheel;
 import frc.robot.subsystems.shooter.ShooterPitch;
 import frc.robot.subsystems.shooter.ShooterYaw;
@@ -66,7 +67,7 @@ public class Robot extends TimedRobot {
 	// public final VerticalIndexer verticalIndexer = new VerticalIndexer();
 
 	public final Intake intake = new Intake(drivetrain);
-	public final Pinion pinion = new Pinion();
+	public final VoltagePinion pinion = new VoltagePinion();
 
 	// public final Climb climb = new Climb();
 
@@ -144,7 +145,7 @@ public class Robot extends TimedRobot {
 		// operatorController.x().onTrue(pinion.extendIntakeCommand().alongWith(intake.outtakeCommand()));
 	
 		operatorController.rightBumper().whileTrue(intake.intakeCommand());
-		operatorController.leftBumper().whileTrue(intake.outtakeCommand());
+		operatorController.rightTrigger().whileTrue(intake.outtakeCommand());
 
 		operatorController.pov(0).onTrue(pinion.extendIntakeCommand());
 		operatorController.pov(180).onTrue(pinion.retractIntakeCommand());
