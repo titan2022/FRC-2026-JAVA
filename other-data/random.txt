@@ -1,6 +1,0 @@
-20 Front Right Drive
-21 Back Right Drive
-31 Back Right Rotator
-33 Front Left Rotator
-30 Front Right Rotator
-11 Back Left Drive
