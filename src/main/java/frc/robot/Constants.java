@@ -33,7 +33,7 @@ public final class Constants {
     /// The deadband, as a fraction of 1
     public static final double DEADBAND = 0.15;
     /// The speed of dpad strafing, in meters per second
-    public static final double DPAD_STRAFE_SPEED = 0.5 * m/s;
+    public static final double DPAD_STRAFE_SPEED = 10.0 * m/s;
   }
 
   public static class HardwareConstants {
