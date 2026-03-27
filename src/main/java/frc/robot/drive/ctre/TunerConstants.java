@@ -73,7 +73,7 @@ public class TunerConstants {
     // Configs for the Pigeon 2; leave this null to skip applying Pigeon 2 configs
     private static final Pigeon2Configuration pigeonConfigs = new Pigeon2Configuration();
 
-    {
+    static {
         // Pigeon is mounted WSD
         pigeonConfigs.MountPose.MountPoseRoll = 180;
         pigeonConfigs.MountPose.MountPoseYaw = 90;
