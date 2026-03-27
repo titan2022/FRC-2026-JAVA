@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 2.4589407552083338,
-        "y": 0.6093826099537036
+        "y": 7.442417390046296
       },
       "prevControl": null,
       "nextControl": {
         "x": 3.4589407552083338,
-        "y": 0.6093826099537036
+        "y": 7.442417390046296
       },
       "isLocked": false,
       "linkedName": "middle left auto link waypoint 1"
@@ -128,28 +128,12 @@
     },
     {
       "anchor": {
-        "x": 4.1160003616898155,
-        "y": 7.376150752314815
-      },
-      "prevControl": {
-        "x": 4.466755293104384,
-        "y": 7.446032120316117
-      },
-      "nextControl": {
-        "x": 3.7652454302752467,
-        "y": 7.306269384313513
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
         "x": 2.4589407552083338,
-        "y": 7.137757882436736
+        "y": 7.442417390046296
       },
       "prevControl": {
-        "x": 3.075974494651512,
-        "y": 7.0673547056698816
+        "x": 3.075974818908432,
+        "y": 7.372017055218683
       },
       "nextControl": null,
       "isLocked": false,
@@ -159,15 +143,15 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.4887643914473684,
-      "rotationDegrees": -0.5912632056894036
+      "rotationDegrees": 0.0
     },
     {
-      "waypointRelativePos": 2.5618729440789507,
+      "waypointRelativePos": 3.2688679245283017,
       "rotationDegrees": -92.56392601908624
     },
     {
-      "waypointRelativePos": 8.859837582236837,
-      "rotationDegrees": 179.82746442506578
+      "waypointRelativePos": 6.169811320754738,
+      "rotationDegrees": 180.0
     }
   ],
   "constraintZones": [],
@@ -186,9 +170,14 @@
     },
     {
       "name": "Intake/ExtendAndOuttake",
-      "waypointRelativePos": 8.746664763289044,
+      "waypointRelativePos": 7.85,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Intake/ExtendAndOuttake"
+        }
+      }
     }
   ],
   "globalConstraints": {
@@ -201,7 +190,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": null,
