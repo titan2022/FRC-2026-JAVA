@@ -36,7 +36,7 @@ public class VoltagePinion extends SubsystemBase {
 		motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
 		motorConfig.CurrentLimits.SupplyCurrentLimitEnable = false;
-    motorConfig.CurrentLimits.SupplyCurrentLimit = 35;
+    motorConfig.CurrentLimits.SupplyCurrentLimit = 20;
 	}
 
 	// Motor controller signals
