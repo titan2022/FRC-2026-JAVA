@@ -183,8 +183,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void autonomousInit() {
-		// No longer called, see function for explanation
-		// drivingCommand.resetAlliance();
+		drivingCommand.resetAlliance();
 
 		m_autonomousCommand = autoChooser.getSelected();
 
@@ -199,8 +198,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
-		// No longer called, see function for explanation
-		// drivingCommand.resetAlliance();
+		drivingCommand.resetAlliance();
 
 		if (m_autonomousCommand != null) {
 			m_autonomousCommand.cancel();

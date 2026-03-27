@@ -21,9 +21,8 @@ public class DrivingCommand extends Command {
 
   private double translationSpeedMultiplier = 1.0;
   private double rotationSpeedMultiplier = 1.0;
-  // Should not use sideMultiplier, see explanation at resetAlliance function
   // private double sideMultiplier = Constants.getColor() == Alliance.Blue ? 1.0 : -1.0;
-  // private double sideMultiplier = 1.0;
+  private double sideMultiplier = 1.0;
 
   private final SwerveRequest.RobotCentric robotCentricDriveRequest = new SwerveRequest.RobotCentric()
             .withDeadband(DriverConstants.MAX_SPEED * DriverConstants.DEADBAND).withRotationalDeadband(DriverConstants.MAX_ANGULAR_SPEED * DriverConstants.DEADBAND) // Add a 10% deadband
@@ -96,9 +95,6 @@ public class DrivingCommand extends Command {
     // ).withTimeout(0.1));
   }
 
-  /*
-  // We should not be implementing our own multiplication system.
-  // SwerveRequest.FieldCentric with parameter ForwardPerspective does this.
   public void resetAlliance() {
     Optional<Alliance> alliance = DriverStation.getAlliance();
     if(alliance.isPresent()) {
@@ -107,7 +103,6 @@ public class DrivingCommand extends Command {
       sideMultiplier = 1.0; // Default is 1.0
     }
   }
-  */
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -115,13 +110,10 @@ public class DrivingCommand extends Command {
     if(isFieldOriented) {
       // Note that X is defined as forward according to WPILib convention,
       // and Y is defined as to the left according to WPILib convention.
-      
       drivetrain.setControl(
               fieldCentricDriveRequest
-                  .withForwardPerspective(SwerveRequest.ForwardPerspectiveValue.OperatorPerspective) // OperatorPerspective is specified in the SwerveDrivetrain object
-                  // No longer multiplying withVelocityX and withVelocityY by sideMultiplier
-                  .withVelocityX(-driveController.getLeftY() * DriverConstants.MAX_SPEED * translationSpeedMultiplier) // Drive forward with negative Y (forward)
-                  .withVelocityY(-driveController.getLeftX() * DriverConstants.MAX_SPEED * translationSpeedMultiplier) // Drive left with negative X (left)
+                  .withVelocityX(-driveController.getLeftY() * DriverConstants.MAX_SPEED * translationSpeedMultiplier * sideMultiplier) // Drive forward with negative Y (forward)
+                  .withVelocityY(-driveController.getLeftX() * DriverConstants.MAX_SPEED * translationSpeedMultiplier * sideMultiplier) // Drive left with negative X (left)
                   .withRotationalRate(-driveController.getRightX() * DriverConstants.MAX_ANGULAR_SPEED * rotationSpeedMultiplier) // Drive counterclockwise with negative X (left)
       );
     } else {
