@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 2.4589407552083338,
-        "y": 7.442417390046296
+        "y": 0.6093826099537036
       },
       "prevControl": null,
       "nextControl": {
         "x": 3.4589407552083338,
-        "y": 7.442417390046296
+        "y": 0.6093826099537036
       },
       "isLocked": false,
       "linkedName": "middle left auto link waypoint 1"

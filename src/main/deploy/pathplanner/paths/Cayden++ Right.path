@@ -185,7 +185,7 @@
       },
       "nextControl": {
         "x": 2.756195924546748,
-        "y": 0.33156169400742164
+        "y": 0.33156169400741997
       },
       "isLocked": false,
       "linkedName": null
@@ -212,8 +212,8 @@
         "y": 0.5802777777777779
       },
       "prevControl": {
-        "x": 2.541794809608638,
-        "y": 0.5998192019626876
+        "x": 2.5417948096086374,
+        "y": 0.5998192019626875
       },
       "nextControl": {
         "x": 4.432309527584648,
@@ -265,25 +265,45 @@
       "name": "Intake/Extend",
       "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Intake/Extend"
+        }
+      }
     },
     {
       "name": "Intake/Intake",
       "waypointRelativePos": 0.4434470377019745,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Intake/Intake"
+        }
+      }
     },
     {
       "name": "Intake/Outtake",
       "waypointRelativePos": 8.822262118491926,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Intake/Outtake"
+        }
+      }
     },
     {
       "name": "Intake/Intake",
       "waypointRelativePos": 13.113105924596056,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Intake/Intake"
+        }
+      }
     }
   ],
   "globalConstraints": {
