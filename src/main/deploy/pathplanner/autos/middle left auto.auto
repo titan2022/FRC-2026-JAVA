@@ -11,15 +11,34 @@
           }
         },
         {
-          "type": "wait",
+          "type": "deadline",
           "data": {
-            "waitTime": 5.0
+            "commands": [
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 7.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake/Extend"
+                }
+              }
+            ]
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "middle left auto part 2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake/Outtake"
           }
         }
       ]
