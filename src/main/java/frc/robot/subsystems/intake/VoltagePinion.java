@@ -8,7 +8,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-// import dev.doglog.DogLog;
+import dev.doglog.DogLog;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
@@ -93,12 +93,12 @@ public class VoltagePinion extends SubsystemBase {
 			temperatureSignal
 		);
 
-		// // Log values
-		// DogLog.log(SUBSYSTEM_NAME + "/Angular Position", getAngularPosition(), "rotation");
-		// DogLog.log(SUBSYSTEM_NAME + "/Angular Velocity", getAngularVelocity(), "rotation/s");
-		// DogLog.log(SUBSYSTEM_NAME + "/Voltage", getVoltage(), "V");
-		// DogLog.log(SUBSYSTEM_NAME + "/Stator Current", getCurrent(), "A");
-		// DogLog.log(SUBSYSTEM_NAME + "/Temperature", getTemperature(), "°C");
+		// Log values
+		DogLog.log(SUBSYSTEM_NAME + "/Angular Position", getAngularPosition(), "rotation");
+		DogLog.log(SUBSYSTEM_NAME + "/Angular Velocity", getAngularVelocity(), "rotation/s");
+		DogLog.log(SUBSYSTEM_NAME + "/Voltage", getVoltage(), "V");
+		DogLog.log(SUBSYSTEM_NAME + "/Stator Current", getCurrent(), "A");
+		DogLog.log(SUBSYSTEM_NAME + "/Temperature", getTemperature(), "°C");
 	}
 
 	/**

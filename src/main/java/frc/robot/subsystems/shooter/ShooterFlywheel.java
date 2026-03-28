@@ -11,7 +11,7 @@ import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
-// import dev.doglog.DogLog;
+import dev.doglog.DogLog;
 import edu.wpi.first.math.system.plant.DCMotor;
 import frc.robot.Constants.HardwareConstants;
 import frc.robot.subsystems.base.Flywheel;
@@ -115,6 +115,6 @@ public class ShooterFlywheel extends Flywheel {
   public void periodic() {
     super.periodic();
 
-    // DogLog.log(SUBSYSTEM_NAME + "/Position (degrees)", getAngularPosition() / degree, "°");
+    DogLog.log(SUBSYSTEM_NAME + "/Position (degrees)", getAngularPosition() / degree, "°");
   }
 }

@@ -9,7 +9,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
-// import dev.doglog.DogLog;
+import dev.doglog.DogLog;
 import edu.wpi.first.math.system.plant.DCMotor;
 import frc.robot.Constants.HardwareConstants;
 import frc.robot.subsystems.base.ArmPivot;
@@ -94,7 +94,7 @@ public class ShooterPitch extends ArmPivot {
   public void periodic() {
     super.periodic();
 
-    // DogLog.log(SUBSYSTEM_NAME + "/Position (degrees)", getAngularPosition() / degree, "°");
-    // DogLog.log(SUBSYSTEM_NAME + "/Position setpoint (degrees)", getAngularPositionSetpoint() / degree, "°");
+    DogLog.log(SUBSYSTEM_NAME + "/Position (degrees)", getAngularPosition() / degree, "°");
+    DogLog.log(SUBSYSTEM_NAME + "/Position setpoint (degrees)", getAngularPositionSetpoint() / degree, "°");
   }
 }

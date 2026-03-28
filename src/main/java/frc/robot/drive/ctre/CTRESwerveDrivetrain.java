@@ -15,7 +15,7 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
-// import dev.doglog.DogLog;
+import dev.doglog.DogLog;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -310,15 +310,15 @@ public class CTRESwerveDrivetrain extends TunerSwerveDrivetrain implements Subsy
 			});
 		}
 
-		// DogLog.log("BatteryVoltage", RobotController.getBatteryVoltage());
+		DogLog.log("BatteryVoltage", RobotController.getBatteryVoltage());
 		SwerveDriveState state = getState();
-		// DogLog.log("Drive/OdometryPose", state.Pose);
-		// DogLog.log("Drive/TargetStates", state.ModuleTargets);
-		// DogLog.log("Drive/MeasuredStates", state.ModuleStates);
-		// DogLog.log("Drive/MeasuredSpeeds", state.Speeds);
-		// DogLog.log("Drive/TranslationSpeed", Math.sqrt(state.Speeds.vxMetersPerSecond * state.Speeds.vxMetersPerSecond + state.Speeds.vyMetersPerSecond * state.Speeds.vyMetersPerSecond));
-		// if (mapleSimSwerveDrivetrain != null)
-			// DogLog.log("Drive/SimulationPose", mapleSimSwerveDrivetrain.mapleSimDrive.getSimulatedDriveTrainPose());
+		DogLog.log("Drive/OdometryPose", state.Pose);
+		DogLog.log("Drive/TargetStates", state.ModuleTargets);
+		DogLog.log("Drive/MeasuredStates", state.ModuleStates);
+		DogLog.log("Drive/MeasuredSpeeds", state.Speeds);
+		DogLog.log("Drive/TranslationSpeed", Math.sqrt(state.Speeds.vxMetersPerSecond * state.Speeds.vxMetersPerSecond + state.Speeds.vyMetersPerSecond * state.Speeds.vyMetersPerSecond));
+		if (mapleSimSwerveDrivetrain != null)
+			DogLog.log("Drive/SimulationPose", mapleSimSwerveDrivetrain.mapleSimDrive.getSimulatedDriveTrainPose());
 
 		// Calculate and display distance to the HUB
 		// Distance is calculated along the horizontal plane of the field
@@ -326,7 +326,7 @@ public class CTRESwerveDrivetrain extends TunerSwerveDrivetrain implements Subsy
 
 		// double distanceToHub = getState().Pose.getTranslation().getDistance(VisionConstants.getHubPosition());
 
-		// // DogLog.log("Drive/DistanceToHub", distanceToHub, Meters);
+		// DogLog.log("Drive/DistanceToHub", distanceToHub, Meters);
 	}
 
 	public MapleSimSwerveDrivetrain mapleSimSwerveDrivetrain = null;

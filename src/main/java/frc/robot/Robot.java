@@ -9,8 +9,8 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathConstraints;
 
-// import dev.doglog.DogLog;
-// import dev.doglog.DogLogOptions;
+import dev.doglog.DogLog;
+import dev.doglog.DogLogOptions;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -92,14 +92,11 @@ public class Robot extends TimedRobot {
 	public SendableChooser<Command> autoChooser;
 
 	public Robot() {
-		autoChooser = AutoBuilder.buildAutoChooser();
-		SmartDashboard.putData("Auto Chooser", autoChooser);
-
-		// DogLog.setOptions(new DogLogOptions()
-		// 				.withLogExtras(true)
-		// 				.withCaptureDs(true)
-		// 				.withNtPublish(true)
-		// 				.withCaptureNt(false));
+		DogLog.setOptions(new DogLogOptions()
+						.withLogExtras(true)
+						.withCaptureDs(true)
+						.withNtPublish(true)
+						.withCaptureNt(false));
 		// DogLog.setPdh(new PowerDistribution());
 
 		// drivetrain.registerTelemetry(logger::telemeterize);

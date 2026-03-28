@@ -1,6 +1,6 @@
 package frc.robot.subsystems.base;
 
-// import dev.doglog.DogLog;
+import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
@@ -77,16 +77,16 @@ public class Elevator extends PositionPIDFBase {
     motor.getSimState().setSupplyVoltage(12.0);
     
     double inputVoltage = motor.getSimState().getMotorVoltage();
-    // // DogLog.log(SUBSYSTEM_NAME + "/Sim Input Voltage", inputVoltage, "V");
+    // DogLog.log(SUBSYSTEM_NAME + "/Sim Input Voltage", inputVoltage, "V");
     
     sim.setInput(inputVoltage);
     sim.update(0.020);
     
-    // // DogLog.log(SUBSYSTEM_NAME + "/Sim Position Meters", sim.getPositionMeters(), "m");
-    // // DogLog.log(SUBSYSTEM_NAME + "/Sim Velocity", sim.getVelocityMetersPerSecond(), "m/s");
+    // DogLog.log(SUBSYSTEM_NAME + "/Sim Position Meters", sim.getPositionMeters(), "m");
+    // DogLog.log(SUBSYSTEM_NAME + "/Sim Velocity", sim.getVelocityMetersPerSecond(), "m/s");
 
-    // // DogLog.log(SUBSYSTEM_NAME + "/MotionMagicCruiseVelocity", motorConfig.MotionMagic.MotionMagicCruiseVelocity);
-    // // DogLog.log(SUBSYSTEM_NAME + "/MotionMagicAcceleration", motorConfig.MotionMagic.MotionMagicAcceleration);
+    // DogLog.log(SUBSYSTEM_NAME + "/MotionMagicCruiseVelocity", motorConfig.MotionMagic.MotionMagicCruiseVelocity);
+    // DogLog.log(SUBSYSTEM_NAME + "/MotionMagicAcceleration", motorConfig.MotionMagic.MotionMagicAcceleration);
     
     RoboRioSim.setVInVoltage(
       BatterySim.calculateDefaultBatteryLoadedVoltage(sim.getCurrentDrawAmps())
@@ -102,9 +102,9 @@ public class Elevator extends PositionPIDFBase {
   public void periodic() {
     super.periodic();
 
-    // // DogLog.log(SUBSYSTEM_NAME + "/Linear Position", getLinearPosition(), "m");
-    // // DogLog.log(SUBSYSTEM_NAME + "/Linear Position Setpoint", setpoint * METERS_PER_ROTATION, "m");
-    // // DogLog.log(SUBSYSTEM_NAME + "/Linear Velocity", getLinearVelocity(), "m/s");
+    DogLog.log(SUBSYSTEM_NAME + "/Linear Position", getLinearPosition(), "m");
+    DogLog.log(SUBSYSTEM_NAME + "/Linear Position Setpoint", setpoint * METERS_PER_ROTATION, "m");
+    DogLog.log(SUBSYSTEM_NAME + "/Linear Velocity", getLinearVelocity(), "m/s");
   }
 
   /**
