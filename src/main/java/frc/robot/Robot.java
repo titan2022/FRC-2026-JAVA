@@ -92,11 +92,12 @@ public class Robot extends TimedRobot {
 	public SendableChooser<Command> autoChooser;
 
 	public Robot() {
-		DogLog.setOptions(new DogLogOptions()
-						.withLogExtras(true)
-						.withCaptureDs(true)
-						.withNtPublish(true)
-						.withCaptureNt(false));
+		DogLog.setEnabled(false);
+		// DogLog.setOptions(new DogLogOptions()
+		// 				.withLogExtras(true)
+		// 				.withCaptureDs(true)
+		// 				.withNtPublish(true)
+		// 				.withCaptureNt(false));
 		// DogLog.setPdh(new PowerDistribution());
 
 		// drivetrain.registerTelemetry(logger::telemeterize);
